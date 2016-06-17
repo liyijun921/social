@@ -1,6 +1,7 @@
 package com.cnnp.social.supervision.manager;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -10,6 +11,8 @@ import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.time.DateUtils;
 import org.dozer.DozerBeanMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -92,14 +95,38 @@ public class SupervisionManager {
 			@Override
 			public Predicate toPredicate(Root<TSupervision> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
 				Path<String> areaPath = root.get("area");
-				Path<String> estimateDate = root.get("estimatedcompletetiontime");
-				Path<String> accountableSN = root.get("accountableSN");
-				Path<String> responsibleSN = root.get("responsibleSN");
+				Path<Date> estimateDate = root.get("estimatedcompletetiontime");
+				Path<String> accountableSN = root.get("accountablesn");
+				Path<String> responsibleSN = root.get("responsiblesn");
 				Path<String> source = root.get("source");
-				query.where(cb.like(areaPath, search.getAreaCode()),
-						cb.between(estimateDate, search.getSearchBeginDate(), search.getSearchEndDate()),
-						cb.equal(accountableSN, search.getAccountableSN()),
-						cb.equal(responsibleSN, search.getResponsibleSN()), cb.equal(source, search.getSource()));
+				List<Predicate> predicateList = new ArrayList<Predicate>();
+				
+				if(StringUtils.isNoneBlank(search.getAreaCode())){
+					predicateList.add(cb.like(areaPath, search.getAreaCode()));
+					
+				}
+				if(StringUtils.isNoneBlank(search.getSearchBeginDate())&& StringUtils.isNotBlank(search.getSearchEndDate())){
+					try{
+					predicateList.add(cb.between(estimateDate, 
+							DateUtils.parseDate(search.getSearchBeginDate(),"yyyy-MM-dd"), 
+							DateUtils.parseDate(search.getSearchEndDate(),"yyyy-MM-dd")
+							));
+					}catch(Exception err){
+						
+					}
+				}
+				if(StringUtils.isNoneBlank(search.getAccountableSN())){
+					predicateList.add(cb.equal(accountableSN, search.getAccountableSN()));
+				}
+				if(StringUtils.isNoneBlank(search.getResponsibleSN())){
+					predicateList.add(cb.equal(responsibleSN, search.getResponsibleSN()));
+				}
+				if(StringUtils.isNoneBlank(search.getSource())){
+					predicateList.add(cb.equal(source, search.getSource()));
+				}
+				Predicate[] predicates = new Predicate[predicateList.size()];
+				predicateList.toArray(predicates);
+				query.where(predicates);
 				return null;
 			}
 		}, pageable);

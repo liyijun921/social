@@ -21,21 +21,20 @@ public class SupervisionController {
 	@Autowired
 	private SupervisionManager supervisionManger;
 
-	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
+	@RequestMapping(value = "/find/{id}", method = RequestMethod.GET)
 	public @ResponseBody SupervisionDto view(@PathVariable("id") long id) {
 		return supervisionManger.findOne(id);
 	}
 
 	@RequestMapping(value = "/add", method = RequestMethod.POST)
 	public void save(@RequestBody SupervisionDto supervision) {
-
-		supervisionManger.save(supervision);
+//test
+		supervisionManger.save(supervision); 
 
 	}
 
-	@RequestMapping(value = "/search", method = RequestMethod.POST)
-	public @ResponseBody List<SupervisionDto> search(@RequestBody SupervisionSearch search, @RequestParam int page,
-			@RequestParam int size) {
-		return supervisionManger.search(search, page, size);
+	@RequestMapping(value = "/search", method = RequestMethod.POST, produces="application/json",consumes="application/json")
+	public @ResponseBody List<SupervisionDto> search(@RequestBody SupervisionSearch search) {
+		return supervisionManger.search(search, 1, 2);
 	}
 }
