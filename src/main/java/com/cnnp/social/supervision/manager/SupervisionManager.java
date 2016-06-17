@@ -3,7 +3,6 @@ package com.cnnp.social.supervision.manager;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.function.Consumer;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -132,16 +131,12 @@ public class SupervisionManager {
 		}, pageable);
 	//	pageSet.
 		final List<SupervisionDto> rsList=new ArrayList<SupervisionDto>();
-		pageSet.forEach(new Consumer<TSupervision>() {
-
-			@Override
-			public void accept(TSupervision t) {
-				SupervisionDto dto=new SupervisionDto();
-				mapper.map(t, dto);
-				rsList.add(dto);
-			}
-			
-		});
+		List<TSupervision> pageSetList=pageSet.getContent();
+		for(TSupervision supervison : pageSetList){
+			SupervisionDto dto=new SupervisionDto();
+			mapper.map(supervison, dto);
+			rsList.add(dto);
+		}
 		return rsList;
 	}
 }
