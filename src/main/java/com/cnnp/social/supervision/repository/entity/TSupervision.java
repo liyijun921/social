@@ -2,8 +2,10 @@ package com.cnnp.social.supervision.repository.entity;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
-
+import java.util.List;
 
 /**
  * The persistent class for the SUPERVISION database table.
@@ -11,8 +13,8 @@ import java.util.Date;
  */
 @Entity
 @Table(name = "T_SUPERVISION")
-public class TSupervision{
-	
+public class TSupervision {
+
 	@Id
 	private long id;
 
@@ -43,8 +45,6 @@ public class TSupervision{
 
 	private String responsiblesn;
 
-	
-
 	private BigDecimal slevel;
 
 	private String source;
@@ -55,6 +55,10 @@ public class TSupervision{
 	private Date updatetime;
 
 	private BigDecimal urgency;
+
+	@OneToMany(cascade = { CascadeType.ALL })
+	@JoinColumn(name = "supervisionid")
+	private List<TSupervisionTrace> traces = new ArrayList<TSupervisionTrace>();
 
 	public TSupervision() {
 	}
@@ -171,7 +175,6 @@ public class TSupervision{
 		this.responsiblesn = responsiblesn;
 	}
 
-
 	public BigDecimal getSlevel() {
 		return this.slevel;
 	}
@@ -211,5 +214,14 @@ public class TSupervision{
 	public void setUrgency(BigDecimal urgency) {
 		this.urgency = urgency;
 	}
+
+	public List<TSupervisionTrace> getTraces() {
+		return traces;
+	}
+
+	public void setTraces(List<TSupervisionTrace> traces) {
+		this.traces = traces;
+	}
+	
 
 }

@@ -14,7 +14,7 @@ import com.cnnp.social.collspace.manager.CollspaceManager;
 import com.cnnp.social.collspace.manager.dto.CollspaceUserDto;
 
 @RestController
-@RequestMapping("/collspace")
+@RequestMapping("/api/v1.0/collspace")
 public class CollspaceController {
 	@Autowired
 	private CollspaceManager collspaceManger;

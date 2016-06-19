@@ -135,6 +135,13 @@ public class SupervisionManager {
 		for(TSupervision supervison : pageSetList){
 			SupervisionDto dto=new SupervisionDto();
 			mapper.map(supervison, dto);
+			
+			if(supervison.getTraces().size()>0){
+				TSupervisionTrace trace=supervison.getTraces().get(0);
+				SupervisionTraceDto traceDto=new SupervisionTraceDto();
+				mapper.map(trace, traceDto);
+				dto.setLatestTrace(traceDto);
+			}
 			rsList.add(dto);
 		}
 		return rsList;

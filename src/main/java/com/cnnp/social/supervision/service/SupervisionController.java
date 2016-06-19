@@ -16,7 +16,7 @@ import com.cnnp.social.supervision.manager.dto.SupervisionDto;
 import com.cnnp.social.supervision.manager.dto.SupervisionSearch;
 
 @RestController
-@RequestMapping("/supervision")
+@RequestMapping("/api/v1.0/supervision")
 public class SupervisionController {
 	@Autowired
 	private SupervisionManager supervisionManger;
@@ -34,7 +34,7 @@ public class SupervisionController {
 	}
 
 	@RequestMapping(value = "/search", method = RequestMethod.POST, produces="application/json",consumes="application/json")
-	public @ResponseBody List<SupervisionDto> search(@RequestBody SupervisionSearch search) {
-		return supervisionManger.search(search, 1, 2);
+	public @ResponseBody List<SupervisionDto> search(@RequestBody SupervisionSearch search,@RequestParam int page, @RequestParam int size) {
+		return supervisionManger.search(search, page, size);
 	}
 }
