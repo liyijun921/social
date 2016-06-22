@@ -10,7 +10,16 @@ import com.cnnp.social.collspace.repository.entity.TCollspaceUser;
 
 @Transactional
 public interface CollspaceUserDao extends CrudRepository<TCollspaceUser, String> {
-	//public List<TSupervision> search()
+	//public List<TCollspaceUser> search()
 	@Query("from TCollspaceUser Collspace where Collspace.userid = ?1")
 	public List<TCollspaceUser> find(String userid);
+	
+	@Query("from TCollspaceUser Collspace where Collspace.userid = ?1 and type = ?2")
+	public List<TCollspaceUser> find(String userid,String type);
+	
+	@Query("from TCollspaceUser Collspace where Collspace.collspaceid = ?1 and type = ?2")
+	public List<TCollspaceUser> findmember(String collspaceid,String type);
+	
+	@Query("from TCollspaceUser Collspace where Collspace.userid = ?1 and Collspace.collspaceid = ?2")
+	public TCollspaceUser findmemberup(String userid,String collspaceid);
 }

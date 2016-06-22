@@ -1,13 +1,11 @@
 package com.cnnp.social.collspace.manager.dto;
 
-import org.dozer.Mapping;
-
 import java.util.Date;
 
 public class CollspaceDto {
-	private long collspaceid; //空间ID
+	private String collspaceid; //空间ID
 	private String collspacename;//空间名
-	private long createuserid;//创建人ID
+	private String createuserid;//创建人ID
 	private String createusername;//创建人
 	private Date createtime;//创建时间
 	private Date updatetime;//更新时间
@@ -15,14 +13,15 @@ public class CollspaceDto {
 	private String scope;//公开范围
 	private String imgname;//图片名称
 	private String imgpath;//图片地址
-	private long member;//成员数
-	
+	private String member;//成员数
+	private String collsystem;//协作空间制度	
+	private String responsibility;//协作空间职责
 
-	public long getCollspaceid() {
+	public String getCollspaceid() {
 		return collspaceid;
 	}
 
-	public void setCollspaceid(long collspaceid) {
+	public void setCollspaceid(String collspaceid) {
 		this.collspaceid = collspaceid;
 	}
 
@@ -34,11 +33,11 @@ public class CollspaceDto {
 		this.collspacename = collspacename;
 	}
 
-	public long getCreateuserid() {
+	public String getCreateuserid() {
 		return createuserid;
 	}
 
-	public void setCreateuserid(long createuserid) {
+	public void setCreateuserid(String createuserid) {
 		this.createuserid = createuserid;
 	}
 
@@ -98,13 +97,27 @@ public class CollspaceDto {
 		this.imgpath = imgpath;
 	}
 
-	public long getMember() {
+	public String getMember() {
 		return member;
 	}
 
-	public void setMember(long member) {
+	public void setMember(String member) {
 		this.member = member;
 	}
 
+	public String getCollsystem() {
+		return collsystem;
+	}
+
+	public void setCollsystem(String collsystem) {
+		this.collsystem = collsystem;
+	}
 	
+	public String getResponsibility() {
+		return responsibility;
+	}
+
+	public void setResponsibility(String responsibility) {
+		this.responsibility = responsibility;
+	}
 }

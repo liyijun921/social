@@ -19,7 +19,7 @@ public class TCollspaceUser {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	private long collspaceid; //空间ID
+	private String collspaceid; //空间ID
 	@Mapping(value="userid")
 	private String userid;//用户id
 	private String username;//用户名
@@ -39,11 +39,11 @@ public class TCollspaceUser {
 		this.userid = userid;
 	}
 
-	public long getCollspaceid() {
+	public String getCollspaceid() {
 		return this.collspaceid;
 	}
 
-	public void setCollspaceid(long collspaceid) {
+	public void setCollspaceid(String collspaceid) {
 		this.collspaceid = collspaceid;
 	}
 

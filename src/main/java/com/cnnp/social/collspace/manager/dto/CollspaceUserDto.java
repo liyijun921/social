@@ -2,17 +2,17 @@ package com.cnnp.social.collspace.manager.dto;
 
 
 public class CollspaceUserDto {
-	private long collspaceid; //空间ID
+	private String collspaceid; //空间ID
 	private String userid;//用户id
 	private String username;//用户名
 	private String type;//用户类型
 	private String isdelete;//是否删除
 	private CollspaceDto latestspace;//最新执行情况
 	
-	public long getCollspaceid() {
+	public String getCollspaceid() {
 		return collspaceid;
 	}
-	public void setCollspaceid(long collspaceid) {
+	public void setCollspaceid(String collspaceid) {
 		this.collspaceid = collspaceid;
 	}
 	

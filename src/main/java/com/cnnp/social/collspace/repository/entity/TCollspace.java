@@ -14,11 +14,11 @@ import java.util.Date;
 public class TCollspace{
 	
 	@Id
-	private long collspaceid; //空间ID
+	private String collspaceid; //空间ID
 
 	private String collspacename;//空间名
 
-	private long createuserid;//创建人ID
+	private String createuserid;//创建人ID
 
 	private String createusername;//创建人
 
@@ -34,18 +34,20 @@ public class TCollspace{
 
 	private String imgpath;//图片地址
 	
-	private long member;//成员数
-
-
+	private String member;//成员数
+	
+	private String collsystem;//协作空间制度
+	
+	private String responsibility;//协作空间职责
 
 	public TCollspace() {
 	}
 
-	public long getCollspaceid() {
+	public String getCollspaceid() {
 		return this.collspaceid;
 	}
 
-	public void setCollspaceid(long collspaceid) {
+	public void setCollspaceid(String collspaceid) {
 		this.collspaceid = collspaceid;
 	}
 
@@ -57,11 +59,11 @@ public class TCollspace{
 		this.collspacename = collspacename;
 	}
 
-	public long getCreateuserid() {
+	public String getCreateuserid() {
 		return this.createuserid;
 	}
 
-	public void setCreateuserid(long createuserid) {
+	public void setCreateuserid(String createuserid) {
 		this.createuserid = createuserid;
 	}
 
@@ -121,12 +123,28 @@ public class TCollspace{
 		this.imgpath = imgpath;
 	}
 
-	public long getMember() {
+	public String getCollsystem() {
+		return this.collsystem;
+	}
+
+	public void setCollsystem(String collsystem) {
+		this.collsystem = collsystem;
+	}
+	
+	public String getMember() {
 		return this.member;
 	}
 
-	public void setMember(long member) {
+	public void setMember(String member) {
 		this.member = member;
+	}
+	
+	public String getResponsibility() {
+		return this.responsibility;
+	}
+
+	public void setResponsibility(String responsibility) {
+		this.responsibility = responsibility;
 	}
 
 }

@@ -1,5 +1,6 @@
 package com.cnnp.social;
 
+import com.cnnp.social.base.BaseSetting;
 import com.cnnp.social.news.manager.NewsSetting;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -10,7 +11,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @ComponentScan
 @EnableAutoConfiguration
-@EnableConfigurationProperties({NewsSetting.class})
+@EnableConfigurationProperties({NewsSetting.class,BaseSetting.class})
 public class Application {
 //extends SpringBootServletInitializer
     public static void main(String[] args) {

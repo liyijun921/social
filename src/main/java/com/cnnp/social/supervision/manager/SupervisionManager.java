@@ -24,6 +24,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.cnnp.social.base.BaseSetting;
+import com.cnnp.social.news.manager.NewsSetting;
 import com.cnnp.social.supervision.manager.dto.SupervisionDto;
 import com.cnnp.social.supervision.manager.dto.SupervisionSearch;
 import com.cnnp.social.supervision.manager.dto.SupervisionTraceDto;
@@ -37,6 +39,9 @@ import com.cnnp.social.supervision.repository.entity.TSupervisionTrace;
 public class SupervisionManager {
 	@Autowired
 	private SupervisionDao supervisionDao;
+	
+	@Autowired
+	private BaseSetting setting;
 	
 	private DozerBeanMapper mapper = new DozerBeanMapper();
 
@@ -102,7 +107,14 @@ public class SupervisionManager {
 				List<Predicate> predicateList = new ArrayList<Predicate>();
 
 				if (StringUtils.isNoneBlank(search.getAreaCode())) {
-					predicateList.add(cb.like(areaPath, search.getAreaCode()));
+					String[] areacodes=search.getAreaCode().split(setting.getSplitchar());
+					List<Predicate> orPredicateList = new ArrayList<Predicate>();
+					for(String areacode : areacodes){
+						orPredicateList.add(cb.like(areaPath, areacode));
+					}
+					Predicate[] orPredicates = new Predicate[orPredicateList.size()];
+					orPredicateList.toArray(orPredicates);
+					predicateList.add(cb.or(orPredicates));
 
 				}
 				if (StringUtils.isNoneBlank(search.getSearchBeginDate())
@@ -115,14 +127,25 @@ public class SupervisionManager {
 
 					}
 				}
-				if (StringUtils.isNoneBlank(search.getAccountableSN())) {
+				if (StringUtils.isNoneBlank(search.getAccountableSN())&& !StringUtils.isNoneBlank(search.getResponsibleSN())) {
 					predicateList.add(cb.equal(accountableSN, search.getAccountableSN()));
 				}
-				if (StringUtils.isNoneBlank(search.getResponsibleSN())) {
+				if (StringUtils.isNoneBlank(search.getResponsibleSN())&& !StringUtils.isNoneBlank(search.getAccountableSN())) {
 					predicateList.add(cb.equal(responsibleSN, search.getResponsibleSN()));
 				}
+				if (StringUtils.isNoneBlank(search.getResponsibleSN())&& StringUtils.isNoneBlank(search.getAccountableSN())) {
+					predicateList.add(cb.or(cb.equal(responsibleSN, search.getResponsibleSN()),
+							cb.equal(accountableSN, search.getAccountableSN())));
+				}
 				if (StringUtils.isNoneBlank(search.getSource())) {
-					predicateList.add(cb.equal(source, search.getSource()));
+					String[] sourcecodes=search.getSource().split(setting.getSplitchar());
+					List<Predicate> orPredicateList = new ArrayList<Predicate>();
+					for(String sourcecode : sourcecodes){
+						orPredicateList.add(cb.equal(source, sourcecode));
+					}
+					Predicate[] orPredicates = new Predicate[orPredicateList.size()];
+					orPredicateList.toArray(orPredicates);
+					predicateList.add(cb.or(orPredicates));
 				}
 				Predicate[] predicates = new Predicate[predicateList.size()];
 				predicateList.toArray(predicates);
