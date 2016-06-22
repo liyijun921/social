@@ -28,7 +28,7 @@ public class TSupervision {
 
 	private String code;
 
-	private String comments;
+	private String comments; 
 
 	@Temporal(TemporalType.DATE)
 	private Date estimatedcompletetiontime;
