@@ -7,6 +7,7 @@ public class SupervisionSearch {
 	private String searchEndDate;//督办计划完成日期 - 完成日期
 	private String areaCode;//督办领域
 	private String source;//督办来源
+	private String scope;//督办范围
 	public String getResponsibleSN() {
 		return responsibleSN;
 	}
@@ -42,6 +43,12 @@ public class SupervisionSearch {
 	}
 	public void setSource(String source) {
 		this.source = source;
+	}
+	public String getScope() {
+		return scope;
+	}
+	public void setScope(String scope) {
+		this.scope = scope;
 	}
 	
 	

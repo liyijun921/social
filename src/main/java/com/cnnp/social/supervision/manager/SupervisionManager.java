@@ -104,6 +104,7 @@ public class SupervisionManager {
 				Path<String> accountableSN = root.get("accountablesn");
 				Path<String> responsibleSN = root.get("responsiblesn");
 				Path<String> source = root.get("source");
+				Path<String> scopePath = root.get("scope");
 				List<Predicate> predicateList = new ArrayList<Predicate>();
 
 				if (StringUtils.isNoneBlank(search.getAreaCode())) {
@@ -142,6 +143,16 @@ public class SupervisionManager {
 					List<Predicate> orPredicateList = new ArrayList<Predicate>();
 					for(String sourcecode : sourcecodes){
 						orPredicateList.add(cb.equal(source, sourcecode));
+					}
+					Predicate[] orPredicates = new Predicate[orPredicateList.size()];
+					orPredicateList.toArray(orPredicates);
+					predicateList.add(cb.or(orPredicates));
+				}
+				if (StringUtils.isNoneBlank(search.getScope())) {
+					String[] scopes=search.getScope().split(setting.getSplitchar());
+					List<Predicate> orPredicateList = new ArrayList<Predicate>();
+					for(String scope : scopes){
+						orPredicateList.add(cb.equal(scopePath, scope));
 					}
 					Predicate[] orPredicates = new Predicate[orPredicateList.size()];
 					orPredicateList.toArray(orPredicates);

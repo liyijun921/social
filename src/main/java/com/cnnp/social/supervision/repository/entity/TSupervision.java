@@ -36,8 +36,9 @@ public class TSupervision {
 	private String name;
 
 	private long pid;
-
+	private String scope;
 	private String responsibledeptcode;
+	
 
 	private String responsibledeptname;
 
@@ -223,6 +224,14 @@ public class TSupervision {
 
 	public void setTraces(List<TSupervisionTrace> traces) {
 		this.traces = traces;
+	}
+
+	public String getScope() {
+		return scope;
+	}
+
+	public void setScope(String scope) {
+		this.scope = scope;
 	}
 	
 
