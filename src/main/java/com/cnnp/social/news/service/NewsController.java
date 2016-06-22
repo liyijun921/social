@@ -16,7 +16,7 @@ import java.util.List;
  * Created by Damon on 16/5/31.
  */
 @RestController
-@RequestMapping("/news")
+@RequestMapping("/api/v1.0/news")
 public class NewsController {
     @Autowired
     private NewsManager newsManager;

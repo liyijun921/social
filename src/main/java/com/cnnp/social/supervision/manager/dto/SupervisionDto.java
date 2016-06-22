@@ -14,19 +14,18 @@ public class SupervisionDto {
 	private String source;//督办来源
 	private String area;//督办领域
 	private int status;//督办状态
-	@Mapping(value = "slevel")
-	private int level;//重要程度
+	private int importance;//重要程度
 	private int urgency;//紧急程度
 	private String scope;//督办范围
 	@Mapping(value = "estimatedcompletetiontime")
-	private Date estimatedCompletetionTime;//预计完成日期
-	private Date actualCompletetionTime;//实际完成日期
-	private String accountableSN;//责任领导员工号
-	private String accountableName;//责任领导姓名
-	private String responsibleSN;//责任人员工号
-	private String responsibleName;//责任人姓名
-	private String responsibleDeptCode;//责任部门编号
-	private String responsibleDeptName;//责任部门名称
+	private Date estimatedcompletetiontime;//预计完成日期
+	private Date actualcompletetiontime;//实际完成日期
+	private String accountablesn;//责任领导员工号
+	private String accountablename;//责任领导姓名
+	private String responsiblesn;//责任人员工号
+	private String responsiblename;//责任人姓名
+	private String responsibledeptcode;//责任部门编号
+	private String responsibledeptname;//责任部门名称
 	private String comments;//备注
 	
 	private SupervisionTraceDto latestTrace;//最新执行情况
@@ -103,12 +102,14 @@ public class SupervisionDto {
 		this.status = status;
 	}
 
-	public int getLevel() {
-		return level;
+	
+
+	public int getImportance() {
+		return importance;
 	}
 
-	public void setLevel(int level) {
-		this.level = level;
+	public void setImportance(int importance) {
+		this.importance = importance;
 	}
 
 	public int getUrgency() {
@@ -127,68 +128,70 @@ public class SupervisionDto {
 		this.scope = scope;
 	}
 
-	public Date getEstimatedCompletetionTime() {
-		return estimatedCompletetionTime;
+	
+
+	public Date getEstimatedcompletetiontime() {
+		return estimatedcompletetiontime;
 	}
 
-	public void setEstimatedCompletetionTime(Date estimatedCompletetionTime) {
-		this.estimatedCompletetionTime = estimatedCompletetionTime;
+	public void setEstimatedcompletetiontime(Date estimatedcompletetiontime) {
+		this.estimatedcompletetiontime = estimatedcompletetiontime;
 	}
 
-	public Date getActualCompletetionTime() {
-		return actualCompletetionTime;
+	public Date getActualcompletetiontime() {
+		return actualcompletetiontime;
 	}
 
-	public void setActualCompletetionTime(Date actualCompletetionTime) {
-		this.actualCompletetionTime = actualCompletetionTime;
+	public void setActualcompletetiontime(Date actualcompletetiontime) {
+		this.actualcompletetiontime = actualcompletetiontime;
 	}
 
-	public String getAccountableSN() {
-		return accountableSN;
+	public String getAccountablesn() {
+		return accountablesn;
 	}
 
-	public void setAccountableSN(String accountableSN) {
-		this.accountableSN = accountableSN;
+	public void setAccountablesn(String accountablesn) {
+		this.accountablesn = accountablesn;
 	}
 
-	public String getAccountableName() {
-		return accountableName;
+	public String getAccountablename() {
+		return accountablename;
 	}
 
-	public void setAccountableName(String accountableName) {
-		this.accountableName = accountableName;
+	public void setAccountablename(String accountablename) {
+		this.accountablename = accountablename;
 	}
 
-	public String getResponsibleSN() {
-		return responsibleSN;
+	public String getResponsiblesn() {
+		return responsiblesn;
 	}
 
-	public void setResponsibleSN(String responsibleSN) {
-		this.responsibleSN = responsibleSN;
+	public void setResponsiblesn(String responsiblesn) {
+		this.responsiblesn = responsiblesn;
 	}
 
-	public String getResponsibleName() {
-		return responsibleName;
+	public String getResponsiblename() {
+		return responsiblename;
 	}
 
-	public void setResponsibleName(String responsibleName) {
-		this.responsibleName = responsibleName;
+	public void setResponsiblename(String responsiblename) {
+		this.responsiblename = responsiblename;
 	}
 
-	public String getResponsibleDeptCode() {
-		return responsibleDeptCode;
+	public String getResponsibledeptcode() {
+		return responsibledeptcode;
 	}
 
-	public void setResponsibleDeptCode(String responsibleDeptCode) {
-		this.responsibleDeptCode = responsibleDeptCode;
+	public void setResponsibledeptcode(String responsibledeptcode) {
+		this.responsibledeptcode = responsibledeptcode;
 	}
 
-	public String getResponsibleDeptName() {
-		return responsibleDeptName;
+	public String getResponsibledeptname() {
+		return responsibledeptname;
 	}
 
-	public void setResponsibleDeptName(String responsibleDeptName) {
-		this.responsibleDeptName = responsibleDeptName;
+	public void setResponsibledeptname(String responsibledeptname) {
+		this.responsibledeptname = responsibledeptname;
 	}
 
 	public String getComments() {

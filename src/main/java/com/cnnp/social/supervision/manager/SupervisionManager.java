@@ -28,7 +28,6 @@ import com.cnnp.social.supervision.manager.dto.SupervisionDto;
 import com.cnnp.social.supervision.manager.dto.SupervisionSearch;
 import com.cnnp.social.supervision.manager.dto.SupervisionTraceDto;
 import com.cnnp.social.supervision.repository.dao.SupervisionDao;
-import com.cnnp.social.supervision.repository.dao.SupervisionTraceDao;
 import com.cnnp.social.supervision.repository.entity.TSupervision;
 import com.cnnp.social.supervision.repository.entity.TSupervisionTrace;
 
@@ -38,9 +37,7 @@ import com.cnnp.social.supervision.repository.entity.TSupervisionTrace;
 public class SupervisionManager {
 	@Autowired
 	private SupervisionDao supervisionDao;
-	@Autowired
-	private SupervisionTraceDao supervisionTraceDao;
-
+	
 	private DozerBeanMapper mapper = new DozerBeanMapper();
 
 	@Transactional
@@ -51,15 +48,18 @@ public class SupervisionManager {
 		// 保存督办主表
 		TSupervision supervisionEntry = new TSupervision();
 		mapper.map(supervision, supervisionEntry);
-		supervisionEntry = supervisionDao.save(supervisionEntry);
-		if (supervisionEntry == null || supervision.getLatestTrace() == null) {
-			return;
+
+		SupervisionTraceDto traceDto = supervision.getLatestTrace();
+		if (traceDto != null) {
+			TSupervisionTrace supervisionTraceEntry = new TSupervisionTrace();
+			mapper.map(traceDto, supervisionTraceEntry);
+			if (supervisionEntry.getTraces() == null) {
+				supervisionEntry.setTraces(new ArrayList<TSupervisionTrace>());
+			}
+			supervisionEntry.getTraces().add(supervisionTraceEntry);
 		}
-		// 保存督办子表
-		TSupervisionTrace supervisionTraceEntry = new TSupervisionTrace();
-		mapper.map(supervision.getLatestTrace(), supervisionTraceEntry);
-		supervisionTraceEntry.setSupervisionid(supervisionEntry.getId());
-		supervisionTraceDao.save(supervisionTraceEntry);
+
+		supervisionDao.save(supervisionEntry);
 
 	}
 
@@ -76,12 +76,13 @@ public class SupervisionManager {
 		}
 		SupervisionDto supervisionDto = new SupervisionDto();
 		mapper.map(supervisionEntry, supervisionDto);
-		TSupervisionTrace supervisionTraceEntry = supervisionTraceDao.find(supervisionDto.getId());
-		if (supervisionTraceEntry == null) {
+		List<TSupervisionTrace> traces = supervisionEntry.getTraces();
+		if (traces == null || traces.size() < 1) {
 			return supervisionDto;
 		}
+		TSupervisionTrace trace = traces.get(0);
 		SupervisionTraceDto supervisionTraceDto = new SupervisionTraceDto();
-		mapper.map(supervisionTraceEntry, supervisionTraceDto);
+		mapper.map(trace, supervisionTraceDto);
 		supervisionDto.setLatestTrace(supervisionTraceDto);
 		return supervisionDto;
 
@@ -90,7 +91,7 @@ public class SupervisionManager {
 	public List<SupervisionDto> search(final SupervisionSearch search, int page, int size) {
 		Sort sort = new Sort(Direction.DESC, "estimatedcompletetiontime");
 		Pageable pageable = new PageRequest(page, size, sort);
-		Page<TSupervision> pageSet=supervisionDao.findAll(new Specification<TSupervision>() {
+		Page<TSupervision> pageSet = supervisionDao.findAll(new Specification<TSupervision>() {
 			@Override
 			public Predicate toPredicate(Root<TSupervision> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
 				Path<String> areaPath = root.get("area");
@@ -99,28 +100,28 @@ public class SupervisionManager {
 				Path<String> responsibleSN = root.get("responsiblesn");
 				Path<String> source = root.get("source");
 				List<Predicate> predicateList = new ArrayList<Predicate>();
-				
-				if(StringUtils.isNoneBlank(search.getAreaCode())){
+
+				if (StringUtils.isNoneBlank(search.getAreaCode())) {
 					predicateList.add(cb.like(areaPath, search.getAreaCode()));
-					
+
 				}
-				if(StringUtils.isNoneBlank(search.getSearchBeginDate())&& StringUtils.isNotBlank(search.getSearchEndDate())){
-					try{
-					predicateList.add(cb.between(estimateDate, 
-							DateUtils.parseDate(search.getSearchBeginDate(),"yyyy-MM-dd"), 
-							DateUtils.parseDate(search.getSearchEndDate(),"yyyy-MM-dd")
-							));
-					}catch(Exception err){
-						
+				if (StringUtils.isNoneBlank(search.getSearchBeginDate())
+						&& StringUtils.isNotBlank(search.getSearchEndDate())) {
+					try {
+						predicateList.add(
+								cb.between(estimateDate, DateUtils.parseDate(search.getSearchBeginDate(), "yyyy-MM-dd"),
+										DateUtils.parseDate(search.getSearchEndDate(), "yyyy-MM-dd")));
+					} catch (Exception err) {
+
 					}
 				}
-				if(StringUtils.isNoneBlank(search.getAccountableSN())){
+				if (StringUtils.isNoneBlank(search.getAccountableSN())) {
 					predicateList.add(cb.equal(accountableSN, search.getAccountableSN()));
 				}
-				if(StringUtils.isNoneBlank(search.getResponsibleSN())){
+				if (StringUtils.isNoneBlank(search.getResponsibleSN())) {
 					predicateList.add(cb.equal(responsibleSN, search.getResponsibleSN()));
 				}
-				if(StringUtils.isNoneBlank(search.getSource())){
+				if (StringUtils.isNoneBlank(search.getSource())) {
 					predicateList.add(cb.equal(source, search.getSource()));
 				}
 				Predicate[] predicates = new Predicate[predicateList.size()];
@@ -129,16 +130,16 @@ public class SupervisionManager {
 				return null;
 			}
 		}, pageable);
-	//	pageSet.
-		final List<SupervisionDto> rsList=new ArrayList<SupervisionDto>();
-		List<TSupervision> pageSetList=pageSet.getContent();
-		for(TSupervision supervison : pageSetList){
-			SupervisionDto dto=new SupervisionDto();
+		// pageSet.
+		final List<SupervisionDto> rsList = new ArrayList<SupervisionDto>();
+		List<TSupervision> pageSetList = pageSet.getContent();
+		for (TSupervision supervison : pageSetList) {
+			SupervisionDto dto = new SupervisionDto();
 			mapper.map(supervison, dto);
-			
-			if(supervison.getTraces().size()>0){
-				TSupervisionTrace trace=supervison.getTraces().get(0);
-				SupervisionTraceDto traceDto=new SupervisionTraceDto();
+
+			if (supervison.getTraces().size() > 0) {
+				TSupervisionTrace trace = supervison.getTraces().get(0);
+				SupervisionTraceDto traceDto = new SupervisionTraceDto();
 				mapper.map(trace, traceDto);
 				dto.setLatestTrace(traceDto);
 			}

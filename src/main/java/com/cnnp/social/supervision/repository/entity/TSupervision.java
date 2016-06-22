@@ -45,7 +45,7 @@ public class TSupervision {
 
 	private String responsiblesn;
 
-	private BigDecimal slevel;
+	private int importance;
 
 	private String source;
 
@@ -175,12 +175,14 @@ public class TSupervision {
 		this.responsiblesn = responsiblesn;
 	}
 
-	public BigDecimal getSlevel() {
-		return this.slevel;
+	
+
+	public int getImportance() {
+		return importance;
 	}
 
-	public void setSlevel(BigDecimal slevel) {
-		this.slevel = slevel;
+	public void setImportance(int importance) {
+		this.importance = importance;
 	}
 
 	public String getSource() {
