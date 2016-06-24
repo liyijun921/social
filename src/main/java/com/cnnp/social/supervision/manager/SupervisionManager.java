@@ -79,6 +79,11 @@ public class SupervisionManager {
 		if (supervisionEntry == null) {
 			return new SupervisionDto();
 		}
+		return convertSupervisionEntrytoDto(supervisionEntry);
+
+	}
+
+	private SupervisionDto convertSupervisionEntrytoDto(TSupervision supervisionEntry) {
 		SupervisionDto supervisionDto = new SupervisionDto();
 		mapper.map(supervisionEntry, supervisionDto);
 		List<TSupervisionTrace> traces = supervisionEntry.getTraces();
@@ -90,7 +95,18 @@ public class SupervisionManager {
 		mapper.map(trace, supervisionTraceDto);
 		supervisionDto.setLatestTrace(supervisionTraceDto);
 		return supervisionDto;
-
+	}
+	
+	public List<SupervisionDto> findChildren(long pid) {
+		List<TSupervision> supervisionEntries=supervisionDao.findChildren(pid);
+		if(supervisionEntries==null){
+			return new ArrayList<SupervisionDto>();
+		}
+		List<SupervisionDto> rsList = new ArrayList<SupervisionDto>();
+		for(TSupervision supervisionEntry : supervisionEntries ){
+			rsList.add(convertSupervisionEntrytoDto(supervisionEntry));
+		}
+		return rsList;
 	}
 
 	public List<SupervisionDto> search(final SupervisionSearch search, int page, int size) {

@@ -30,10 +30,12 @@ public class SupervisionController {
 	public @ResponseBody SupervisionDto view(@PathVariable("id") long id) {
 		return supervisionManger.findOne(id);
 	}
-
+	@RequestMapping(value = "/findchildren/{pid}", method = RequestMethod.GET)
+	public @ResponseBody List<SupervisionDto> findChildren(@PathVariable("pid") long pid) {
+		return supervisionManger.findChildren(pid);
+	}
 	@RequestMapping(value = "/add", method = RequestMethod.POST)
 	public void save(@RequestBody SupervisionDto supervision) {
-		// test
 		supervisionManger.save(supervision);
 
 	}
