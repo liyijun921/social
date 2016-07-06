@@ -7,6 +7,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -22,7 +23,8 @@ import org.dozer.Mapping;
 public class TSupervisionTrace {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SQ_Supervision_Trace")
+	@SequenceGenerator(initialValue = 1, name = "SQ_Supervision_Trace", sequenceName = "SQ_Supervision_Trace")
 	private long id;
 
 	private String operatorname;
