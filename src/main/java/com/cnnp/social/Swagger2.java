@@ -23,7 +23,7 @@ public class Swagger2 {
                 .paths(PathSelectors.any())
                 .build();
     }
-
+//yuanq test
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
                 .title("中国核电集团企业信息门户 APIs")
