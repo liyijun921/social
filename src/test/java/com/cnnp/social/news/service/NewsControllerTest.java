@@ -14,7 +14,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 
-/**
+/**==========================
 * NewsController Tester. 
 * 
 * @author <Authors name> 
