@@ -11,7 +11,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.transaction.annotation.Transactional;
 
-
 import com.cnnp.social.schedule.manager.dto.ScheduleDto;
 import com.cnnp.social.schedule.manager.dto.SchedulePeopleDto;
 import com.cnnp.social.schedule.repository.dao.ScheduleDao;
@@ -134,7 +133,7 @@ public class ScheduleManager {
 		for(TSchedulePeople user : schedulepeopleEntries){
 			SchedulePeopleDto schedulePeopleDto = new SchedulePeopleDto();
 			mapper.map(user, schedulePeopleDto);
-			TSchedule scheduleEntry = scheduleDao.findate(schedulePeopleDto.getScheduleId(),startdate,enddate);
+			TSchedule scheduleEntry = scheduleDao.finddate(schedulePeopleDto.getScheduleId(),startdate,enddate);
 			if(scheduleEntry!=null){
 				ScheduleDto scheduledto=new ScheduleDto();
 				mapper.map(scheduleEntry, scheduledto);
@@ -155,7 +154,7 @@ public class ScheduleManager {
 		for(TSchedulePeople user : schedulepeopleEntries){
 			SchedulePeopleDto schedulePeopleDto = new SchedulePeopleDto();
 			mapper.map(user, schedulePeopleDto);
-			TSchedule scheduleEntry = scheduleDao.findate(schedulePeopleDto.getScheduleId(),startdate,enddate);
+			TSchedule scheduleEntry = scheduleDao.finddate(schedulePeopleDto.getScheduleId(),startdate,enddate);
 			if(scheduleEntry!=null){
 				ScheduleDto scheduledto=new ScheduleDto();
 				mapper.map(scheduleEntry, scheduledto);
@@ -184,6 +183,72 @@ public class ScheduleManager {
 		return scheduledto;		
 	}
 	
+	public List<SchedulePeopleDto> findCompanyPeoples(String companyid,String peopletype,String startdate,String enddate){
+		List<TSchedulePeople> schedulepeopleEntries = schedulepeopleDao.findcompany(companyid, peopletype);
+		if(schedulepeopleEntries==null){
+			return new ArrayList<SchedulePeopleDto>();
+		}
+		List<SchedulePeopleDto> schedulePeopleDtos=new ArrayList<SchedulePeopleDto>();
+		for(TSchedulePeople user : schedulepeopleEntries){
+			SchedulePeopleDto schedulePeopleDto = new SchedulePeopleDto();
+			mapper.map(user, schedulePeopleDto);
+			TSchedule scheduleEntry = scheduleDao.finddate(schedulePeopleDto.getScheduleId(),startdate,enddate);
+			if(scheduleEntry!=null){				
+				schedulePeopleDtos.add(schedulePeopleDto);
+			}
+		}		
+		return schedulePeopleDtos;			
+	}
+	
+	
+	public List<SchedulePeopleDto> findCompanyPeoples(String userid,String companyid,String collid,String type,String startdate,String enddate){
+		List<TSchedulePeople> schedulepeopleEntries = new ArrayList<TSchedulePeople>();
+		//List<ScheduleDto> scheduleDtos=new ArrayList<ScheduleDto>();
+		List<SchedulePeopleDto> schedulePeopleDtos=new ArrayList<SchedulePeopleDto>();
+		if(type.equals("0")){
+			 schedulepeopleEntries = schedulepeopleDao.findcompany(companyid, "1");
+			 if(schedulepeopleEntries==null){
+					return new ArrayList<SchedulePeopleDto>();
+				}
+		}		
+		if(type.equals("1")){
+			 schedulepeopleEntries = schedulepeopleDao.findcompany(companyid);
+			 if(schedulepeopleEntries==null){
+					return new ArrayList<SchedulePeopleDto>();
+				}
+		}
+		if(type.equals("2")){			
+			List<TSchedule> scheduleEntry = scheduleDao.findcolldate(collid,startdate,enddate);
+			 if(scheduleEntry==null){
+				return new ArrayList<SchedulePeopleDto>();
+			 }	
+			 for(TSchedule schedule : scheduleEntry){
+				 List<TSchedulePeople> peoples = schedulepeopleDao.find(schedule.getid());
+				 if (peoples == null || peoples.size() < 1) {
+						return schedulePeopleDtos;
+					}
+				 for(TSchedulePeople user : peoples){
+						SchedulePeopleDto schedulePeopleDto = new SchedulePeopleDto();
+						mapper.map(user, schedulePeopleDto);
+						TSchedule scheduleEntry1 = scheduleDao.finddate(schedulePeopleDto.getScheduleId(),startdate,enddate);
+						if(scheduleEntry1!=null){				
+							schedulePeopleDtos.add(schedulePeopleDto);
+						}
+					}	
+			 }
+			//List<ScheduleDto> scheduleDtos=new ArrayList<ScheduleDto>();					
+			return schedulePeopleDtos;			 
+		}		
+		for(TSchedulePeople user : schedulepeopleEntries){
+			SchedulePeopleDto schedulePeopleDto = new SchedulePeopleDto();
+			mapper.map(user, schedulePeopleDto);
+			TSchedule scheduleEntry = scheduleDao.finddate(schedulePeopleDto.getScheduleId(),startdate,enddate);
+			if(scheduleEntry!=null){				
+				schedulePeopleDtos.add(schedulePeopleDto);
+			}
+		}		
+		return schedulePeopleDtos;			
+	}
 	
 	public void delOneSchedule(Long id){
 	
@@ -204,4 +269,56 @@ public class ScheduleManager {
 		return;
 	}	
 	
+	public List<ScheduleDto> findCompanySchedules(String userid,String companyid,String collid,String type,String startdate,String enddate){
+		
+		List<TSchedulePeople> schedulepeopleEntries = new ArrayList<TSchedulePeople>();
+		List<ScheduleDto> scheduleDtos=new ArrayList<ScheduleDto>();
+		if(type.equals("0")){
+			 schedulepeopleEntries = schedulepeopleDao.findcompany(companyid, "1");
+			 if(schedulepeopleEntries==null){
+					return new ArrayList<ScheduleDto>();
+				}
+		}		
+		if(type.equals("1")){
+			 schedulepeopleEntries = schedulepeopleDao.findcompany(companyid);
+			 if(schedulepeopleEntries==null){
+					return new ArrayList<ScheduleDto>();
+				}
+		}
+		if(type.equals("2")){			
+			List<TSchedule> scheduleEntry = scheduleDao.findcolldate(collid,startdate,enddate);
+			 if(scheduleEntry==null){
+				return new ArrayList<ScheduleDto>();
+			 }	
+			 for(TSchedule schedule : scheduleEntry){
+				 List<TSchedulePeople> peoples = schedulepeopleDao.find(schedule.getid());
+				 if (peoples == null || peoples.size() < 1) {
+						return scheduleDtos;
+					}
+					for(TSchedulePeople people : peoples){
+						SchedulePeopleDto dto=new SchedulePeopleDto();
+						ScheduleDto scheduledto=new ScheduleDto();
+						mapper.map(schedule, scheduledto);
+					    mapper.map(people, dto);
+					    scheduledto.setPeople(dto);		   
+					    scheduleDtos.add(scheduledto);
+					}
+			 }
+			//List<ScheduleDto> scheduleDtos=new ArrayList<ScheduleDto>();					
+			return scheduleDtos;			 
+		}		
+		for(TSchedulePeople user : schedulepeopleEntries){
+			SchedulePeopleDto schedulePeopleDto = new SchedulePeopleDto();
+			mapper.map(user, schedulePeopleDto);
+			TSchedule scheduleEntry = new TSchedule();
+			scheduleEntry = scheduleDao.finddate(schedulePeopleDto.getScheduleId(),startdate,enddate);		
+			if(scheduleEntry!=null){
+				ScheduleDto scheduledto=new ScheduleDto();
+				mapper.map(scheduleEntry, scheduledto);
+				scheduledto.setPeople(schedulePeopleDto);
+				scheduleDtos.add(scheduledto);
+			}
+		}		
+		return scheduleDtos;			
+	}	
 }
