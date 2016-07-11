@@ -44,7 +44,8 @@ public class ScheduleDto {
 	
 	private String other;//其他
 	private String type;//其他
-		
+	private String collsaceid;//空间id
+	
 	private SchedulePeopleDto people;//最新执行情况
 	public Long getid() {
 		return id;
@@ -209,6 +210,13 @@ public class ScheduleDto {
  
 	public void setType(String type) {
 		this.type = type;
+	}
+	public String getCollsaceid() {
+		return this.collsaceid;
+	}
+
+	public void setCollsaceid(String collsaceid) {
+		this.collsaceid = collsaceid;
 	}
 	
 	public SchedulePeopleDto getPeople() {

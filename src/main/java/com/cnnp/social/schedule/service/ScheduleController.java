@@ -24,10 +24,10 @@ public class ScheduleController {
 	private ScheduleManager scheduleManger;
 	
 	//创建
-	//@RequestMapping(value = "/schedule/add", method = RequestMethod.POST)
-   // public void save(@RequestBody ScheduleDto schedule) {
-	//	scheduleManger.saveSchedule(schedule); 
-	//}
+	@RequestMapping(value = "/schedule/addtest", method = RequestMethod.POST)
+    public List<SchedulePeopleDto> save1(@RequestBody List<ScheduleDto> schedule) {
+		return scheduleManger.saveSchedule1(schedule,"2016-05-16","2016-06-29"); 		
+	}
 	@RequestMapping(value = "/schedule/add", method = RequestMethod.POST)
 	public void save(@RequestBody List<ScheduleDto> schedule) {
 		scheduleManger.saveSchedule(schedule); 
@@ -45,7 +45,14 @@ public class ScheduleController {
 	public @ResponseBody List<ScheduleDto> viewCompanySchedule(@RequestParam String companyid,@RequestParam String peopletype,@RequestParam String startdate,@RequestParam String enddate) {
 		return scheduleManger.findCompanySchedule(companyid,peopletype,startdate,enddate);
 	}
-	
+	@RequestMapping(value = "/scheduleCompanys", method = RequestMethod.GET)
+	public @ResponseBody List<ScheduleDto> viewCompanySchedules(@RequestParam String userid,@RequestParam String companyid,@RequestParam String collid,@RequestParam String type,@RequestParam String startdate,@RequestParam String enddate) {
+		return scheduleManger.findCompanySchedules(userid,companyid,collid,type,startdate,enddate);
+	}
+	@RequestMapping(value = "/scheduleCompanyPeoples", method = RequestMethod.GET)
+	public @ResponseBody List<SchedulePeopleDto> viewCompanyPeoples(@RequestParam String userid,@RequestParam String companyid,@RequestParam String collid,@RequestParam String type,@RequestParam String startdate,@RequestParam String enddate) {
+		return scheduleManger.findCompanyPeoples(userid,companyid,collid,type,startdate,enddate);
+	}
 	@RequestMapping(value = "/schedulepeopleone/", method = RequestMethod.GET)
 	public @ResponseBody ScheduleDto viewOnePeopleSchedule(@RequestParam Long id,@RequestParam String userid) {
 		return scheduleManger.findPeopleOneSchedule(id,userid);
@@ -54,9 +61,12 @@ public class ScheduleController {
 	public @ResponseBody List<ScheduleDto> viewSchedulePeoples(@PathVariable("id") Long id) {
 		return scheduleManger.findSchedulepeoples(id);
 	}
-	
-	@RequestMapping(value = "/scheduledelone/{id}", method = RequestMethod.POST)
-	public void del(@PathVariable("id") Long id) {
-		scheduleManger.delOneSchedule(id); 
+	@RequestMapping(value = "/scheduledelone/{id}", method = RequestMethod.DELETE)
+	public Boolean del(@PathVariable("id") Long id) {
+		return scheduleManger.delOneSchedule(id);
 	}
+	//@RequestMapping(value = "/scheduledelone/{id}", method = RequestMethod.POST)
+	//public void del(@PathVariable("id") Long id) {
+	//	scheduleManger.delOneSchedule(id); 
+	//}
 }

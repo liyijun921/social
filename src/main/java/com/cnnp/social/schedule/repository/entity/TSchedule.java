@@ -57,7 +57,8 @@ public class TSchedule{
 	
 	private String other;//其他
 	
-	private String type;//其他
+	private String type;//类型
+	private String collsaceid;//空间id
 	
 	@OneToMany(cascade = { CascadeType.ALL })
 	@JoinColumn(name = "scheduleid")
@@ -229,6 +230,13 @@ public class TSchedule{
 
 	public void setType(String type) {
 		this.type = type;
+	}
+	public String getCollsaceid() {
+		return this.collsaceid;
+	}
+
+	public void setCollsaceid(String collsaceid) {
+		this.collsaceid = collsaceid;
 	}
 	public List<TSchedulePeople> getPeople() {
 		return people;
