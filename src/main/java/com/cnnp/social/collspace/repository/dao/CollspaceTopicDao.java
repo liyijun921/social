@@ -1,5 +1,7 @@
 package com.cnnp.social.collspace.repository.dao;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,5 +14,6 @@ public interface CollspaceTopicDao extends CrudRepository<TCollspaceTopic, Long>
 	@Query("select topic from TCollspaceTopic topic where topic.collspaceid = ?1")
 	TCollspaceTopic find(Long collspaceid);
 	//public List<TSupervision> search()
-
+	@Query("select topic from TCollspaceTopic topic where topic.topicid = ?1")
+	List<TCollspaceTopic> findtopiclist(String topicid);
 }
