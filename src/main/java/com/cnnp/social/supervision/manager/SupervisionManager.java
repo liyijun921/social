@@ -25,13 +25,17 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.cnnp.social.base.BaseSetting;
+import com.cnnp.social.base.SocialResponse;
 import com.cnnp.social.news.manager.NewsSetting;
 import com.cnnp.social.supervision.manager.dto.SupervisionDto;
 import com.cnnp.social.supervision.manager.dto.SupervisionSearch;
 import com.cnnp.social.supervision.manager.dto.SupervisionTraceDto;
+import com.cnnp.social.supervision.manager.dto.SupervisionUpdateStatusDto;
 import com.cnnp.social.supervision.repository.dao.SupervisionDao;
+import com.cnnp.social.supervision.repository.dao.SupervisionUpdateStatusDao;
 import com.cnnp.social.supervision.repository.entity.TSupervision;
 import com.cnnp.social.supervision.repository.entity.TSupervisionTrace;
+import com.cnnp.social.supervision.repository.entity.TSupervisionUpdatestatus;
 
 @EnableTransactionManagement
 @Component
@@ -39,6 +43,8 @@ import com.cnnp.social.supervision.repository.entity.TSupervisionTrace;
 public class SupervisionManager {
 	@Autowired
 	private SupervisionDao supervisionDao;
+	@Autowired
+	private SupervisionUpdateStatusDao supervisionUpdateStatusDao;
 	
 	@Autowired
 	private BaseSetting setting;
@@ -67,7 +73,83 @@ public class SupervisionManager {
 		supervisionDao.save(supervisionEntry);
 
 	}
-
+	@Transactional
+	public SocialResponse postpone(long supervisionid,Date newDate,SupervisionUpdateStatusDto statusDto){
+		TSupervision supervisionEntry = supervisionDao.findOne(supervisionid);
+		supervisionEntry.setEstimatedcompletetiontime(newDate);
+		if (statusDto != null) {
+			TSupervisionUpdatestatus supervisionUpdatestatusEntry = new TSupervisionUpdatestatus();
+			mapper.map(statusDto, supervisionUpdatestatusEntry);
+			if (supervisionEntry.getUpdateStatus() == null) {
+				supervisionEntry.setUpdateStatus(new ArrayList<TSupervisionUpdatestatus>());
+			}
+			supervisionUpdatestatusEntry.setSupervisionId(supervisionid);
+			supervisionUpdatestatusEntry.setOperatetype(2);//延期
+			supervisionEntry.getUpdateStatus().add(supervisionUpdatestatusEntry);
+		}
+		TSupervision supervision=supervisionDao.save(supervisionEntry);
+		SocialResponse response=new SocialResponse();
+		if(supervision!=null){
+			response.setMessagecode(200);
+			response.setMessage(new String[]{""+supervision.getId()});
+		}else{
+			response.setMessagecode(500);
+			response.setMessage(new String[]{"postpone the supervision<"+supervisionid+"> error."});
+		}
+		return response;
+	}
+	@Transactional
+	public SocialResponse delete(long supervisionid,SupervisionUpdateStatusDto statusDto){
+		TSupervision supervisionEntry = supervisionDao.findOne(supervisionid);
+		supervisionEntry.setStatus(2);//撤销
+		
+		if (statusDto != null) {
+			TSupervisionUpdatestatus supervisionUpdatestatusEntry = new TSupervisionUpdatestatus();
+			mapper.map(statusDto, supervisionUpdatestatusEntry);
+			if (supervisionEntry.getUpdateStatus() == null) {
+				supervisionEntry.setUpdateStatus(new ArrayList<TSupervisionUpdatestatus>());
+			}
+			supervisionUpdatestatusEntry.setOperatetype(3);//关闭
+			supervisionUpdatestatusEntry.setSupervisionId(supervisionid);
+			supervisionEntry.getUpdateStatus().add(supervisionUpdatestatusEntry);
+		}
+		TSupervision supervision=supervisionDao.save(supervisionEntry);
+		SocialResponse response=new SocialResponse();
+		if(supervision!=null){
+			response.setMessagecode(200);
+			response.setMessage(new String[]{""+supervision.getId()});
+		}else{
+			response.setMessagecode(500);
+			response.setMessage(new String[]{"postpone the supervision<"+supervisionid+"> error."});
+		}
+		return response;
+	}
+	@Transactional
+	public SocialResponse close(long supervisionid,SupervisionUpdateStatusDto statusDto){
+		TSupervision supervisionEntry = supervisionDao.findOne(supervisionid);
+		supervisionEntry.setStatus(1);//任务项关闭
+		
+		if (statusDto != null) {
+			TSupervisionUpdatestatus supervisionUpdatestatusEntry = new TSupervisionUpdatestatus();
+			mapper.map(statusDto, supervisionUpdatestatusEntry);
+			if (supervisionEntry.getUpdateStatus() == null) {
+				supervisionEntry.setUpdateStatus(new ArrayList<TSupervisionUpdatestatus>());
+			}
+			supervisionUpdatestatusEntry.setOperatetype(4);//关闭
+			supervisionEntry.getUpdateStatus().add(supervisionUpdatestatusEntry);
+		}
+		TSupervision supervision=supervisionDao.save(supervisionEntry);
+		SocialResponse response=new SocialResponse();
+		if(supervision!=null){
+			response.setMessagecode(200);
+			response.setMessage(new String[]{""+supervision.getId()});
+		}else{
+			response.setMessagecode(500);
+			response.setMessage(new String[]{"postpone the supervision<"+supervisionid+"> error."});
+		}
+		return response;
+	}
+	
 	/**
 	 *
 	 * @param id

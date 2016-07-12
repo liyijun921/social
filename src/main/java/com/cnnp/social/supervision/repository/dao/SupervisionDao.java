@@ -14,4 +14,8 @@ public interface SupervisionDao extends CrudRepository<TSupervision, Long>,JpaSp
 	
 	@Query("select supervision from TSupervision supervision where supervision.pid = ?1 or supervision.id=?1")
 	public List<TSupervision> findChildren(long pid);
+	
+	
+	
+	
 }

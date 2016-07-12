@@ -1,7 +1,10 @@
 package com.cnnp.social.supervision.service;
 
+import java.text.ParseException;
+import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -11,9 +14,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.cnnp.social.base.BaseSetting;
+import com.cnnp.social.base.SocialResponse;
 import com.cnnp.social.supervision.manager.SupervisionManager;
 import com.cnnp.social.supervision.manager.dto.SupervisionDto;
 import com.cnnp.social.supervision.manager.dto.SupervisionSearch;
+import com.cnnp.social.supervision.manager.dto.SupervisionUpdateStatusDto;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -25,7 +31,9 @@ import io.swagger.annotations.ApiOperation;
 public class SupervisionController {
 	@Autowired
 	private SupervisionManager supervisionManger;
-
+	@Autowired
+	private BaseSetting setting;
+	
 	@RequestMapping(value = "/find/{id}", method = RequestMethod.GET)
 	public @ResponseBody SupervisionDto view(@PathVariable("id") long id) {
 		return supervisionManger.findOne(id);
@@ -39,7 +47,34 @@ public class SupervisionController {
 		supervisionManger.save(supervision);
 
 	}
+	
+	@RequestMapping(value = "/postpone/{id}", method = RequestMethod.PUT)
+	public @ResponseBody SocialResponse postpone(@PathVariable("id") long id, @RequestParam String newDateStr,
+			@RequestBody SupervisionUpdateStatusDto supervisionUpdateStatus) {
+		Date newDate=null;
+		try {
+			newDate = DateUtils.parseDate(newDateStr, setting.getDateFormatter());
+		} catch (ParseException e) {
+			SocialResponse response=new SocialResponse();
+			response.setMessagecode(500);
+			response.setMessage(new String[]{e.getMessage()});
+			return response;
+		}
+		return supervisionManger.postpone(id, newDate, supervisionUpdateStatus);
 
+	}
+	@RequestMapping(value = "/delete/{id}", method = RequestMethod.DELETE)
+	public @ResponseBody SocialResponse delete(@PathVariable("id") long id,
+			@RequestBody SupervisionUpdateStatusDto supervisionUpdateStatus) {
+		return supervisionManger.delete(id,supervisionUpdateStatus);
+
+	}
+	@RequestMapping(value = "/close/{id}", method = RequestMethod.DELETE)
+	public @ResponseBody SocialResponse close(@PathVariable("id") long id,
+			@RequestBody SupervisionUpdateStatusDto supervisionUpdateStatus) {
+		return supervisionManger.close(id,supervisionUpdateStatus);
+
+	}
 	@ApiOperation(value = "分页查询督办列表", notes = "调用者传入当前页和每页显示数目返回督办列表")
 	
 	@ApiImplicitParams({

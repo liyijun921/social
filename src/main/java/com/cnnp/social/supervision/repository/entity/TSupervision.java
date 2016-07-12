@@ -52,7 +52,7 @@ public class TSupervision {
 
 	private String source;
 
-	private BigDecimal status;
+	private int status;
 
 	@Temporal(TemporalType.DATE)
 	private Date updatetime;
@@ -62,6 +62,10 @@ public class TSupervision {
 	@OneToMany(cascade = { CascadeType.ALL })
 	@JoinColumn(name = "supervisionid")
 	private List<TSupervisionTrace> traces = new ArrayList<TSupervisionTrace>();
+	
+	@OneToMany(cascade = { CascadeType.ALL })
+	@JoinColumn(name = "supervisionid")
+	private List<TSupervisionUpdatestatus> updateStatus=new ArrayList<TSupervisionUpdatestatus>();
 
 	public TSupervision() {
 	}
@@ -196,11 +200,11 @@ public class TSupervision {
 		this.source = source;
 	}
 
-	public BigDecimal getStatus() {
+	public int getStatus() {
 		return this.status;
 	}
 
-	public void setStatus(BigDecimal status) {
+	public void setStatus(int status) {
 		this.status = status;
 	}
 
@@ -226,6 +230,14 @@ public class TSupervision {
 
 	public void setTraces(List<TSupervisionTrace> traces) {
 		this.traces = traces;
+	}
+
+	public List<TSupervisionUpdatestatus> getUpdateStatus() {
+		return updateStatus;
+	}
+
+	public void setUpdateStatus(List<TSupervisionUpdatestatus> updateStatus) {
+		this.updateStatus = updateStatus;
 	}
 
 	public String getScope() {
