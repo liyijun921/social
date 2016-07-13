@@ -4,7 +4,7 @@ import java.util.Date;
 
 public class ScheduleUserIDDto {
 
-	private String userid;//用户id
+	private String userid;//用户id 
 
 	public String getUserid() {
 		return userid;
