@@ -71,7 +71,6 @@ public class CollspaceController {
 		final Calendar today=Calendar.getInstance();
 		tCollspaceTopic.setCreatetime(today.getTime());
 		tCollspaceTopic.setUpdatetime(today.getTime());
-		tCollspaceTopic.setCreateusername("李四");
 		return collspaceManger.savetopic(tCollspaceTopic);
 	}
 }
