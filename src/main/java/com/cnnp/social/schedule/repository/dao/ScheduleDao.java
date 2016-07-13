@@ -22,7 +22,7 @@ public interface ScheduleDao extends CrudRepository<TSchedule, Long> ,JpaSpecifi
 	public List<TSchedule> findcolldate(String collsaceid,String startdate,String enddate);
 	@Query("select schedule from TSchedule schedule where schedule.id = ?1 and schedule.startdate> TO_DATE(?2, 'YYYY-MM-DD HH24:MI:SS') and schedule.startdate <  TO_DATE(?3, 'YYYY-MM-DD HH24:MI:SS') ")
 	public TSchedule finddate(Long id,String startdate,String enddate);
-	@Query("select schedule from TSchedule schedule where (schedule.startdate > TO_DATE(?1, 'YYYY-MM-DD HH24:MI:SS') AND schedule.startdate < TO_DATE(?1, 'YYYY-MM-DD HH24:MI:SS')) OR (schedule.startdate < TO_DATE('2016-06-16', 'YYYY-MM-DD HH24:MI:SS') AND schedule.enddate > TO_DATE(?2, 'YYYY-MM-DD HH24:MI:SS')) OR     (schedule.enddate > TO_DATE(?2, 'YYYY-MM-DD HH24:MI:SS') AND schedule.enddate < TO_DATE(?2, 'YYYY-MM-DD HH24:MI:SS')) ")
+	@Query("select schedule from TSchedule schedule where (schedule.startdate BETWEEN  to_date(?1, 'YYYY-MM-DD HH24:MI:SS') AND to_date(?2, 'YYYY-MM-DD HH24:MI:SS') OR schedule.enddate BETWEEN  to_date(?1, 'YYYY-MM-DD HH24:MI:SS') AND to_date(?2, 'YYYY-MM-DD HH24:MI:SS') OR to_date(?1, 'YYYY-MM-DD HH24:MI:SS') Between schedule.startdate AND schedule.enddate OR to_date(?2, 'YYYY-MM-DD HH24:MI:SS') BETWEEN schedule.startdate AND schedule.enddate) ")
 	public List<TSchedule> finddate(String startdate,String enddate);
 
 }

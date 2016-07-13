@@ -20,7 +20,7 @@ public class SchedulePeopleDto {
 	private String peopletype;//备注
 	   
 	private Date updatetime;//执行时间
-	
+	private String collsaceid;//空间id
 	public long getid() {
 		return id;
 	}
@@ -91,4 +91,11 @@ public class SchedulePeopleDto {
 	public void setUpdatetime(Date updatetime) {
 		this.updatetime = updatetime;
 	}	
+	public String getCollsaceid() {
+		return this.collsaceid;
+	}
+
+	public void setCollsaceid(String collsaceid) {
+		this.collsaceid = collsaceid;
+	}
 }
