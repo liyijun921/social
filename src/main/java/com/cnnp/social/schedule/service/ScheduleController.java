@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.cnnp.social.schedule.manager.ScheduleManager;
 import com.cnnp.social.schedule.manager.dto.ScheduleDto;
 import com.cnnp.social.schedule.manager.dto.SchedulePeopleDto;
+import com.cnnp.social.schedule.manager.dto.ScheduleUserIDDto;
 
 
 
@@ -24,21 +25,26 @@ public class ScheduleController {
 	private ScheduleManager scheduleManger;
 	
 	//创建
-	@RequestMapping(value = "/schedule/addtest", method = RequestMethod.POST)
-    public List<SchedulePeopleDto> save1(@RequestBody List<ScheduleDto> schedule) {
-		return scheduleManger.saveSchedule1(schedule,"2016-05-16","2016-06-29"); 		
-	}
 	@RequestMapping(value = "/schedule/add", method = RequestMethod.POST)
-	public void save(@RequestBody List<ScheduleDto> schedule) {
-		scheduleManger.saveSchedule(schedule); 
+    public List<SchedulePeopleDto> save1(@RequestBody List<ScheduleDto> schedule,@RequestParam String startdate,@RequestParam String enddate) {
+		return scheduleManger.saveSchedule(schedule,startdate,enddate); 		
 	}
-	
+	//@RequestMapping(value = "/schedule/add", method = RequestMethod.POST)
+	//public void save(@RequestBody List<ScheduleDto> schedule) {
+	//	scheduleManger.saveSchedule(schedule); 
+	//}
+
 	@RequestMapping(value = "/schedule/{userid}", method = RequestMethod.GET)
 	public @ResponseBody List<ScheduleDto> viewUserSchedule(@PathVariable("userid") String userid) {
 		return scheduleManger.findUserAllSchedule(userid);
 	}
 	@RequestMapping(value = "/scheduleuserdate", method = RequestMethod.GET)
 	public @ResponseBody List<ScheduleDto> viewUserDateSchedule(@RequestParam String userid,@RequestParam String startdate,@RequestParam String enddate) {
+		return scheduleManger.findUserDateSchedule(userid,startdate,enddate);
+	}
+	
+	@RequestMapping(value = "/scheduledepartmentdate", method = RequestMethod.POST)
+	public @ResponseBody List<ScheduleDto> viewUsersDateSchedule(@RequestBody List<ScheduleUserIDDto> userid,@RequestParam String startdate,@RequestParam String enddate) {
 		return scheduleManger.findUserDateSchedule(userid,startdate,enddate);
 	}
 	@RequestMapping(value = "/scheduleCompany", method = RequestMethod.GET)
@@ -50,8 +56,8 @@ public class ScheduleController {
 		return scheduleManger.findCompanySchedules(userid,companyid,collid,type,startdate,enddate);
 	}
 	@RequestMapping(value = "/scheduleCompanyPeoples", method = RequestMethod.GET)
-	public @ResponseBody List<SchedulePeopleDto> viewCompanyPeoples(@RequestParam String userid,@RequestParam String companyid,@RequestParam String collid,@RequestParam String type,@RequestParam String startdate,@RequestParam String enddate) {
-		return scheduleManger.findCompanyPeoples(userid,companyid,collid,type,startdate,enddate);
+	public @ResponseBody List<SchedulePeopleDto> viewCompanyPeoples(@RequestParam String companyid,@RequestParam String collid,@RequestParam String type) {
+		return scheduleManger.findCompanyPeoples(companyid,collid,type);
 	}
 	@RequestMapping(value = "/schedulepeopleone/", method = RequestMethod.GET)
 	public @ResponseBody ScheduleDto viewOnePeopleSchedule(@RequestParam Long id,@RequestParam String userid) {

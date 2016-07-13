@@ -22,9 +22,15 @@ public interface SchedulePeopleDao extends CrudRepository<TSchedulePeople, Long>
 	@Query("select People from TSchedulePeople People where People.companyid = ?1 and People.peopletype = ?2")
 	public List<TSchedulePeople> findcompany(String companyid,String peopletype);
 	
+	@Query("select People from TSchedulePeople People where People.companyid = ?1 and People.peopletype = ?2  and People.id in (select max(People.id) from TSchedulePeople People group by People.userid)")
+	public List<TSchedulePeople> findcompanyuser(String companyid,String peopletype);
+
 	@Query("select People from TSchedulePeople People where People.companyid = ?1")
 	public List<TSchedulePeople> findcompany(String companyid);
-	
+	@Query("select People from TSchedulePeople People where People.companyid = ?1  and People.id in (select max(People.id) from TSchedulePeople People group by People.userid)")
+	public List<TSchedulePeople> findcompanyuser(String companyid);
+	@Query("select People from TSchedulePeople People where People.collsaceid = ?1  and People.id in (select max(People.id) from TSchedulePeople People group by People.userid)")
+	public List<TSchedulePeople> findcolluser(String collid);
 	@Query("delete from TSchedulePeople People where People.scheduleid = ?1")
 	public List<TSchedulePeople> deleteid(Long scheduleId);
 }

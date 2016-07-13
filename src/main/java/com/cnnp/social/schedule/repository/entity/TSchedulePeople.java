@@ -40,7 +40,7 @@ public class TSchedulePeople{
 
 	@Temporal(TemporalType.DATE)
 	private Date updatetime;
-	
+	private String collsaceid;//空间id
 	public TSchedulePeople() {
 	}
 
@@ -113,5 +113,12 @@ public class TSchedulePeople{
 
 	public void setUpdatetime(Date updatetime) {
 		this.updatetime = updatetime;
+	}
+	public String getCollsaceid() {
+		return this.collsaceid;
+	}
+
+	public void setCollsaceid(String collsaceid) {
+		this.collsaceid = collsaceid;
 	}
 }
