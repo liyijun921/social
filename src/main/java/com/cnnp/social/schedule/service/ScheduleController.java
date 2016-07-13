@@ -29,10 +29,10 @@ public class ScheduleController {
     public List<SchedulePeopleDto> save1(@RequestBody List<ScheduleDto> schedule,@RequestParam String startdate,@RequestParam String enddate) {
 		return scheduleManger.saveSchedule(schedule,startdate,enddate); 		
 	}
-	//@RequestMapping(value = "/schedule/add", method = RequestMethod.POST)
-	//public void save(@RequestBody List<ScheduleDto> schedule) {
-	//	scheduleManger.saveSchedule(schedule); 
-	//}
+	@RequestMapping(value = "/schedule/addtest", method = RequestMethod.POST)
+	public void save(@RequestBody List<ScheduleDto> schedule) {
+		scheduleManger.saveSchedule(schedule); 
+	}
 
 	@RequestMapping(value = "/schedule/{userid}", method = RequestMethod.GET)
 	public @ResponseBody List<ScheduleDto> viewUserSchedule(@PathVariable("userid") String userid) {
