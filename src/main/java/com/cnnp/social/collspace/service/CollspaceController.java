@@ -1,5 +1,6 @@
 package com.cnnp.social.collspace.service;
 
+import java.util.Calendar;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +14,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.cnnp.social.collspace.manager.CollspaceManager;
 import com.cnnp.social.collspace.manager.dto.CollspaceDto;
+import com.cnnp.social.collspace.manager.dto.CollspaceTopicDto;
 import com.cnnp.social.collspace.manager.dto.CollspaceUserDto;
+import com.cnnp.social.collspace.repository.entity.TCollspaceTopic;
 
 
 
@@ -53,5 +56,22 @@ public class CollspaceController {
 	public void save(@RequestBody CollspaceDto collspace) {
 		collspaceManger.savecoll(collspace); 
 	}
-
+	
+	//查询发帖信息 wzy
+	@RequestMapping(value = "/Colltopic/{topicid}",method = RequestMethod.GET)
+	@ResponseBody
+	public List<CollspaceTopicDto> viewtopic(@PathVariable("topicid")String topicid){
+		return collspaceManger.findtopiclist(topicid);
+	}
+	
+	//保存发帖信息wzy
+	@RequestMapping(value ="/Colltopic/add",method = RequestMethod.POST)
+	@ResponseBody
+	public CollspaceTopicDto savetopic(@RequestBody TCollspaceTopic tCollspaceTopic){
+		final Calendar today=Calendar.getInstance();
+		tCollspaceTopic.setCreatetime(today.getTime());
+		tCollspaceTopic.setUpdatetime(today.getTime());
+		tCollspaceTopic.setCreateusername("李四");
+		return collspaceManger.savetopic(tCollspaceTopic);
+	}
 }

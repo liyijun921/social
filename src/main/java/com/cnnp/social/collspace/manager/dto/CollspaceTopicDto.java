@@ -14,7 +14,9 @@ public class CollspaceTopicDto {
 	private String description;//备注信息
 	private String remarkname;//主题名
 	private String isdelete;//是否删除
-
+	private long backnum;//回复次数 
+	
+	
 	public long getCollspaceid() {
 		return collspaceid;
 	}
@@ -86,5 +88,11 @@ public class CollspaceTopicDto {
 	public void setIsdelete(String isdelete) {
 		this.isdelete = isdelete;
 	}
-	
+	public long getBacknum() {
+		return backnum;
+	}
+
+	public void setBacknum(long backnum) {
+		this.backnum = backnum;
+	}
 }

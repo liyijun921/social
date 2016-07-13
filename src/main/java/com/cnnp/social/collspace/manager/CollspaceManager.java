@@ -10,11 +10,14 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.cnnp.social.collspace.manager.dto.CollspaceDto;
+import com.cnnp.social.collspace.manager.dto.CollspaceTopicDto;
 import com.cnnp.social.collspace.manager.dto.CollspaceUserDto;
 import com.cnnp.social.collspace.repository.dao.CollspaceDao;
-
+import com.cnnp.social.collspace.repository.dao.CollspaceRamarkDao;
+import com.cnnp.social.collspace.repository.dao.CollspaceTopicDao;
 import com.cnnp.social.collspace.repository.dao.CollspaceUserDao;
 import com.cnnp.social.collspace.repository.entity.TCollspace;
+import com.cnnp.social.collspace.repository.entity.TCollspaceTopic;
 import com.cnnp.social.collspace.repository.entity.TCollspaceUser;
 
 
@@ -26,6 +29,10 @@ public class CollspaceManager {
 	private CollspaceDao collspaceDao;
 	@Autowired
 	private CollspaceUserDao collspaceUserDao;
+	@Autowired
+	private CollspaceTopicDao collspaceTopicDao;
+	@Autowired
+	private CollspaceRamarkDao collspaceRamarkDao;
 
 
 	private DozerBeanMapper mapper = new DozerBeanMapper();
@@ -141,5 +148,32 @@ public class CollspaceManager {
 		mapper.map(collspace, collspaceEntry);
 		collspaceEntry = collspaceDao.save(collspaceEntry);		
 
+	}
+	/**
+	 * //查询发帖信息 wzy
+	 * @param topicid
+	 * @return
+	 */
+	public List<CollspaceTopicDto> findtopiclist(String topicid){
+		List<CollspaceTopicDto> collspaceTopicDtos =new ArrayList<CollspaceTopicDto>();
+		List<TCollspaceTopic> topiclist = collspaceTopicDao.findtopiclist(topicid);
+		
+		for (TCollspaceTopic topiclists : topiclist) {
+			long backnum = collspaceRamarkDao.countbacknum(topiclists.getCollspaceid());
+			
+			CollspaceTopicDto collspaceTopicDto = new CollspaceTopicDto();
+			collspaceTopicDto.setBacknum(backnum);
+			mapper.map(topiclists, collspaceTopicDto);
+			collspaceTopicDtos.add(collspaceTopicDto);
+		}
+		return collspaceTopicDtos;
+	}
+	
+	@Transactional
+	public CollspaceTopicDto savetopic(TCollspaceTopic tCollspaceTopic){
+		CollspaceTopicDto collspaceTopicDto = new CollspaceTopicDto();
+		tCollspaceTopic =collspaceTopicDao.save(tCollspaceTopic);
+		mapper.map(tCollspaceTopic, collspaceTopicDto);
+		return collspaceTopicDto;
 	}
 }

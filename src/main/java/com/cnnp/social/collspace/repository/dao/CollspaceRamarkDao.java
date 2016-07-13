@@ -12,5 +12,7 @@ public interface CollspaceRamarkDao extends CrudRepository<TCollspaceRemark, Lon
 	@Query("select remark from TCollspaceRemark remark where remark.id = ?1")
 	TCollspaceRemark find(Long id);
 	//public List<TSupervision> search()
+	@Query("select count(1) from TCollspaceRemark remark where remark.collspaceid = ?1")
+	long countbacknum(Long collspaceid);
 
 }
