@@ -32,6 +32,7 @@ import com.cnnp.social.supervision.manager.dto.SupervisionSearch;
 import com.cnnp.social.supervision.manager.dto.SupervisionTraceDto;
 import com.cnnp.social.supervision.manager.dto.SupervisionUpdateStatusDto;
 import com.cnnp.social.supervision.repository.dao.SupervisionDao;
+import com.cnnp.social.supervision.repository.dao.SupervisionTraceDao;
 import com.cnnp.social.supervision.repository.dao.SupervisionUpdateStatusDao;
 import com.cnnp.social.supervision.repository.entity.TSupervision;
 import com.cnnp.social.supervision.repository.entity.TSupervisionTrace;
@@ -45,6 +46,8 @@ public class SupervisionManager {
 	private SupervisionDao supervisionDao;
 	@Autowired
 	private SupervisionUpdateStatusDao supervisionUpdateStatusDao;
+	@Autowired
+	private SupervisionTraceDao supervisionTraceDao;
 	
 	@Autowired
 	private BaseSetting setting;
@@ -73,6 +76,25 @@ public class SupervisionManager {
 		supervisionDao.save(supervisionEntry);
 
 	}
+	public SocialResponse trace(SupervisionTraceDto traceDto){
+		TSupervisionTrace trace=null;
+		if (traceDto != null) {
+			TSupervisionTrace supervisionTraceEntry = new TSupervisionTrace();
+			mapper.map(traceDto, supervisionTraceEntry);
+			trace=supervisionTraceDao.save(supervisionTraceEntry);
+		}
+		SocialResponse response=new SocialResponse();
+		if(trace!=null){
+			response.setMessagecode(200);
+			response.setMessage(new String[]{""+trace.getId()});
+		}else{
+			response.setMessagecode(500);
+			response.setMessage(new String[]{"update the supervision trace error."});
+		}
+		return response;
+		
+	}
+	
 	@Transactional
 	public SocialResponse postpone(long supervisionid,Date newDate,SupervisionUpdateStatusDto statusDto){
 		TSupervision supervisionEntry = supervisionDao.findOne(supervisionid);

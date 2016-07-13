@@ -19,6 +19,7 @@ import com.cnnp.social.base.SocialResponse;
 import com.cnnp.social.supervision.manager.SupervisionManager;
 import com.cnnp.social.supervision.manager.dto.SupervisionDto;
 import com.cnnp.social.supervision.manager.dto.SupervisionSearch;
+import com.cnnp.social.supervision.manager.dto.SupervisionTraceDto;
 import com.cnnp.social.supervision.manager.dto.SupervisionUpdateStatusDto;
 
 import io.swagger.annotations.Api;
@@ -46,6 +47,11 @@ public class SupervisionController {
 	public void save(@RequestBody SupervisionDto supervision) {
 		supervisionManger.save(supervision);
 
+	}
+	
+	@RequestMapping(value = "/trace/{id}", method = RequestMethod.PUT)
+	public @ResponseBody SocialResponse postpone(@RequestBody SupervisionTraceDto supervisionTraceDto) {
+		return supervisionManger.trace(supervisionTraceDto);
 	}
 	
 	@RequestMapping(value = "/postpone/{id}", method = RequestMethod.PUT)

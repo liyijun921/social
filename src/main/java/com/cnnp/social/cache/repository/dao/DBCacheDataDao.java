@@ -2,11 +2,13 @@ package com.cnnp.social.cache.repository.dao;
 
 import java.util.List;
 
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
 import com.cnnp.social.cache.repository.entity.TDicData;
-
+@CacheConfig(cacheNames = "cnnp.portal.socail.cache")
 public interface DBCacheDataDao extends CrudRepository<TDicData, Long> {
 	
 	/**
@@ -15,6 +17,7 @@ public interface DBCacheDataDao extends CrudRepository<TDicData, Long> {
 	 * @return TDicData
 	 */
 	@Query("select dic from TDicData dic where dic.dictype = ?1")
+	@Cacheable
 	List<TDicData> findByType(String dicType);
 	
 	/**
@@ -23,6 +26,7 @@ public interface DBCacheDataDao extends CrudRepository<TDicData, Long> {
 	 * @return TDicData
 	 */
 	@Query("select dic from TDicData dic where dic.parentid = ?1")
+	@Cacheable
 	List<TDicData> findByPID(long PID);
 	
 }
