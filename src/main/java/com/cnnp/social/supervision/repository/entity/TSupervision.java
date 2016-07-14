@@ -1,6 +1,8 @@
 package com.cnnp.social.supervision.repository.entity;
 
 import javax.persistence.*;
+
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -13,7 +15,7 @@ import java.util.List;
  */
 @Entity
 @Table(name = "T_SUPERVISION")
-public class TSupervision {
+public class TSupervision implements Serializable{
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SQ_Supervision")
