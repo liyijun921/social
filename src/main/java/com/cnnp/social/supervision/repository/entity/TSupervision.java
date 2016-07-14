@@ -17,7 +17,7 @@ public class TSupervision {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SQ_Supervision")
-	@SequenceGenerator(initialValue = 1, name = "SQ_Supervision", sequenceName = "SQ_Supervision")
+	@SequenceGenerator(initialValue = 10000, name = "SQ_Supervision", sequenceName = "SQ_Supervision")
 	private long id;
 
 	private String accountablename;
