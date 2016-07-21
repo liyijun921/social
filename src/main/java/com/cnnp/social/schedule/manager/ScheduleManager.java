@@ -37,6 +37,15 @@ public class ScheduleManager {
 		if (schedules == null) {
 			return new ArrayList<SchedulePeopleDto>();
 		}
+        long scheduleid = 0;		
+		if (schedules.get(0).getid() == null) {	
+			scheduleid = scheduleDao.findmaxid() +1;
+			for(ScheduleDto scheduledto : schedules){			
+				scheduledto.setid(scheduleid);
+				scheduledto.getPeople().setScheduleId(scheduleid);
+				scheduledto.getPeople().setid(scheduleid);
+			}
+		}
 	    List<SchedulePeopleDto> resultsDtos=new ArrayList<SchedulePeopleDto>();	
 	    List<TSchedule> scheduletemps = scheduleDao.finddate(startdate, enddate);
 		Boolean peopleflg = false;
@@ -105,7 +114,15 @@ public class ScheduleManager {
 		if (schedules == null) {
 			return;
 		}
-			
+		long scheduleid = 0;
+		
+		if (schedules.get(0).getid() == null) {	
+			scheduleid = scheduleDao.findmaxid() +1;
+			for(ScheduleDto scheduledto : schedules){			
+				scheduledto.setid(scheduleid);
+				scheduledto.getPeople().setScheduleId(scheduleid);
+			}
+		}
 		List<TSchedulePeople> peoples = schedulepeopleDao.find(schedules.get(0).getid());
 		if (peoples != null) {			
 			for(TSchedulePeople people : peoples){
@@ -126,6 +143,7 @@ public class ScheduleManager {
 				if (scheduleEntry.getPeople() == null) {
 					scheduleEntry.setPeople(new ArrayList<TSchedulePeople>());				
 				}
+				
 				peoplesEntry.add(schedulepeopleEntry);
 				scheduleEntry.getPeople().addAll(peoplesEntry);
 			}			
