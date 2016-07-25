@@ -3,6 +3,7 @@ package com.cnnp.social.schedule.manager;
 
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.dozer.DozerBeanMapper;
@@ -44,6 +45,7 @@ public class ScheduleManager {
 				scheduledto.setid(scheduleid);
 				scheduledto.getPeople().setScheduleId(scheduleid);
 				scheduledto.getPeople().setid(scheduleid);
+				//scheduledto.setCreatetime(new Date());
 			}
 		}
 	    List<SchedulePeopleDto> resultsDtos=new ArrayList<SchedulePeopleDto>();	
@@ -121,6 +123,7 @@ public class ScheduleManager {
 			for(ScheduleDto scheduledto : schedules){			
 				scheduledto.setid(scheduleid);
 				scheduledto.getPeople().setScheduleId(scheduleid);
+				scheduledto.setCreatetime(new Date());
 			}
 		}
 		List<TSchedulePeople> peoples = schedulepeopleDao.find(schedules.get(0).getid());
@@ -394,4 +397,12 @@ public class ScheduleManager {
 		}		
 		return scheduleDtos;			
 	}	
+	public void editSchedulescope(long id,String scope ) {		
+		TSchedule scheduleEntry = scheduleDao.findOne(id);
+		if(scheduleEntry!=null){			
+			scheduleEntry.setScope(scope);
+			scheduleDao.save(scheduleEntry);
+		}
+		return;
+	}
 }

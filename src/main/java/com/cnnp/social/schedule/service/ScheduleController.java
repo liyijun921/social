@@ -67,9 +67,15 @@ public class ScheduleController {
 	public @ResponseBody List<ScheduleDto> viewSchedulePeoples(@PathVariable("id") Long id) {
 		return scheduleManger.findSchedulepeoples(id);
 	}
+	
 	@RequestMapping(value = "/scheduledelone/{id}", method = RequestMethod.DELETE)
 	public Boolean del(@PathVariable("id") Long id) {
 		return scheduleManger.delOneSchedule(id);
+	}
+	
+	@RequestMapping(value = "/editschedulscope", method = RequestMethod.GET)
+	public void editSchedulescope(@RequestParam Long id,@RequestParam String scope) {
+		 scheduleManger.editSchedulescope(id,scope);
 	}
 	//@RequestMapping(value = "/scheduledelone/{id}", method = RequestMethod.POST)
 	//public void del(@PathVariable("id") Long id) {
