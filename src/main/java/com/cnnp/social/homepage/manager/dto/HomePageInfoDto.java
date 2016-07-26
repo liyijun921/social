@@ -8,8 +8,6 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 import com.cnnp.social.homepage.repository.entity.THomePageAdmin;
-import com.cnnp.social.schedule.manager.dto.SchedulePeopleDto;
-
 
 public class HomePageInfoDto {
 	private long id; //ID

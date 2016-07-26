@@ -7,14 +7,13 @@ import java.util.List;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-import com.cnnp.social.homepage.repository.entity.THomePageAdmin;
 import com.cnnp.social.homepage.repository.entity.THomePageFormIn;
 
 
 public class HomePageFormDto {
 	private long id; //ID
 	private long hpid; //ID
-	private long columnid; //ID
+	//private long columnid; //ID
 	private String name;//日程标题
 	private String styleid;//用户id
 	private String status;//用户名	
@@ -65,13 +64,13 @@ public class HomePageFormDto {
 		this.createusername = createusername;
 	}
 
-	public long getColumnid() {
-		return columnid;
-	}
+	//public long getColumnid() {
+	//	return columnid;
+	//}
 
-	public void setColumnid(long columnid) {
-		this.columnid = columnid;
-	}
+	//public void setColumnid(long columnid) {
+	//	this.columnid = columnid;
+	//}
 
 	public String getStyleid() {
 		return styleid;

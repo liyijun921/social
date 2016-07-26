@@ -9,7 +9,7 @@ import javax.persistence.TemporalType;
 
 public class HomePageFormInDto {
 	private long id; //ID
-	private long hpid; //ID
+	private long columnid; //ID
 	private long formid; //ID
 	private String name;//日程标题
 	private String form_inid;//日程类型
@@ -27,12 +27,12 @@ public class HomePageFormInDto {
 	public void setid(Long id) {
 		this.id = id;
 	}
-	public long getHpid() {
-		return hpid;
+	public long getColumnid() {
+		return columnid;
 	}
 
-	public void setHpid(long hpid) {
-		this.hpid = hpid;
+	public void setColumnid(long columnid) {
+		this.columnid = columnid;
 	}
 	public String getName() {
 		return name;

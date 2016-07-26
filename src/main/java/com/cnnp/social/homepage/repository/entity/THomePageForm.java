@@ -1,9 +1,6 @@
 package com.cnnp.social.homepage.repository.entity;
 
 import javax.persistence.*;
-
-import com.cnnp.social.schedule.repository.entity.TSchedulePeople;
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -18,7 +15,7 @@ public class THomePageForm{
 	@Id
 	private long id; //ID
 	private long hpid; //ID
-	private long columnid; //ID
+	//private long columnid; //ID
 	private String name;//日程标题
 	private String styleid;//用户id
 	private String status;//用户名	
@@ -28,9 +25,9 @@ public class THomePageForm{
 	private String createusername;//创建用户名	
 	@Temporal(TemporalType.DATE)
 	private Date updatetime;//创建时间	
-	//@OneToMany(cascade = { CascadeType.ALL })
-	//@JoinColumn(name = "formid")
-	//private List<THomePageFormIn> formin = new ArrayList<THomePageFormIn>();
+	@OneToMany(cascade = { CascadeType.ALL })
+	@JoinColumn(name = "formid")
+	private List<THomePageFormIn> formin = new ArrayList<THomePageFormIn>();
 	
 	public THomePageForm() {
 	}
@@ -74,13 +71,13 @@ public class THomePageForm{
 		this.createusername = createusername;
 	}
 
-	public long getColumnid() {
-		return this.columnid;
-	}
+	//public long getColumnid() {
+	//	return this.columnid;
+	//}
 
-	public void setColumnid(long columnid) {
-		this.columnid = columnid;
-	}
+	//public void setColumnid(long columnid) {
+	//	this.columnid = columnid;
+	//}
 
 	public String getStyleid() {
 		return this.styleid;
@@ -120,11 +117,11 @@ public class THomePageForm{
 	public void setUpdatetime(Date updatetime) {
 		this.updatetime = updatetime;
 	}
-	//public List<THomePageFormIn> getFormin() {
-	//	return this.formin;
-	//}
+	public List<THomePageFormIn> getFormin() {
+		return this.formin;
+	}
 
-	//public void setFormin(List<THomePageFormIn> formin) {
-	//	this.formin = formin;
-	//}
+	public void setFormin(List<THomePageFormIn> formin) {
+		this.formin = formin;
+	}
 }
