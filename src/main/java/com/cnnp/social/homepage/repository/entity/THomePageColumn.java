@@ -2,7 +2,6 @@ package com.cnnp.social.homepage.repository.entity;
 
 import javax.persistence.*;
 
-import com.cnnp.social.schedule.repository.entity.TSchedulePeople;
 
 import java.util.ArrayList;
 import java.util.Date;

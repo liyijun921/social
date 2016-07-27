@@ -10,15 +10,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.cnnp.social.collspace.manager.dto.CollspaceDto;
 import com.cnnp.social.homepage.manager.HomePageManager;
 import com.cnnp.social.homepage.manager.dto.HomePageColumnDto;
 import com.cnnp.social.homepage.manager.dto.HomePageFormDto;
 import com.cnnp.social.homepage.manager.dto.HomePageInfoDto;
 import com.cnnp.social.homepage.manager.dto.HomePageStyleDto;
-import com.cnnp.social.plan.manager.PlanManager;
-import com.cnnp.social.plan.manager.dto.PlanInfoDto;
-import com.cnnp.social.schedule.manager.dto.ScheduleDto;
+
 
 
 @RestController
@@ -54,32 +51,39 @@ public class HomePageController {
 		hpManger.saveColumn(column); 
 	}
 	@RequestMapping(value = "/homepagecolumn/edit", method = RequestMethod.POST)
-	public void edit(@RequestBody HomePageColumnDto column) {
+	public void columnedit(@RequestBody HomePageColumnDto column) {
 		hpManger.editColumn(column); 
 	}
 	@RequestMapping(value = "/homepagecolumn/edittype", method = RequestMethod.GET)
-	public void edittype(@RequestParam long hpid,@RequestParam long columnid,@RequestParam String type) {
+	public void editcolumntype(@RequestParam long hpid,@RequestParam long columnid,@RequestParam String type) {
 		hpManger.editColumn(hpid,columnid,type); 
 	}
 	
-	@RequestMapping(value = "/homepagefrom", method = RequestMethod.GET)
+	@RequestMapping(value = "/homepageform", method = RequestMethod.GET)
 	public @ResponseBody List<HomePageFormDto> viewForm(@RequestParam long hpid) {
-		return hpManger.findFrom(hpid);
+		return hpManger.findForm(hpid);
 	}
 	
-	@RequestMapping(value = "/homepagefrom/add", method = RequestMethod.POST)
-	public void save(@RequestBody HomePageFormDto from) {
-		hpManger.saveFrom(from); 
+	@RequestMapping(value = "/homepageform/add", method = RequestMethod.POST)
+	public void save(@RequestBody HomePageFormDto form) {
+		hpManger.saveForm(form); 
 	}
-	@RequestMapping(value = "/homepagestyle", method = RequestMethod.GET)
-	public @ResponseBody List<HomePageStyleDto> viewStyle(@RequestParam long hpid) {
+	@RequestMapping(value = "/homepagestyle/{hpid}", method = RequestMethod.GET)
+	public @ResponseBody List<HomePageStyleDto> viewStyle(@PathVariable("hpid") long hpid) {
 		return hpManger.findStyle(hpid);
 	}
 	@RequestMapping(value = "/homepagestyle/add", method = RequestMethod.POST)
 	public void save(@RequestBody HomePageStyleDto style) {
 		hpManger.saveStyle(style); 
 	}
-	
+	@RequestMapping(value = "/homepagestyle/edit", method = RequestMethod.POST)
+	public void styleedit(@RequestBody HomePageStyleDto style) {
+		hpManger.editHomePageStyle(style); 
+	}
+	@RequestMapping(value = "/homepagestyle/edittype", method = RequestMethod.GET)
+	public void editstyletype(@RequestParam long styleid,@RequestParam String type) {
+		hpManger.editHomePageStyle(styleid,type); 
+	}
 	//@RequestMapping(value = "/test", method = RequestMethod.GET)
 	//public @ResponseBody List<HomePageFormDto> viewtest(@RequestParam long hpid) {
 	//	return hpManger.findFrom(hpid);

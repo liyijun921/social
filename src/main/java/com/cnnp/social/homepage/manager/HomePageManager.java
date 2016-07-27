@@ -1,6 +1,7 @@
 package com.cnnp.social.homepage.manager;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.dozer.DozerBeanMapper;
@@ -8,11 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.transaction.annotation.Transactional;
-
-import com.cnnp.social.collspace.manager.dto.CollspaceDto;
-import com.cnnp.social.collspace.manager.dto.CollspaceUserDto;
-import com.cnnp.social.collspace.repository.entity.TCollspace;
-import com.cnnp.social.collspace.repository.entity.TCollspaceUser;
 import com.cnnp.social.homepage.manager.dto.HomePageAdminDto;
 import com.cnnp.social.homepage.manager.dto.HomePageColumnDto;
 import com.cnnp.social.homepage.manager.dto.HomePageFormDto;
@@ -22,27 +18,19 @@ import com.cnnp.social.homepage.repository.dao.HomePageAdminDao;
 import com.cnnp.social.homepage.repository.dao.HomePageColumnDao;
 import com.cnnp.social.homepage.repository.dao.HomePageFormDao;
 import com.cnnp.social.homepage.repository.dao.HomePageFormInDao;
+import com.cnnp.social.homepage.repository.dao.HomePageImgDao;
 import com.cnnp.social.homepage.repository.dao.HomePageInfoDao;
 import com.cnnp.social.homepage.repository.dao.HomePageStyleDao;
+import com.cnnp.social.homepage.repository.dao.HomePageStyleOrderDao;
 import com.cnnp.social.homepage.repository.entity.THomePageAdmin;
 import com.cnnp.social.homepage.repository.entity.THomePageColumn;
 import com.cnnp.social.homepage.repository.entity.THomePageForm;
 import com.cnnp.social.homepage.repository.entity.THomePageFormIn;
+import com.cnnp.social.homepage.repository.entity.THomePageImg;
 import com.cnnp.social.homepage.repository.entity.THomePageInfo;
 import com.cnnp.social.homepage.repository.entity.THomePageStyle;
-import com.cnnp.social.plan.manager.dto.PlanInfoDto;
-import com.cnnp.social.plan.manager.dto.PlanmodifyInfoDto;
-import com.cnnp.social.plan.manager.dto.PlantaskInfoDto;
-import com.cnnp.social.plan.repository.dao.PlanInfoDao;
-import com.cnnp.social.plan.repository.dao.PlanmodifyInfoDao;
-import com.cnnp.social.plan.repository.dao.PlantaskInfoDao;
-import com.cnnp.social.plan.repository.entity.TPlanInfo;
-import com.cnnp.social.plan.repository.entity.TPlanmodifyInfo;
-import com.cnnp.social.plan.repository.entity.TPlantaskInfo;
-import com.cnnp.social.schedule.manager.dto.ScheduleDto;
-import com.cnnp.social.schedule.manager.dto.SchedulePeopleDto;
-import com.cnnp.social.schedule.repository.entity.TSchedule;
-import com.cnnp.social.schedule.repository.entity.TSchedulePeople;
+import com.cnnp.social.homepage.repository.entity.THomePageStyleOrder;
+
 
 
 @EnableTransactionManagement
@@ -61,6 +49,10 @@ public class HomePageManager {
 	private HomePageFormInDao homepageForminDao;
 	@Autowired
 	private HomePageStyleDao homepageStyleDao;
+	@Autowired
+	private HomePageImgDao homepageimgDao;
+	@Autowired
+	private HomePageStyleOrderDao homepagestyleorderDao;
 	
 	private DozerBeanMapper mapper = new DozerBeanMapper();
 	
@@ -70,23 +62,22 @@ public class HomePageManager {
 			return;
 		}
 		long hpid = homepageInfoDao.findmaxid()+1;
-		long id = homepageAdminDao.findmaxid();
+		long id = homepageAdminDao.findmaxid()+1;
+		Date now = new Date(); 
 		homepage.setid(hpid);
-		
+		homepage.setUpdatetime(now);
 		THomePageInfo hpEntry = new THomePageInfo();
 		mapper.map(homepage, hpEntry);
 		List<THomePageAdmin> homepageadminEntries = new ArrayList<THomePageAdmin>();
-		int i=1;
-		for(THomePageAdmin admin : hpEntry.getAdmin()){					
-		    id = id+i;
+		for(THomePageAdmin admin : hpEntry.getAdmin()){	
 			admin.setid(id);
 			admin.setHpid(hpid);
+			admin.setUpdatetime(now);
 			homepageadminEntries.add(admin);
-			i++;	
+			 id = id+1;
 		}
 		hpEntry.setAdmin(homepageadminEntries);
 		homepageInfoDao.save(hpEntry);
-		//homepageAdminDao.save(homepageadminEntries);
 		return;
 	}
 	public void editHomePage(HomePageInfoDto homepage) {
@@ -94,18 +85,19 @@ public class HomePageManager {
 			return;
 		}
 		long id = homepageAdminDao.findmaxid()+1;
+		Date now = new Date();
+		homepage.setUpdatetime(now);
 		THomePageInfo hpEntry = new THomePageInfo();
 		mapper.map(homepage, hpEntry);
 		for(THomePageAdmin admin : hpEntry.getAdmin()){	
 			homepageAdminDao.delete(admin.getid());	
 		}		
 		List<THomePageAdmin> homepageadminEntries = new ArrayList<THomePageAdmin>();
-		int i=1;
 		for(THomePageAdmin admin : hpEntry.getAdmin()){					
-		    id = id+i;
+			admin.setUpdatetime(now);
 			admin.setid(id);
 			homepageadminEntries.add(admin);
-			i++;	
+			id = id+1;
 		}
 		hpEntry.setAdmin(homepageadminEntries);
 		homepageInfoDao.save(hpEntry);
@@ -117,6 +109,7 @@ public class HomePageManager {
 		if(homepageaEntry==null){
 			return;
 		}
+		
 		if(type.equals("del")){			
 			homepageInfoDao.delete(hpid);	
 			return;
@@ -127,6 +120,8 @@ public class HomePageManager {
 		if(type.equals("stop")){			
 			homepageaEntry.setStatus("1");			
 		}
+		Date now = new Date();
+		homepageaEntry.setUpdatetime(now);
 		homepageInfoDao.save(homepageaEntry);
 		return;
 	}
@@ -180,24 +175,21 @@ public class HomePageManager {
 		}
 		long adminid = homepageAdminDao.findmaxid()+1;
 		long columnid = homepageColumnDao.findmaxid()+1;
+		Date now = new Date(); 
 		column.setid(columnid);
-		
+		column.setUpdatetime(now);
 		THomePageColumn columnEntry = new THomePageColumn();
 		mapper.map(column, columnEntry);
 		List<THomePageAdmin> homepageadminEntries = new ArrayList<THomePageAdmin>();
-		int i=1;
 		for(THomePageAdmin admin : columnEntry.getAdmin()){			
 			admin.setid(adminid);
-			admin.setColumnid(columnid);;
+			admin.setColumnid(columnid);
+			admin.setUpdatetime(now);
 			homepageadminEntries.add(admin);
-			adminid = adminid+i;
-			i++;	
+			adminid = adminid+1;
 		}
 		columnEntry.setAdmin(homepageadminEntries);	
-		
-		
 		homepageColumnDao.save(columnEntry);
-		//homepageAdminDao.save(homepageadminEntries);
 		return;
 	}
 	public void editColumn(HomePageColumnDto column) {
@@ -205,18 +197,21 @@ public class HomePageManager {
 			return;
 		}
 		long adminid = homepageAdminDao.findmaxid()+1;
+		Date now = new Date();
+		column.setUpdatetime(now);
 		THomePageColumn columnEntry = new THomePageColumn();
 		mapper.map(column, columnEntry);
 		for(THomePageAdmin admin : column.getAdmin()){	
 			homepageAdminDao.delete(admin.getid());	
 		}
 		List<THomePageAdmin> homepageadminEntries = new ArrayList<THomePageAdmin>();
-		int i=1;
+		
 		for(THomePageAdmin admin : columnEntry.getAdmin()){			
 			admin.setid(adminid);
+			admin.setUpdatetime(now);
 			homepageadminEntries.add(admin);
-			adminid = adminid+i;
-			i++;	
+			adminid = adminid+1;
+			
 		}
 		columnEntry.setAdmin(homepageadminEntries);
 		homepageColumnDao.save(columnEntry);
@@ -229,6 +224,7 @@ public class HomePageManager {
 		if(columnEntry==null){
 			return;
 		}
+		
 		if(type.equals("del")){			
 			homepageColumnDao.delete(columnid);	
 			return;
@@ -239,12 +235,14 @@ public class HomePageManager {
 		if(type.equals("stop")){			
 			columnEntry.setStatus("1");			
 		}
+		Date now = new Date(); 
+		columnEntry.setUpdatetime(now);
 		homepageColumnDao.save(columnEntry);
 		return;
 	}
 	
 	
-	public List<HomePageFormDto> findFrom(long hpid){
+	public List<HomePageFormDto> findForm(long hpid){
 		List<THomePageForm> homepagefromEntries =  homepageFormDao.find(hpid);
 		if(homepagefromEntries==null){
 			return new ArrayList<HomePageFormDto>();
@@ -261,15 +259,29 @@ public class HomePageManager {
 		return homepagefromDtos;		
 	}
 	
-	public void saveFrom(HomePageFormDto from) {
-		if (from == null) {
+	public void saveForm(HomePageFormDto form) {
+		if (form == null) {
 			return;
 		}
-		long fromid = homepageFormDao.findmaxid()+1;		
-		from.setid(fromid);		
-		THomePageForm fromEntry = new THomePageForm();
-		mapper.map(from, fromEntry);	
-		homepageFormDao.save(fromEntry);		
+		long formid = homepageFormDao.findmaxid()+1;
+		long forminid = homepageForminDao.findmaxid()+1;
+		Date now = new Date(); 
+		form.setid(formid);		
+		form.setUpdatetime(now);
+		THomePageForm formEntry = new THomePageForm();
+		mapper.map(form, formEntry);	
+		List<THomePageFormIn> homepageforminEntries = new ArrayList<THomePageFormIn>();
+
+		for(THomePageFormIn formin : formEntry.getFormin()){			
+			formin.setFormid(formid);
+			formin.setid(forminid);
+			formin.setUpdatetime(now);
+			homepageforminEntries.add(formin);
+			forminid = forminid+1;
+			
+		}
+		formEntry.setFormin(homepageforminEntries);
+		homepageFormDao.save(formEntry);		
 		return;
 	}
 	
@@ -281,6 +293,10 @@ public class HomePageManager {
 		List<HomePageStyleDto> homepagestyleDtos=new ArrayList<HomePageStyleDto>();
 		
 		for(THomePageStyle Style : homepagestyleEntries){
+			List<THomePageStyleOrder> homepagestyleorderEntries =  homepagestyleorderDao.find(Style.getid());
+			List<THomePageImg> homepageimgEntries =  homepageimgDao.find(Style.getid());
+			Style.setOrder(homepagestyleorderEntries);
+			Style.setImg(homepageimgEntries);
 			HomePageStyleDto dto=new HomePageStyleDto();
 			mapper.map(Style, dto);	
 			homepagestyleDtos.add(dto);
@@ -293,14 +309,85 @@ public class HomePageManager {
 			return;
 		}
 		long styleid = homepageStyleDao.findmaxid()+1;
-		
-		style.setid(styleid);
-		
+		long imgid = homepageimgDao.findmaxid()+1;
+		long orderid = homepagestyleorderDao.findmaxid()+1;
+		Date now = new Date(); 
+		style.setid(styleid);	
+		style.setUpdatetime(now);
 		THomePageStyle styleEntry = new THomePageStyle();
 		mapper.map(style, styleEntry);
-	
+		List<THomePageStyleOrder> homepagestyleorderEntries = new ArrayList<THomePageStyleOrder>();
+		List<THomePageImg> homepageimgEntries = new ArrayList<THomePageImg>();
+		for(THomePageStyleOrder order : styleEntry.getOrder()){			
+			order.setid(orderid);
+			order.setStyleid(styleid);			
+			homepagestyleorderEntries.add(order);
+			orderid = orderid+1;			
+		}
+		for(THomePageImg img : styleEntry.getImg()){			
+			img.setid(imgid);
+			img.setStyleid(styleid);
+			img.setUpdatetime(now);
+			homepageimgEntries.add(img);
+			imgid = imgid+1;			
+		}
+		homepageStyleDao.save(styleEntry);		
+		return;
+	}
+	public void editHomePageStyle(HomePageStyleDto style) {
+		if (style == null) {
+			return;
+		}
+		long imgid = homepageimgDao.findmaxid()+1;
+		long orderid = homepagestyleorderDao.findmaxid()+1;
+		Date now = new Date();
+		style.setUpdatetime(now);
+		THomePageStyle styleEntry = new THomePageStyle();
+		mapper.map(style, styleEntry);
+		for(THomePageImg img : style.getImg()){	
+			homepageimgDao.delete(img.getid());	
+		}
+		for(THomePageStyleOrder order : style.getOrder()){	
+			homepageimgDao.delete(order.getid());	
+		}
+		List<THomePageStyleOrder> homepagestyleorderEntries = new ArrayList<THomePageStyleOrder>();
+		List<THomePageImg> homepageimgEntries = new ArrayList<THomePageImg>();
+		for(THomePageStyleOrder order : styleEntry.getOrder()){			
+			order.setid(orderid);	
+			homepagestyleorderEntries.add(order);
+			orderid = orderid+1;			
+		}
+		for(THomePageImg img : styleEntry.getImg()){			
+			img.setid(imgid);
+			img.setUpdatetime(now);
+			homepageimgEntries.add(img);
+			imgid = imgid+1;			
+		}
+		styleEntry.setImg(homepageimgEntries);
+		styleEntry.setOrder(homepagestyleorderEntries);
 		homepageStyleDao.save(styleEntry);
+		return;
+	}
+	
+	public void editHomePageStyle(long styleid,String type) {
+		THomePageStyle styleEntry =  homepageStyleDao.findOne(styleid);
+		if(styleEntry==null){
+			return;
+		}
 		
+		if(type.equals("del")){			
+			homepageStyleDao.delete(styleid);	
+			return;
+		}
+		if(type.equals("start")){			
+			styleEntry.setStatus("0");			
+		}
+		if(type.equals("stop")){			
+			styleEntry.setStatus("1");			
+		}
+		Date now = new Date();
+		styleEntry.setUpdatetime(now);
+		homepageStyleDao.save(styleEntry);
 		return;
 	}
 }
