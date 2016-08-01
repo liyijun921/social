@@ -50,7 +50,7 @@ public class SupervisionController {
 	}
 	
 	@RequestMapping(value = "/trace/{id}", method = RequestMethod.PUT)
-	public @ResponseBody SocialResponse postpone(@RequestBody SupervisionTraceDto supervisionTraceDto) {
+	public @ResponseBody SocialResponse trace(@RequestBody SupervisionTraceDto supervisionTraceDto) {
 		return supervisionManger.trace(supervisionTraceDto);
 	}
 	

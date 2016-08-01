@@ -2,6 +2,7 @@ package com.cnnp.social.supervision.repository.entity;
 
 import java.util.Date;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -36,6 +37,7 @@ public class TSupervisionTrace {
 	private long supervisionid;
 	private String description;
 
+	@Column(columnDefinition = "DATE DEFAULT SYSDATE",insertable=false) 
 	@Temporal(TemporalType.DATE)
 	private Date updatetime;
 	

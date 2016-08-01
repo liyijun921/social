@@ -2,6 +2,8 @@ package com.cnnp.social.supervision.repository.entity;
 
 import javax.persistence.*;
 
+import org.springframework.cache.annotation.Cacheable;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -56,6 +58,7 @@ public class TSupervision implements Serializable{
 
 	private int status;
 
+	@Column(columnDefinition = "DATE DEFAULT SYSDATE",insertable=false) 
 	@Temporal(TemporalType.DATE)
 	private Date updatetime;
 
@@ -225,7 +228,7 @@ public class TSupervision implements Serializable{
 	public void setUrgency(BigDecimal urgency) {
 		this.urgency = urgency;
 	}
-
+	
 	public List<TSupervisionTrace> getTraces() {
 		return traces;
 	}
