@@ -23,6 +23,8 @@ public class NewsDto {
     private String linkAddr;
     private boolean isLatest=false;
     private CardDto belongCard;
+    private String newsfield;
+    private String orgName;
     private int id;
 
     public String getTitle() {
@@ -112,5 +114,19 @@ public class NewsDto {
 	public void setId(int id) {
 		this.id = id;
 	}
-    
+	public String getNewsfield() {
+        return newsfield;
+    }
+
+    public void setNewsfield(String newsfield) {
+        this.newsfield = newsfield;
+    }
+	public String getOrgName() {
+        return orgName;
+    }
+
+    public void setOrgName(String orgName) {
+        this.orgName = orgName;
+    }
+
 }

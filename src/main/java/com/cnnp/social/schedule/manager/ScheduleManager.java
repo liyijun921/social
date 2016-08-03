@@ -21,6 +21,7 @@ import com.cnnp.social.schedule.repository.dao.SchedulePeopleDao;
 import com.cnnp.social.schedule.repository.entity.TSchedule;
 import com.cnnp.social.schedule.repository.entity.TSchedulePeople;
 
+
 @EnableTransactionManagement
 @Component
 
@@ -29,7 +30,6 @@ public class ScheduleManager {
 	private ScheduleDao scheduleDao;
 	@Autowired
 	private SchedulePeopleDao schedulepeopleDao;
-	
 	private DozerBeanMapper mapper = new DozerBeanMapper();
 	
 	
@@ -38,58 +38,46 @@ public class ScheduleManager {
 		if (schedules == null) {
 			return new ArrayList<SchedulePeopleDto>();
 		}
-        long scheduleid = 0;		
+		List<SchedulePeopleDto> resultsDtos=new ArrayList<SchedulePeopleDto>();	
+		Date now = new Date(); 
+        long scheduleid = 0;	
+        Boolean peopleflg = false;
 		if (schedules.get(0).getid() == null) {	
 			scheduleid = scheduleDao.findmaxid() +1;
-			for(ScheduleDto scheduledto : schedules){			
+			for(ScheduleDto scheduledto : schedules){		
+				List<TSchedulePeople> peopletemps = schedulepeopleDao.finduser(startdate, enddate,scheduledto.getPeople().getUserid());
+				if (peopletemps.size() != 0) {
+					resultsDtos.add(scheduledto.getPeople());
+					peopleflg = true;
+				}
 				scheduledto.setid(scheduleid);
 				scheduledto.getPeople().setScheduleId(scheduleid);
 				scheduledto.getPeople().setid(scheduleid);
-				//scheduledto.setCreatetime(new Date());
+				scheduledto.getPeople().setStartdate(scheduledto.getStartdate());
+				scheduledto.getPeople().setEnddate(scheduledto.getEnddate());
+				scheduledto.setCreatetime(now);
 			}
+		}else{
+			for(ScheduleDto scheduledto : schedules){		
+				List<TSchedulePeople> peopletemps = schedulepeopleDao.finduser(startdate, enddate,scheduledto.getPeople().getUserid());
+				if (peopletemps.size() != 0) {
+					for(TSchedulePeople peopletemp : peopletemps){
+						if (scheduledto.getid() != peopletemp.getid()) {
+							resultsDtos.add(scheduledto.getPeople());
+							peopleflg = true;
+						}
+					}										
+				}
+			}	
 		}
-	    List<SchedulePeopleDto> resultsDtos=new ArrayList<SchedulePeopleDto>();	
-	    List<TSchedule> scheduletemps = scheduleDao.finddate(startdate, enddate);
-		Boolean peopleflg = false;
-	    if (scheduletemps != null) {
-	    	for(TSchedule scheduletemp1 : scheduletemps){
-	    	    for(ScheduleDto scheduletemp : schedules){
-	    	    	
-	    	    	System.out.println("scheduletemp1.getid()=" + scheduletemp1.getid());  
-	    	    	System.out.println("scheduletemp.getid()=" + scheduletemp.getid()); 
-	    	    	if (scheduletemp1.getid() != scheduletemp.getid()) {
-	    	    		TSchedulePeople people = schedulepeopleDao.finduseridone(scheduletemp1.getid(),scheduletemp.getPeople().getUserid());
-		 	    		if (people != null) {
-		 	    			Boolean flg = true;		 	    			 
-		 	    			for(SchedulePeopleDto resultsDto : resultsDtos){	 
-		 	    				if (resultsDto.getUserid().equals(people.getUserid())) {
-		 	    					flg = false;
-		 	    				}
-		 	    			}
-		 	    			
-		 	    			if (flg) {	
-		 	    				SchedulePeopleDto dto=new SchedulePeopleDto();				
-			 				    mapper.map(scheduletemp.getPeople(), dto);
-			 	    			resultsDtos.add(dto);
-			 	    			peopleflg = true;
-		 	    			}		 	    			
-		 	    		}
-	    	    	}	 	    		
-	 		    }	 	    	
-	 	    }
-	    }
+	    
 	    if (peopleflg) {	
 	    	return resultsDtos;
 	    }
 	    
 		List<TSchedulePeople> peoples = schedulepeopleDao.find(schedules.get(0).getid());
-		if (peoples != null) {			
-			//schedulepeopleDao.deleteid(schedules.get(0).getid());
-			for(TSchedulePeople people : peoples){
-				SchedulePeopleDto dto=new SchedulePeopleDto();				
-			    mapper.map(people, dto);
-			    schedulepeopleDao.delete(dto.getid());   			   
-			}	
+		if (peoples != null) {					
+			schedulepeopleDao.delete(peoples);   
 		}
 		List<TSchedulePeople> peoplesEntry = new  ArrayList<TSchedulePeople>();
 		TSchedule scheduleEntry = new TSchedule();
@@ -108,7 +96,9 @@ public class ScheduleManager {
 					
 		}
 		scheduleDao.save(scheduleEntry);
+		
 	    return resultsDtos;
+	
 	}
 	
 	
@@ -127,12 +117,15 @@ public class ScheduleManager {
 			}
 		}
 		List<TSchedulePeople> peoples = schedulepeopleDao.find(schedules.get(0).getid());
-		if (peoples != null) {			
+		if (peoples != null) {	
+			schedulepeopleDao.delete(peoples); 
+			/**
 			for(TSchedulePeople people : peoples){
 				SchedulePeopleDto dto=new SchedulePeopleDto();				
 			    mapper.map(people, dto);
 			    schedulepeopleDao.delete(dto.getid());   			   
 			}	
+			*/
 		}
 		
 		List<TSchedulePeople> peoplesEntry = new  ArrayList<TSchedulePeople>();
@@ -214,7 +207,7 @@ public class ScheduleManager {
 	public List<ScheduleDto> findUserDateSchedule(List<ScheduleUserIDDto> userids,String startdate,String enddate){
 		List<ScheduleDto> scheduleDtos=new ArrayList<ScheduleDto>();
 		for(ScheduleUserIDDto userid : userids){
-			List<TSchedulePeople> schedulepeopleEntries = schedulepeopleDao.finduserid(userid.getUserid());
+			List<TSchedulePeople> schedulepeopleEntries = schedulepeopleDao.finduserid(userid.getUserid(),startdate,enddate);
 			for(TSchedulePeople user : schedulepeopleEntries){
 				SchedulePeopleDto schedulePeopleDto = new SchedulePeopleDto();
 				mapper.map(user, schedulePeopleDto);
@@ -231,7 +224,7 @@ public class ScheduleManager {
 	}
 	public List<ScheduleDto> findUserDateSchedule(String userid,String startdate,String enddate){
 		List<ScheduleDto> scheduleDtos=new ArrayList<ScheduleDto>();
-			List<TSchedulePeople> schedulepeopleEntries = schedulepeopleDao.finduserid(userid);
+			List<TSchedulePeople> schedulepeopleEntries = schedulepeopleDao.finduserid(userid,startdate,enddate);
 			for(TSchedulePeople user : schedulepeopleEntries){
 				SchedulePeopleDto schedulePeopleDto = new SchedulePeopleDto();
 				mapper.map(user, schedulePeopleDto);
@@ -246,6 +239,7 @@ public class ScheduleManager {
 				
 		return scheduleDtos;			
 	}
+	
 	public List<ScheduleDto> findCompanySchedule(String companyid,String peopletype,String startdate,String enddate){
 		List<TSchedulePeople> schedulepeopleEntries = schedulepeopleDao.findcompany(companyid, peopletype);
 		if(schedulepeopleEntries==null){
@@ -332,7 +326,7 @@ public class ScheduleManager {
 		if(scheduleEntry==null){
 			return false;
 		}
-		
+		/**
 		List<TSchedulePeople> peoples = schedulepeopleDao.find(id);
 		if (peoples != null ) {	
 			for(TSchedulePeople people : peoples){
@@ -341,25 +335,25 @@ public class ScheduleManager {
 			    schedulepeopleDao.delete(dto.getid());   			   
 			}			
 		}		
+		*/
 		scheduleDao.delete(id);
 		return true;
 	}	
-	
 	public List<ScheduleDto> findCompanySchedules(String userid,String companyid,String collid,String type,String startdate,String enddate){
 		
 		List<TSchedulePeople> schedulepeopleEntries = new ArrayList<TSchedulePeople>();
 		List<ScheduleDto> scheduleDtos=new ArrayList<ScheduleDto>();
 		if(type.equals("0")){
-			 schedulepeopleEntries = schedulepeopleDao.findcompany(companyid, "1");
+			 schedulepeopleEntries = schedulepeopleDao.findcompanydate(companyid, "1",startdate,enddate);
 			 if(schedulepeopleEntries==null){
 					return new ArrayList<ScheduleDto>();
-				}
+			}
 		}		
 		if(type.equals("1")){
-			 schedulepeopleEntries = schedulepeopleDao.findcompany(companyid);
+			 schedulepeopleEntries = schedulepeopleDao.findcompany(companyid,startdate,enddate);
 			 if(schedulepeopleEntries==null){
 					return new ArrayList<ScheduleDto>();
-				}
+			}
 		}
 		if(type.equals("2")){			
 			List<TSchedule> scheduleEntry = scheduleDao.findcolldate(collid,startdate,enddate);
@@ -397,6 +391,7 @@ public class ScheduleManager {
 		}		
 		return scheduleDtos;			
 	}	
+	
 	public void editSchedulescope(long id,String scope ) {		
 		TSchedule scheduleEntry = scheduleDao.findOne(id);
 		if(scheduleEntry!=null){			
@@ -405,4 +400,5 @@ public class ScheduleManager {
 		}
 		return;
 	}
+	
 }

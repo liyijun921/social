@@ -26,12 +26,8 @@ public class ScheduleController {
 	
 	//创建
 	@RequestMapping(value = "/schedule/add", method = RequestMethod.POST)
-    public List<SchedulePeopleDto> save1(@RequestBody List<ScheduleDto> schedule,@RequestParam String startdate,@RequestParam String enddate) {
+    public List<SchedulePeopleDto> save(@RequestBody List<ScheduleDto> schedule,@RequestParam String startdate,@RequestParam String enddate) {
 		return scheduleManger.saveSchedule(schedule,startdate,enddate); 		
-	}
-	@RequestMapping(value = "/schedule/addtest", method = RequestMethod.POST)
-	public void save(@RequestBody List<ScheduleDto> schedule) {
-		scheduleManger.saveSchedule(schedule); 
 	}
 
 	@RequestMapping(value = "/schedule/{userid}", method = RequestMethod.GET)
@@ -72,7 +68,7 @@ public class ScheduleController {
 	public Boolean del(@PathVariable("id") Long id) {
 		return scheduleManger.delOneSchedule(id);
 	}
-	
+
 	@RequestMapping(value = "/editschedulscope", method = RequestMethod.GET)
 	public void editSchedulescope(@RequestParam Long id,@RequestParam String scope) {
 		 scheduleManger.editSchedulescope(id,scope);
@@ -81,4 +77,6 @@ public class ScheduleController {
 	//public void del(@PathVariable("id") Long id) {
 	//	scheduleManger.delOneSchedule(id); 
 	//}
+	
+	
 }
