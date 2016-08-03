@@ -21,6 +21,8 @@ public class SchedulePeopleDto {
 	   
 	private Date updatetime;//执行时间
 	private String collsaceid;//空间id
+	private Date startdate;//开始日期
+	private Date enddate;//结束日期
 	public long getid() {
 		return id;
 	}
@@ -98,4 +100,20 @@ public class SchedulePeopleDto {
 	public void setCollsaceid(String collsaceid) {
 		this.collsaceid = collsaceid;
 	}
+	public Date getStartdate() {
+		return startdate;
+	}
+
+	public void setStartdate(Date startdate) {
+		this.startdate = startdate;
+	}
+
+	public Date getEnddate() {
+		return enddate;
+	}
+
+	public void setEnddate(Date enddate) {
+		this.enddate = enddate;
+	}
+	
 }

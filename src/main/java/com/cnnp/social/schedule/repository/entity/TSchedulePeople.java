@@ -41,6 +41,10 @@ public class TSchedulePeople{
 	@Temporal(TemporalType.DATE)
 	private Date updatetime;
 	private String collsaceid;//空间id
+	@Temporal(TemporalType.DATE)
+	private Date startdate;//开始日期
+	@Temporal(TemporalType.DATE)
+	private Date enddate;//结束日期
 	public TSchedulePeople() {
 	}
 
@@ -120,5 +124,20 @@ public class TSchedulePeople{
 
 	public void setCollsaceid(String collsaceid) {
 		this.collsaceid = collsaceid;
+	}
+	public Date getStartdate() {
+		return this.startdate;
+	}
+
+	public void setStartdate(Date startdate) {
+		this.startdate = startdate;
+	}
+
+	public Date getEnddate() {
+		return this.enddate;
+	}
+
+	public void setEnddate(Date enddate) {
+		this.enddate = enddate;
 	}
 }
