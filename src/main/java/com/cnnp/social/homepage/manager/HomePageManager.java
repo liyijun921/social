@@ -12,6 +12,8 @@ import org.springframework.transaction.annotation.Transactional;
 import com.cnnp.social.homepage.manager.dto.HomePageAdminDto;
 import com.cnnp.social.homepage.manager.dto.HomePageColumnDto;
 import com.cnnp.social.homepage.manager.dto.HomePageFormDto;
+import com.cnnp.social.homepage.manager.dto.HomePageIDNameDto;
+import com.cnnp.social.homepage.manager.dto.HomePageInfoAllDto;
 import com.cnnp.social.homepage.manager.dto.HomePageInfoDto;
 import com.cnnp.social.homepage.manager.dto.HomePageStyleDto;
 import com.cnnp.social.homepage.repository.dao.HomePageAdminDao;
@@ -348,7 +350,7 @@ public class HomePageManager {
 			homepageimgDao.delete(img.getid());	
 		}
 		for(THomePageStyleOrder order : style.getOrder()){	
-			homepageimgDao.delete(order.getid());	
+			homepagestyleorderDao.delete(order.getid());	
 		}
 		List<THomePageStyleOrder> homepagestyleorderEntries = new ArrayList<THomePageStyleOrder>();
 		List<THomePageImg> homepageimgEntries = new ArrayList<THomePageImg>();
@@ -390,4 +392,30 @@ public class HomePageManager {
 		homepageStyleDao.save(styleEntry);
 		return;
 	}
+	public List<HomePageIDNameDto> findHomePageSector(long hpid){
+		List<HomePageIDNameDto> homepageaidnameDtos=new ArrayList<HomePageIDNameDto>();
+		List<THomePageInfo> homepageEntry = homepageInfoDao.findparentid(hpid);
+		if(homepageEntry==null){
+			return new ArrayList<HomePageIDNameDto>();
+		}
+		for(THomePageInfo hp : homepageEntry){
+			HomePageIDNameDto iddto=new HomePageIDNameDto();
+			iddto.setid(hp.getid());
+			iddto.setName(hp.getName());
+			iddto.setHptype(hp.getHptype());
+			homepageaidnameDtos.add(iddto);
+		}
+		return homepageaidnameDtos;		
+	}
+	
+	public HomePageInfoAllDto findHomePageAll(long hpid){
+		HomePageInfoAllDto homepageallDto=new HomePageInfoAllDto();
+		THomePageInfo homepageEntry = homepageInfoDao.findOne(hpid);
+		if(homepageEntry==null){
+			return new HomePageInfoAllDto();
+		}
+
+		return homepageallDto;		
+	}
+	
 }
