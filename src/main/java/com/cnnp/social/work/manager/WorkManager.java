@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.transaction.annotation.Transactional;
 
-
+import com.cnnp.social.work.manager.dto.AdminlinkDto;
 import com.cnnp.social.work.manager.dto.UserlinkDto;
 import com.cnnp.social.work.repository.dao.AdminlinkDao;
 import com.cnnp.social.work.repository.dao.UserlinkDao;
@@ -50,9 +50,10 @@ public class WorkManager {
 		return userlinkDtos;		
 	}
 	
-	public void save(List<UserlinkDto> userlink,String type,String userid) {
+	public Boolean save(List<UserlinkDto> userlink,String type,String userid) {
+		Boolean flg = false;
 		if (userlink == null) {
-			return;
+			return flg;
 		}
 		
 		long id = userlinkDao.findmaxid()+1;
@@ -73,7 +74,21 @@ public class WorkManager {
 			userlinkDao.delete(userlinkDao.find(userid));
 		}
 		userlinkDao.save(userlinkEntries);
-		return;
+		flg = true;
+		return flg;
 	}
-	
+	public List<AdminlinkDto> findalllink(){
+		List<TAdminLink> adminlinkEntries = adminlinkDao.find();
+		if(adminlinkEntries==null){
+			return new ArrayList<AdminlinkDto>();
+		}
+        List<AdminlinkDto> adminlinkDtos=new ArrayList<AdminlinkDto>();
+		
+		for(TAdminLink admin : adminlinkEntries){
+			AdminlinkDto dto=new AdminlinkDto();
+			mapper.map(admin, dto);
+			adminlinkDtos.add(dto);
+		}
+		return adminlinkDtos;		
+	}
 }
