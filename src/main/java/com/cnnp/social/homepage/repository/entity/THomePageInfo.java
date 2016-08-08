@@ -27,6 +27,7 @@ public class THomePageInfo{
 	private String createusername;//创建用户名	
 	@Temporal(TemporalType.DATE)
 	private Date updatetime;//创建时间	
+	private long parentid; //ID
 	
 	@OneToMany(cascade = { CascadeType.ALL })
 	@JoinColumn(name = "hpid")
@@ -127,5 +128,12 @@ public class THomePageInfo{
 
 	public void setAdmin(List<THomePageAdmin> admin) {
 		this.admin = admin;
+	}
+	public long getParentid() {
+		return this.parentid;
+	}
+
+	public void setParentid(long parentid) {
+		this.parentid = parentid;
 	}
 }

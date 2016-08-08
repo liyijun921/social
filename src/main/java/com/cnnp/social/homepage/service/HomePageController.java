@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.cnnp.social.homepage.manager.HomePageManager;
 import com.cnnp.social.homepage.manager.dto.HomePageColumnDto;
 import com.cnnp.social.homepage.manager.dto.HomePageFormDto;
+import com.cnnp.social.homepage.manager.dto.HomePageIDNameDto;
+import com.cnnp.social.homepage.manager.dto.HomePageInfoAllDto;
 import com.cnnp.social.homepage.manager.dto.HomePageInfoDto;
 import com.cnnp.social.homepage.manager.dto.HomePageStyleDto;
 
@@ -88,4 +90,9 @@ public class HomePageController {
 	//public @ResponseBody List<HomePageFormDto> viewtest(@RequestParam long hpid) {
 	//	return hpManger.findFrom(hpid);
 	//}
+	
+	@RequestMapping(value = "sector/{hpid}", method = RequestMethod.GET)
+	public @ResponseBody List<HomePageIDNameDto> viewFormall(@PathVariable("hpid") long hpid) {
+		return hpManger.findHomePageSector(hpid);
+	}
 }

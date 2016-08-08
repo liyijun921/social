@@ -23,6 +23,7 @@ public class HomePageInfoDto {
 	@Temporal(TemporalType.DATE)
 	private Date updatetime;//创建时间	
 	private List<THomePageAdmin> admin = new ArrayList<THomePageAdmin>();
+	private long parentid; //ID
 	
 	public Long getid() {
 		return id;
@@ -117,5 +118,12 @@ public class HomePageInfoDto {
 
 	public void setAdmin(List<THomePageAdmin> admin) {
 		this.admin = admin;
+	}
+	public long getParentid() {
+		return parentid;
+	}
+
+	public void setParentid(long parentid) {
+		this.parentid = parentid;
 	}
 }
