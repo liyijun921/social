@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.cnnp.social.work.manager.WorkManager;
+import com.cnnp.social.work.manager.dto.AdminlinkDto;
 import com.cnnp.social.work.manager.dto.UserlinkDto;
 
 
@@ -23,11 +24,16 @@ public class WorkController {
 	private WorkManager workManger;
 	
 	@RequestMapping(value = "/work/add", method = RequestMethod.POST)
-	public void save(@RequestBody List<UserlinkDto> userlink,@RequestParam String type,@RequestParam String userid) {
-		workManger.save(userlink,type,userid);
+	public Boolean save(@RequestBody List<UserlinkDto> userlink,@RequestParam String type,@RequestParam String userid) {
+		return workManger.save(userlink,type,userid);
 	}
+
 	@RequestMapping(value = "/work/{userid}", method = RequestMethod.GET)
 	public @ResponseBody List<UserlinkDto> view(@PathVariable("userid") String userid) {
 		return workManger.findUserOrder(userid);
+	}
+	@RequestMapping(value = "/work/link", method = RequestMethod.GET)
+	public @ResponseBody List<AdminlinkDto> viewlink() {
+		return workManger.findalllink();
 	}
 }
