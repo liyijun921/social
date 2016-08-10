@@ -27,7 +27,8 @@ public class THomePageFormIn{
 	private String imgpath;//责任人
 	private String code;//日程类型
 	private String more_url;
-	
+	private String ismore;
+	private String url;
 	public THomePageFormIn() {
 	}
 
@@ -107,6 +108,27 @@ public class THomePageFormIn{
 
 	public void setCode(String code) {
 		this.code = code;
+	}
+	public String getMore_url() {
+		return this.more_url;
+	}
+
+	public void setMore_url(String more_url) {
+		this.more_url = more_url;
+	}
+	public String getIsmore() {
+		return this.ismore;
+	}
+
+	public void setIsmore(String ismore) {
+		this.ismore = ismore;
+	}
+	public String getUrl() {
+		return this.url;
+	}
+
+	public void setUrl(String url) {
+		this.url = url;
 	}
 	public Date getUpdatetime() {
 		return this.updatetime;

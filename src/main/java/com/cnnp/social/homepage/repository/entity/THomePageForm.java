@@ -25,6 +25,7 @@ public class THomePageForm{
 	private String createusername;//创建用户名	
 	@Temporal(TemporalType.DATE)
 	private Date updatetime;//创建时间	
+	private String top_color;
 	@OneToMany(cascade = { CascadeType.ALL })
 	@JoinColumn(name = "formid")
 	private List<THomePageFormIn> formin = new ArrayList<THomePageFormIn>();
@@ -39,7 +40,13 @@ public class THomePageForm{
 	public void setid(long id) {
 		this.id = id;
 	}
-	
+	//public long getColumnid() {
+	//	return this.columnid;
+	//}
+
+	//public void setColumnid(long columnid) {
+	//	this.columnid = columnid;
+	//}
 	public long getHpid() {
 		return this.hpid;
 	}
@@ -109,7 +116,13 @@ public class THomePageForm{
 	public void setWidth(String width) {
 		this.width = width;
 	}
-	
+	public String getTop_color() {
+		return this.top_color;
+	}
+
+	public void setTop_color(String top_color) {
+		this.top_color = top_color;
+	}
 	public Date getUpdatetime() {
 		return this.updatetime;
 	}

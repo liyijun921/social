@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.cnnp.social.homepage.manager.dto.HomePageAdminDto;
 import com.cnnp.social.homepage.manager.dto.HomePageColumnDto;
 import com.cnnp.social.homepage.manager.dto.HomePageFormDto;
+import com.cnnp.social.homepage.manager.dto.HomePageFormInAllDto;
 import com.cnnp.social.homepage.manager.dto.HomePageIDNameDto;
 import com.cnnp.social.homepage.manager.dto.HomePageInfoAllDto;
 import com.cnnp.social.homepage.manager.dto.HomePageInfoDto;
@@ -408,14 +409,44 @@ public class HomePageManager {
 		return homepageaidnameDtos;		
 	}
 	
-	public HomePageInfoAllDto findHomePageAll(long hpid){
-		HomePageInfoAllDto homepageallDto=new HomePageInfoAllDto();
+	public List<HomePageInfoAllDto> findHomePageAll(long hpid){
+		List<HomePageInfoAllDto> homepageallDtos=new ArrayList<HomePageInfoAllDto>();
 		THomePageInfo homepageEntry = homepageInfoDao.findOne(hpid);
 		if(homepageEntry==null){
-			return new HomePageInfoAllDto();
+			return new ArrayList<HomePageInfoAllDto>();
 		}
-
-		return homepageallDto;		
+		
+		
+		List<THomePageForm> homepagefromEntries =  homepageFormDao.find(hpid);
+		
+		for(THomePageForm Form : homepagefromEntries){
+			HomePageInfoAllDto hpDto=new HomePageInfoAllDto();
+			hpDto.setCARD_TOP_COLOR(Form.getTop_color());
+			hpDto.setCARD_WIDTH(Form.getWidth());
+			hpDto.setCARD_INDEX(homepagestyleorderDao.findform(Form.getid()).getOrderid());
+			List<HomePageFormInAllDto> forminall = new ArrayList<HomePageFormInAllDto>();
+					
+			for(THomePageFormIn Formin : Form.getFormin()){
+				HomePageFormInAllDto forminone = new HomePageFormInAllDto();
+				
+				forminone.setCONTENT_TYPE("application/json");
+				forminone.setMETHOD("get");
+				forminone.setPAYLOAD("");
+				forminone.setQueryString("&apikey=e71982d5401b488da4acef8827c41845");
+				forminone.setSUBCARD_INDEX(Formin.getForm_inid());
+				forminone.setSUBCARD_ISMORE(Formin.getIsmore());
+				forminone.setSUBCARD_MORE_URL(Formin.getMore_url());
+				forminone.setSUBCARD_TYPE(Formin.getColumnid());
+				forminone.setSUBCARD_ZH(Formin.getName());
+				forminone.setURL(Formin.getUrl());
+				forminall.add(forminone);
+			}
+			hpDto.setSUBCARDS(forminall);
+			
+			homepageallDtos.add(hpDto);
+		}
+		
+		return homepageallDtos;		
 	}
 	
 }
