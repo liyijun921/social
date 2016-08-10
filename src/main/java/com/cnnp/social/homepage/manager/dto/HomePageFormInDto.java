@@ -13,16 +13,17 @@ public class HomePageFormInDto {
 	private long formid; //ID
 	private String name;//日程标题
 	private String form_inid;//日程类型
-	private String styleid;//用户id
-	//private String form_inname;//责任人		
+	private String styleid;//用户id	
 	@Temporal(TemporalType.DATE)
 	private Date updatetime;//创建时间	
-	private String imgname;//日程类型
-	private String imgpath;//责任人
 	private String code;//日程类型
 	private String more_url;
 	private String ismore;
 	private String url;
+	private String content_type;
+	private String method;
+	private String payload;
+	private String querystring;
 	public Long getid() {
 		return id;
 	}
@@ -68,56 +69,62 @@ public class HomePageFormInDto {
 	public void setForm_inid(String form_inid) {
 		this.form_inid = form_inid;
 	}
-	//public String getForm_inname() {
-	//	return this.form_inname;
-	//}
 
-	//public void setForm_inname_1(String form_inname) {
-	//	this.form_inname = form_inname;
-	//}
-
-	public String getImgname() {
-		return this.imgname;
-	}
-
-	public void setImgname(String imgname) {
-		this.imgname = imgname;
-	}
-
-	public String getImgpath() {
-		return this.imgpath;
-	}
-
-	public void setImgpath(String imgpath) {
-		this.imgpath = imgpath;
-	}
 	public String getCode() {
-		return this.code;
+		return code;
 	}
 
 	public void setCode(String code) {
 		this.code = code;
 	}
 	public String getMore_url() {
-		return this.more_url;
+		return more_url;
 	}
 
 	public void setMore_url(String more_url) {
 		this.more_url = more_url;
 	}
 	public String getIsmore() {
-		return this.ismore;
+		return ismore;
 	}
 
 	public void setIsmore(String ismore) {
 		this.ismore = ismore;
 	}
 	public String getUrl() {
-		return this.url;
+		return url;
 	}
 
 	public void setUrl(String url) {
 		this.url = url;
+	}
+	public String getContent_type() {
+		return content_type;
+	}
+
+	public void setContent_type(String content_type) {
+		this.content_type = content_type;
+	}
+	public String getMethod() {
+		return method;
+	}
+
+	public void setMethod(String method) {
+		this.method = method;
+	}
+	public String getPayload() {
+		return payload;
+	}
+
+	public void setPayload(String payload) {
+		this.payload = payload;
+	}
+	public String getQuerystring() {
+		return querystring;
+	}
+
+	public void setQuerystring(String querystring) {
+		this.querystring = querystring;
 	}
 	public Date getUpdatetime() {
 		return updatetime;

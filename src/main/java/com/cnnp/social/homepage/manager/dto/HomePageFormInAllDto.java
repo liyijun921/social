@@ -4,7 +4,7 @@ package com.cnnp.social.homepage.manager.dto;
 
 public class HomePageFormInAllDto {
 	
-	private long SUBCARD_TYPE; //栏目id
+	private String SUBCARD_TYPE; //栏目id
 	private String SUBCARD_ZH;//
 	private String SUBCARD_INDEX;//
 	private String METHOD;//用户id
@@ -14,11 +14,11 @@ public class HomePageFormInAllDto {
 	private String URL;//日程类型
 	private String PAYLOAD;//日程类型
 	private String QueryString;//日程类型
-	public long getSUBCARD_TYPE() {
+	public String getSUBCARD_TYPE() {
 		return SUBCARD_TYPE;
 	}
 
-	public void setSUBCARD_TYPE(long SUBCARD_TYPE) {
+	public void setSUBCARD_TYPE(String SUBCARD_TYPE) {
 		this.SUBCARD_TYPE = SUBCARD_TYPE;
 	}
 	public String getSUBCARD_ZH() {

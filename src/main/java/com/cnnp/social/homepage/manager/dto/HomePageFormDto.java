@@ -13,9 +13,7 @@ import com.cnnp.social.homepage.repository.entity.THomePageFormIn;
 public class HomePageFormDto {
 	private long id; //ID
 	private long hpid; //ID
-	//private long columnid; //ID
 	private String name;//日程标题
-	private String styleid;//用户id
 	private String status;//用户名	
 	private String description;//备注
 	private String width;//责任人		
@@ -33,13 +31,6 @@ public class HomePageFormDto {
 	public void setid(Long id) {
 		this.id = id;
 	}
-	//public long getColumnid() {
-	//	return columnid;
-	//}
-
-	//public void setColumnid(long columnid) {
-	//	this.columnid = columnid;
-	//}
 	
 	public long getHpid() {
 		return hpid;
@@ -70,22 +61,6 @@ public class HomePageFormDto {
 
 	public void setCreateusername(String createusername) {
 		this.createusername = createusername;
-	}
-
-	//public long getColumnid() {
-	//	return columnid;
-	//}
-
-	//public void setColumnid(long columnid) {
-	//	this.columnid = columnid;
-	//}
-
-	public String getStyleid() {
-		return styleid;
-	}
-
-	public void setStyleid(String styleid) {
-		this.styleid = styleid;
 	}
 
 	public String getDescription() {
