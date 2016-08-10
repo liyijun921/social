@@ -40,12 +40,12 @@ public class HomePageController {
 	}
 	@RequestMapping(value = "/homepage/{userid}", method = RequestMethod.GET)
 	public @ResponseBody List<HomePageInfoDto> view(@PathVariable("userid") String userid) {
-		return hpManger.findHomePage(userid,"0");
+		return hpManger.findHomePage(userid);
 	}
 	
 	@RequestMapping(value = "/homepagecolumn", method = RequestMethod.GET)
-	public @ResponseBody List<HomePageColumnDto> viewColumn(@RequestParam long hpid,@RequestParam String type) {
-		return hpManger.findColumn(hpid,type);
+	public @ResponseBody List<HomePageColumnDto> viewColumn() {
+		return hpManger.findColumn();
 	}
 	
 	@RequestMapping(value = "/homepagecolumn/add", method = RequestMethod.POST)
@@ -57,18 +57,25 @@ public class HomePageController {
 		hpManger.editColumn(column); 
 	}
 	@RequestMapping(value = "/homepagecolumn/edittype", method = RequestMethod.GET)
-	public void editcolumntype(@RequestParam long hpid,@RequestParam long columnid,@RequestParam String type) {
-		hpManger.editColumn(hpid,columnid,type); 
+	public void editcolumntype(@RequestParam long columnid,@RequestParam String type) {
+		hpManger.editColumn(columnid,type); 
 	}
 	
 	@RequestMapping(value = "/homepageform", method = RequestMethod.GET)
 	public @ResponseBody List<HomePageFormDto> viewForm(@RequestParam long hpid) {
 		return hpManger.findForm(hpid);
 	}
-	
+	@RequestMapping(value = "/homepageform/edit", method = RequestMethod.POST)
+	public void editForm(@RequestBody HomePageFormDto form) {
+		hpManger.editForm(form);
+	}
 	@RequestMapping(value = "/homepageform/add", method = RequestMethod.POST)
 	public void save(@RequestBody HomePageFormDto form) {
 		hpManger.saveForm(form); 
+	}
+	@RequestMapping(value = "/homepageform/del", method = RequestMethod.GET)
+	public void del(@RequestParam long formid) {
+		hpManger.delForm(formid); 
 	}
 	@RequestMapping(value = "/homepagestyle/{hpid}", method = RequestMethod.GET)
 	public @ResponseBody List<HomePageStyleDto> viewStyle(@PathVariable("hpid") long hpid) {
@@ -94,8 +101,8 @@ public class HomePageController {
 	public @ResponseBody List<HomePageInfoAllDto> viewHpall(@PathVariable("hpid") long hpid) {
 		return hpManger.findHomePageAll(hpid);
 	}
-	@RequestMapping(value = "sector/{hpid}", method = RequestMethod.GET)
-	public @ResponseBody List<HomePageIDNameDto> viewFormall(@PathVariable("hpid") long hpid) {
-		return hpManger.findHomePageSector(hpid);
+	@RequestMapping(value = "/sector", method = RequestMethod.GET)
+	public @ResponseBody List<HomePageIDNameDto> viewFormall() {
+		return hpManger.findHomePageSector();
 	}
 }

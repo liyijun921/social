@@ -75,6 +75,7 @@ public class HomePageManager {
 		for(THomePageAdmin admin : hpEntry.getAdmin()){	
 			admin.setid(id);
 			admin.setHpid(hpid);
+			admin.setColumnid(0);
 			admin.setUpdatetime(now);
 			homepageadminEntries.add(admin);
 			 id = id+1;
@@ -99,6 +100,7 @@ public class HomePageManager {
 		for(THomePageAdmin admin : hpEntry.getAdmin()){					
 			admin.setUpdatetime(now);
 			admin.setid(id);
+			admin.setColumnid(0);
 			homepageadminEntries.add(admin);
 			id = id+1;
 		}
@@ -118,10 +120,10 @@ public class HomePageManager {
 			return;
 		}
 		if(type.equals("start")){			
-			homepageaEntry.setStatus("0");			
+			homepageaEntry.setStatus("1");			
 		}
 		if(type.equals("stop")){			
-			homepageaEntry.setStatus("1");			
+			homepageaEntry.setStatus("0");			
 		}
 		Date now = new Date();
 		homepageaEntry.setUpdatetime(now);
@@ -129,14 +131,9 @@ public class HomePageManager {
 		return;
 	}
 	
-	/**
-	 * 我管理的空间
-	 * @param userid
-	 * @return
-     */
-	//我管理的空间
-	public List<HomePageInfoDto> findHomePage(String userid,String type){
-		List<THomePageAdmin> homepageadminEntries =  homepageAdminDao.find(userid);
+
+	public List<HomePageInfoDto> findHomePage(String userid){
+		List<THomePageAdmin> homepageadminEntries =  homepageAdminDao.findHP(userid);
 		if(homepageadminEntries==null){
 			return new ArrayList<HomePageInfoDto>();
 		}
@@ -148,15 +145,15 @@ public class HomePageManager {
 			THomePageInfo homepageEntries = homepageInfoDao.findOne(dto.getHpid());
 			HomePageInfoDto hp=new HomePageInfoDto();
 			mapper.map(homepageEntries, hp);
-			List<THomePageAdmin> adminEntries =  homepageAdminDao.findadmin(hp.getid(),type);
+			List<THomePageAdmin> adminEntries =  homepageAdminDao.findHPadmin(hp.getid());
 			hp.setAdmin(adminEntries);
 			homepageDtos.add(hp);
 		}		
 		return homepageDtos;		
 	}
-	
-	public List<HomePageColumnDto> findColumn(long hpid,String type){
-		List<THomePageColumn> homepagecolumnEntries =  homepageColumnDao.find(hpid);
+
+	public List<HomePageColumnDto> findColumn(){
+		List<THomePageColumn> homepagecolumnEntries =  homepageColumnDao.findall();
 		if(homepagecolumnEntries==null){
 			return new ArrayList<HomePageColumnDto>();
 		}
@@ -165,7 +162,7 @@ public class HomePageManager {
 		for(THomePageColumn column : homepagecolumnEntries){
 			HomePageColumnDto dto=new HomePageColumnDto();
 			mapper.map(column, dto);
-			List<THomePageAdmin> adminEntries =  homepageAdminDao.findadmin(hpid,dto.getid(),type);
+			List<THomePageAdmin> adminEntries =  homepageAdminDao.findcolumnadmin(dto.getid());
 			dto.setAdmin(adminEntries);
 			homepagecolumnDtos.add(dto);
 		}		
@@ -178,14 +175,17 @@ public class HomePageManager {
 		}
 		long adminid = homepageAdminDao.findmaxid()+1;
 		long columnid = homepageColumnDao.findmaxid()+1;
+		long hpid = homepageInfoDao.findmaxid();
 		Date now = new Date(); 
 		column.setid(columnid);
+		column.setHpid(hpid);
 		column.setUpdatetime(now);
 		THomePageColumn columnEntry = new THomePageColumn();
 		mapper.map(column, columnEntry);
 		List<THomePageAdmin> homepageadminEntries = new ArrayList<THomePageAdmin>();
 		for(THomePageAdmin admin : columnEntry.getAdmin()){			
 			admin.setid(adminid);
+			admin.setHpid(hpid);
 			admin.setColumnid(columnid);
 			admin.setUpdatetime(now);
 			homepageadminEntries.add(admin);
@@ -200,17 +200,18 @@ public class HomePageManager {
 			return;
 		}
 		long adminid = homepageAdminDao.findmaxid()+1;
+		long hpid = homepageInfoDao.findmaxid();
 		Date now = new Date();
 		column.setUpdatetime(now);
 		THomePageColumn columnEntry = new THomePageColumn();
 		mapper.map(column, columnEntry);
-		for(THomePageAdmin admin : column.getAdmin()){	
-			homepageAdminDao.delete(admin.getid());	
-		}
+		homepageAdminDao.delete(column.getAdmin());
+		
 		List<THomePageAdmin> homepageadminEntries = new ArrayList<THomePageAdmin>();
 		
 		for(THomePageAdmin admin : columnEntry.getAdmin()){			
 			admin.setid(adminid);
+			admin.setHpid(hpid);
 			admin.setUpdatetime(now);
 			homepageadminEntries.add(admin);
 			adminid = adminid+1;
@@ -218,25 +219,25 @@ public class HomePageManager {
 		}
 		columnEntry.setAdmin(homepageadminEntries);
 		homepageColumnDao.save(columnEntry);
-		//homepageAdminDao.save(homepageadminEntries);
+		
 		return;
 	}
 	
-	public void editColumn(long hpid,long columnid,String type) {
+	public void editColumn(long columnid,String type) {
 		THomePageColumn columnEntry =  homepageColumnDao.findone(columnid);
 		if(columnEntry==null){
 			return;
 		}
 		
 		if(type.equals("del")){			
-			homepageColumnDao.delete(columnid);	
+			homepageColumnDao.delete(columnEntry);	
 			return;
 		}
 		if(type.equals("start")){			
-			columnEntry.setStatus("0");			
+			columnEntry.setStatus("1");			
 		}
 		if(type.equals("stop")){			
-			columnEntry.setStatus("1");			
+			columnEntry.setStatus("0");			
 		}
 		Date now = new Date(); 
 		columnEntry.setUpdatetime(now);
@@ -285,6 +286,41 @@ public class HomePageManager {
 		}
 		formEntry.setFormin(homepageforminEntries);
 		homepageFormDao.save(formEntry);		
+		return;
+	}
+	
+	public void editForm(HomePageFormDto form) {
+		if (form == null) {
+			return;
+		}
+		long forminid = homepageForminDao.findmaxid()+1;
+		Date now = new Date(); 	
+		form.setUpdatetime(now);
+		THomePageForm formEntry = new THomePageForm();
+		mapper.map(form, formEntry);	
+		List<THomePageFormIn> homepageforminEntries = new ArrayList<THomePageFormIn>();
+		if (form.getFormin() != null) {
+			homepageForminDao.delete(form.getFormin());					
+		}
+		
+		for(THomePageFormIn formin : formEntry.getFormin()){						
+			formin.setid(forminid);
+			formin.setUpdatetime(now);
+			homepageforminEntries.add(formin);
+			forminid = forminid+1;			
+		}
+		formEntry.setFormin(homepageforminEntries);
+		homepageFormDao.save(formEntry);		
+		return;
+	}
+	public void delForm(long formid) {
+		
+		THomePageForm formEntry = homepageFormDao.findOne(formid);
+		
+		if (formEntry != null) {
+			homepageFormDao.delete(formEntry);					
+		}
+				
 		return;
 	}
 	
@@ -393,9 +429,9 @@ public class HomePageManager {
 		homepageStyleDao.save(styleEntry);
 		return;
 	}
-	public List<HomePageIDNameDto> findHomePageSector(long hpid){
+	public List<HomePageIDNameDto> findHomePageSector(){
 		List<HomePageIDNameDto> homepageaidnameDtos=new ArrayList<HomePageIDNameDto>();
-		List<THomePageInfo> homepageEntry = homepageInfoDao.findparentid(hpid);
+		List<THomePageInfo> homepageEntry = homepageInfoDao.findparentid();
 		if(homepageEntry==null){
 			return new ArrayList<HomePageIDNameDto>();
 		}
@@ -411,13 +447,17 @@ public class HomePageManager {
 	
 	public List<HomePageInfoAllDto> findHomePageAll(long hpid){
 		List<HomePageInfoAllDto> homepageallDtos=new ArrayList<HomePageInfoAllDto>();
-		THomePageInfo homepageEntry = homepageInfoDao.findOne(hpid);
+		THomePageInfo homepageEntry = new THomePageInfo();
+		if (hpid==0){
+			homepageEntry = homepageInfoDao.findStartHP();
+		}else{
+			homepageEntry = homepageInfoDao.findOne(hpid);
+		}
+		
 		if(homepageEntry==null){
 			return new ArrayList<HomePageInfoAllDto>();
 		}
-		
-		
-		List<THomePageForm> homepagefromEntries =  homepageFormDao.find(hpid);
+		List<THomePageForm> homepagefromEntries =  homepageFormDao.find(homepageEntry.getid());
 		
 		for(THomePageForm Form : homepagefromEntries){
 			HomePageInfoAllDto hpDto=new HomePageInfoAllDto();
@@ -429,14 +469,14 @@ public class HomePageManager {
 			for(THomePageFormIn Formin : Form.getFormin()){
 				HomePageFormInAllDto forminone = new HomePageFormInAllDto();
 				
-				forminone.setCONTENT_TYPE("application/json");
-				forminone.setMETHOD("get");
-				forminone.setPAYLOAD("");
-				forminone.setQueryString("&apikey=e71982d5401b488da4acef8827c41845");
+				forminone.setCONTENT_TYPE(Formin.getContent_type());
+				forminone.setMETHOD(Formin.getMethod());
+				forminone.setPAYLOAD(Formin.getPayload());
+				forminone.setQueryString(Formin.getQuerystring());
 				forminone.setSUBCARD_INDEX(Formin.getForm_inid());
 				forminone.setSUBCARD_ISMORE(Formin.getIsmore());
 				forminone.setSUBCARD_MORE_URL(Formin.getMore_url());
-				forminone.setSUBCARD_TYPE(Formin.getColumnid());
+				forminone.setSUBCARD_TYPE(homepageColumnDao.findone(Formin.getColumnid()).getName());
 				forminone.setSUBCARD_ZH(Formin.getName());
 				forminone.setURL(Formin.getUrl());
 				forminall.add(forminone);
@@ -448,5 +488,6 @@ public class HomePageManager {
 		
 		return homepageallDtos;		
 	}
+	
 	
 }
