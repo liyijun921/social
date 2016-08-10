@@ -23,7 +23,7 @@ public class HomePageFormDto {
 	private String createusername;//创建用户名	
 	@Temporal(TemporalType.DATE)
 	private Date updatetime;//创建时间	
-	
+	private String top_color;
 	private List<THomePageFormIn> formin = new ArrayList<THomePageFormIn>();
 	
 	public Long getid() {
@@ -33,6 +33,14 @@ public class HomePageFormDto {
 	public void setid(Long id) {
 		this.id = id;
 	}
+	//public long getColumnid() {
+	//	return columnid;
+	//}
+
+	//public void setColumnid(long columnid) {
+	//	this.columnid = columnid;
+	//}
+	
 	public long getHpid() {
 		return hpid;
 	}
@@ -102,7 +110,13 @@ public class HomePageFormDto {
 	public void setWidth(String width) {
 		this.width = width;
 	}
-	
+	public String getTop_color() {
+		return top_color;
+	}
+
+	public void setTop_color(String top_color) {
+		this.top_color = top_color;
+	}
 	public Date getUpdatetime() {
 		return updatetime;
 	}

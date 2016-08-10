@@ -1,99 +1,94 @@
 package com.cnnp.social.homepage.manager.dto;
 
-import java.util.Date;
-import java.util.List;
-
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 
 
 public class HomePageFormInAllDto {
 	
-	private long columnid; //ID
-	private long formid; //ID
-	private String name;//日程标题
-	private String form_inid;//日程类型
-	private String styleid;//用户id
-	private Date updatetime;//创建时间	
-	private String imgname;//日程类型
-	private String imgpath;//责任人
-	private String code;//日程类型
-
-	public long getColumnid() {
-		return columnid;
+	private long SUBCARD_TYPE; //栏目id
+	private String SUBCARD_ZH;//
+	private String SUBCARD_INDEX;//
+	private String METHOD;//用户id
+	private String CONTENT_TYPE;//创建时间	
+	private String SUBCARD_MORE_URL;//日程类型
+	private String SUBCARD_ISMORE;//责任人
+	private String URL;//日程类型
+	private String PAYLOAD;//日程类型
+	private String QueryString;//日程类型
+	public long getSUBCARD_TYPE() {
+		return SUBCARD_TYPE;
 	}
 
-	public void setColumnid(long columnid) {
-		this.columnid = columnid;
+	public void setSUBCARD_TYPE(long SUBCARD_TYPE) {
+		this.SUBCARD_TYPE = SUBCARD_TYPE;
 	}
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
+	public String getSUBCARD_ZH() {
+		return SUBCARD_ZH;
 	}
 
-	public long getFormid() {
-		return formid;
+	public void setSUBCARD_ZH(String SUBCARD_ZH) {
+		this.SUBCARD_ZH = SUBCARD_ZH;
 	}
 
-	public void setFormid(long formid) {
-		this.formid = formid;
+	public String getSUBCARD_INDEX() {
+		return SUBCARD_INDEX;
 	}
 
-	public String getStyleid() {
-		return styleid;
+	public void setSUBCARD_INDEX(String SUBCARD_INDEX) {
+		this.SUBCARD_INDEX = SUBCARD_INDEX;
 	}
 
-	public void setStyleid(String styleid) {
-		this.styleid = styleid;
+	public String getMETHOD() {
+		return METHOD;
 	}
 
-	public String getForm_inid() {
-		return form_inid;
+	public void setMETHOD(String METHOD) {
+		this.METHOD = METHOD;
 	}
 
-	public void setForm_inid(String form_inid) {
-		this.form_inid = form_inid;
-	}
-	//public String getForm_inname() {
-	//	return this.form_inname;
-	//}
-
-	//public void setForm_inname_1(String form_inname) {
-	//	this.form_inname = form_inname;
-	//}
-
-	public String getImgname() {
-		return this.imgname;
+	public String getCONTENT_TYPE() {
+		return CONTENT_TYPE;
 	}
 
-	public void setImgname(String imgname) {
-		this.imgname = imgname;
+	public void setCONTENT_TYPE(String CONTENT_TYPE) {
+		this.CONTENT_TYPE = CONTENT_TYPE;
 	}
 
-	public String getImgpath() {
-		return this.imgpath;
+	public String getSUBCARD_MORE_URL() {
+		return this.SUBCARD_MORE_URL;
 	}
 
-	public void setImgpath(String imgpath) {
-		this.imgpath = imgpath;
-	}
-	public String getCode() {
-		return this.code;
+	public void setSUBCARD_MORE_URL(String SUBCARD_MORE_URL) {
+		this.SUBCARD_MORE_URL = SUBCARD_MORE_URL;
 	}
 
-	public void setCode(String code) {
-		this.code = code;
+	public String getSUBCARD_ISMORE() {
+		return this.SUBCARD_ISMORE;
+	}
+
+	public void setSUBCARD_ISMORE(String SUBCARD_ISMORE) {
+		this.SUBCARD_ISMORE = SUBCARD_ISMORE;
+	}
+	public String getURL() {
+		return this.URL;
+	}
+
+	public void setURL(String URL) {
+		this.URL = URL;
 	}
 	
-	public Date getUpdatetime() {
-		return updatetime;
+	public String getPAYLOAD() {
+		return PAYLOAD;
 	}
 
-	public void setUpdatetime(Date updatetime) {
-		this.updatetime = updatetime;
+	public void setPAYLOAD(String PAYLOAD) {
+		this.PAYLOAD = PAYLOAD;
+	}
+	public String getQueryString() {
+		return QueryString;
+	}
+
+	public void setQueryString(String QueryString) {
+		this.QueryString = QueryString;
 	}
 	
 }

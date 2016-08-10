@@ -90,7 +90,10 @@ public class HomePageController {
 	//public @ResponseBody List<HomePageFormDto> viewtest(@RequestParam long hpid) {
 	//	return hpManger.findFrom(hpid);
 	//}
-	
+	@RequestMapping(value = "/{hpid}", method = RequestMethod.GET)
+	public @ResponseBody List<HomePageInfoAllDto> viewHpall(@PathVariable("hpid") long hpid) {
+		return hpManger.findHomePageAll(hpid);
+	}
 	@RequestMapping(value = "sector/{hpid}", method = RequestMethod.GET)
 	public @ResponseBody List<HomePageIDNameDto> viewFormall(@PathVariable("hpid") long hpid) {
 		return hpManger.findHomePageSector(hpid);
