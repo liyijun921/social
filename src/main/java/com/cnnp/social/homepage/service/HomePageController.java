@@ -44,8 +44,8 @@ public class HomePageController {
 	}
 	
 	@RequestMapping(value = "/homepagecolumn", method = RequestMethod.GET)
-	public @ResponseBody List<HomePageColumnDto> viewColumn() {
-		return hpManger.findColumn();
+	public @ResponseBody List<HomePageColumnDto> viewColumn(@RequestParam long hpid) {
+		return hpManger.findColumn(hpid);
 	}
 	
 	@RequestMapping(value = "/homepagecolumn/add", method = RequestMethod.POST)

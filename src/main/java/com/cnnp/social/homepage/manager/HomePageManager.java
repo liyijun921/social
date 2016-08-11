@@ -72,13 +72,27 @@ public class HomePageManager {
 		THomePageInfo hpEntry = new THomePageInfo();
 		mapper.map(homepage, hpEntry);
 		List<THomePageAdmin> homepageadminEntries = new ArrayList<THomePageAdmin>();
+		Boolean peopleflg = true;
 		for(THomePageAdmin admin : hpEntry.getAdmin()){	
 			admin.setid(id);
 			admin.setHpid(hpid);
 			admin.setColumnid(0);
 			admin.setUpdatetime(now);
 			homepageadminEntries.add(admin);
-			 id = id+1;
+			id = id+1;
+			if (homepage.getCreateuserid().equals(admin.getUserid())){
+				peopleflg = false;
+			}
+		}
+		if (peopleflg){
+			THomePageAdmin user = new THomePageAdmin();
+			user.setid(id);
+			user.setHpid(hpid);
+			user.setColumnid(0);
+			user.setUserid(homepage.getCreateuserid());
+			user.setUsername(homepage.getCreateusername());
+			user.setUpdatetime(now);
+			homepageadminEntries.add(user);
 		}
 		hpEntry.setAdmin(homepageadminEntries);
 		homepageInfoDao.save(hpEntry);
@@ -97,12 +111,27 @@ public class HomePageManager {
 			homepageAdminDao.delete(admin.getid());	
 		}		
 		List<THomePageAdmin> homepageadminEntries = new ArrayList<THomePageAdmin>();
+		Boolean peopleflg = true;
 		for(THomePageAdmin admin : hpEntry.getAdmin()){					
 			admin.setUpdatetime(now);
 			admin.setid(id);
 			admin.setColumnid(0);
 			homepageadminEntries.add(admin);
 			id = id+1;
+			if (homepage.getCreateuserid().equals(admin.getUserid())){
+				peopleflg = false;
+			}
+		}
+		
+		if (peopleflg){
+			THomePageAdmin user = new THomePageAdmin();
+			user.setid(id);
+			user.setHpid(homepage.getid());
+			user.setColumnid(0);
+			user.setUserid(homepage.getCreateuserid());
+			user.setUsername(homepage.getCreateusername());
+			user.setUpdatetime(now);
+			homepageadminEntries.add(user);
 		}
 		hpEntry.setAdmin(homepageadminEntries);
 		homepageInfoDao.save(hpEntry);
@@ -152,8 +181,8 @@ public class HomePageManager {
 		return homepageDtos;		
 	}
 
-	public List<HomePageColumnDto> findColumn(){
-		List<THomePageColumn> homepagecolumnEntries =  homepageColumnDao.findall();
+	public List<HomePageColumnDto> findColumn(long hpid){
+		List<THomePageColumn> homepagecolumnEntries =  homepageColumnDao.find(hpid);
 		if(homepagecolumnEntries==null){
 			return new ArrayList<HomePageColumnDto>();
 		}
@@ -175,21 +204,32 @@ public class HomePageManager {
 		}
 		long adminid = homepageAdminDao.findmaxid()+1;
 		long columnid = homepageColumnDao.findmaxid()+1;
-		long hpid = homepageInfoDao.findmaxid();
 		Date now = new Date(); 
 		column.setid(columnid);
-		column.setHpid(hpid);
 		column.setUpdatetime(now);
 		THomePageColumn columnEntry = new THomePageColumn();
 		mapper.map(column, columnEntry);
 		List<THomePageAdmin> homepageadminEntries = new ArrayList<THomePageAdmin>();
+		Boolean peopleflg = true;
 		for(THomePageAdmin admin : columnEntry.getAdmin()){			
 			admin.setid(adminid);
-			admin.setHpid(hpid);
 			admin.setColumnid(columnid);
 			admin.setUpdatetime(now);
 			homepageadminEntries.add(admin);
 			adminid = adminid+1;
+			if (column.getCreateuserid().equals(admin.getUserid())){
+				peopleflg = false;
+			}
+		}
+		if (peopleflg){
+			THomePageAdmin user = new THomePageAdmin();
+			user.setid(adminid);
+			user.setHpid(column.getHpid());
+			user.setColumnid(columnid);
+			user.setUserid(column.getCreateuserid());
+			user.setUsername(column.getCreateusername());
+			user.setUpdatetime(now);
+			homepageadminEntries.add(user);
 		}
 		columnEntry.setAdmin(homepageadminEntries);	
 		homepageColumnDao.save(columnEntry);
@@ -199,8 +239,7 @@ public class HomePageManager {
 		if (column == null) {
 			return;
 		}
-		long adminid = homepageAdminDao.findmaxid()+1;
-		long hpid = homepageInfoDao.findmaxid();
+		long adminid = homepageAdminDao.findmaxid()+1;		
 		Date now = new Date();
 		column.setUpdatetime(now);
 		THomePageColumn columnEntry = new THomePageColumn();
@@ -208,14 +247,25 @@ public class HomePageManager {
 		homepageAdminDao.delete(column.getAdmin());
 		
 		List<THomePageAdmin> homepageadminEntries = new ArrayList<THomePageAdmin>();
-		
+		Boolean peopleflg = true;
 		for(THomePageAdmin admin : columnEntry.getAdmin()){			
 			admin.setid(adminid);
-			admin.setHpid(hpid);
 			admin.setUpdatetime(now);
 			homepageadminEntries.add(admin);
 			adminid = adminid+1;
-			
+			if (column.getCreateuserid().equals(admin.getUserid())){
+				peopleflg = false;
+			}
+		}
+		if (peopleflg){
+			THomePageAdmin user = new THomePageAdmin();
+			user.setid(adminid);
+			user.setHpid(column.getHpid());
+			user.setColumnid(column.getid());
+			user.setUserid(column.getCreateuserid());
+			user.setUsername(column.getCreateusername());
+			user.setUpdatetime(now);
+			homepageadminEntries.add(user);
 		}
 		columnEntry.setAdmin(homepageadminEntries);
 		homepageColumnDao.save(columnEntry);
@@ -476,7 +526,7 @@ public class HomePageManager {
 				forminone.setSUBCARD_INDEX(Formin.getForm_inid());
 				forminone.setSUBCARD_ISMORE(Formin.getIsmore());
 				forminone.setSUBCARD_MORE_URL(Formin.getMore_url());
-				forminone.setSUBCARD_TYPE(homepageColumnDao.findone(Formin.getColumnid()).getName());
+				forminone.setSUBCARD_TYPE(Formin.getStyleid());
 				forminone.setSUBCARD_ZH(Formin.getName());
 				forminone.setURL(Formin.getUrl());
 				forminall.add(forminone);
