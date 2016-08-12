@@ -232,6 +232,13 @@ public class NewsManager {
         		attdtos.add(attachmentsDtos.get(0));
         	}       	
     	}
+    	
+    	if (news_attdto.getattach_content_id()!=null) {
+        	List<AttachmentsDto> attachmentsDtos = findAttachments("",news_attdto.getattach_content_id());
+        	if (!attachmentsDtos.isEmpty()) {
+        		attdtos.add(attachmentsDtos.get(0));
+        	}       	
+    	}
     	int i=updataaccess_count(id,news_attdto.getaccess_count());
     	if (!attdtos.isEmpty()) {    			
     		news_attdto.setAttachments(attdtos);
