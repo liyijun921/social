@@ -21,4 +21,7 @@ public interface HomePageInfoDao extends CrudRepository<THomePageInfo, Long> ,Jp
 	public List<THomePageInfo> findparentid();
 	@Query("select hp from THomePageInfo hp where STATUS = '1' and PARENTID='0' and rownum =1 ")
 	public THomePageInfo findStartHP();
+	
+	@Query("UPDATE THomePageInfo set STATUS='0' where STATUS ='1' and PARENTID='0'")
+	public THomePageInfo updataStatus();
 }

@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.transaction.annotation.Transactional;
 import com.cnnp.social.homepage.manager.dto.HomePageAdminDto;
+import com.cnnp.social.homepage.manager.dto.HomePageArticlecatDto;
 import com.cnnp.social.homepage.manager.dto.HomePageColumnDto;
 import com.cnnp.social.homepage.manager.dto.HomePageFormDto;
 import com.cnnp.social.homepage.manager.dto.HomePageFormInAllDto;
@@ -18,6 +19,7 @@ import com.cnnp.social.homepage.manager.dto.HomePageInfoAllDto;
 import com.cnnp.social.homepage.manager.dto.HomePageInfoDto;
 import com.cnnp.social.homepage.manager.dto.HomePageStyleDto;
 import com.cnnp.social.homepage.repository.dao.HomePageAdminDao;
+import com.cnnp.social.homepage.repository.dao.HomePageArticlecatDao;
 import com.cnnp.social.homepage.repository.dao.HomePageColumnDao;
 import com.cnnp.social.homepage.repository.dao.HomePageFormDao;
 import com.cnnp.social.homepage.repository.dao.HomePageFormInDao;
@@ -26,6 +28,7 @@ import com.cnnp.social.homepage.repository.dao.HomePageInfoDao;
 import com.cnnp.social.homepage.repository.dao.HomePageStyleDao;
 import com.cnnp.social.homepage.repository.dao.HomePageStyleOrderDao;
 import com.cnnp.social.homepage.repository.entity.THomePageAdmin;
+import com.cnnp.social.homepage.repository.entity.THomePageArticlecat;
 import com.cnnp.social.homepage.repository.entity.THomePageColumn;
 import com.cnnp.social.homepage.repository.entity.THomePageForm;
 import com.cnnp.social.homepage.repository.entity.THomePageFormIn;
@@ -46,6 +49,8 @@ public class HomePageManager {
 	private HomePageAdminDao homepageAdminDao;
 	@Autowired
 	private HomePageColumnDao homepageColumnDao;
+	@Autowired
+	private HomePageArticlecatDao homepageArticlecatDao;
 	@Autowired
 	private HomePageFormDao homepageFormDao;
 	@Autowired
@@ -107,9 +112,11 @@ public class HomePageManager {
 		homepage.setUpdatetime(now);
 		THomePageInfo hpEntry = new THomePageInfo();
 		mapper.map(homepage, hpEntry);
-		for(THomePageAdmin admin : hpEntry.getAdmin()){	
-			homepageAdminDao.delete(admin.getid());	
+		List<THomePageAdmin> adminEntries =  homepageAdminDao.findHPadmin(homepage.getid());
+		if(adminEntries !=null){
+			homepageAdminDao.delete(adminEntries);	
 		}		
+				
 		List<THomePageAdmin> homepageadminEntries = new ArrayList<THomePageAdmin>();
 		Boolean peopleflg = true;
 		for(THomePageAdmin admin : hpEntry.getAdmin()){					
@@ -148,7 +155,10 @@ public class HomePageManager {
 			homepageInfoDao.delete(hpid);	
 			return;
 		}
-		if(type.equals("start")){			
+		if(type.equals("start")){
+			if (homepageaEntry.getParentid()==0){
+				homepageInfoDao.updataStatus();
+			}
 			homepageaEntry.setStatus("1");			
 		}
 		if(type.equals("stop")){			
@@ -244,7 +254,10 @@ public class HomePageManager {
 		column.setUpdatetime(now);
 		THomePageColumn columnEntry = new THomePageColumn();
 		mapper.map(column, columnEntry);
-		homepageAdminDao.delete(column.getAdmin());
+		List<THomePageAdmin> adminEntries =  homepageAdminDao.findcolumnadmin(column.getid());
+		if(adminEntries !=null){
+			homepageAdminDao.delete(adminEntries);	
+		}		
 		
 		List<THomePageAdmin> homepageadminEntries = new ArrayList<THomePageAdmin>();
 		Boolean peopleflg = true;
@@ -347,15 +360,17 @@ public class HomePageManager {
 		Date now = new Date(); 	
 		form.setUpdatetime(now);
 		THomePageForm formEntry = new THomePageForm();
-		mapper.map(form, formEntry);	
-		List<THomePageFormIn> homepageforminEntries = new ArrayList<THomePageFormIn>();
-		if (form.getFormin() != null) {
-			homepageForminDao.delete(form.getFormin());					
+		mapper.map(form, formEntry);
+		List<THomePageFormIn> forminEntries =homepageForminDao.find(form.getid());
+		if (forminEntries != null) {			
+			homepageForminDao.delete(forminEntries);					
 		}
+		List<THomePageFormIn> homepageforminEntries = new ArrayList<THomePageFormIn>();		
 		
 		for(THomePageFormIn formin : formEntry.getFormin()){						
 			formin.setid(forminid);
 			formin.setUpdatetime(now);
+			formin.setFormid(form.getid());
 			homepageforminEntries.add(formin);
 			forminid = forminid+1;			
 		}
@@ -431,23 +446,28 @@ public class HomePageManager {
 		long orderid = homepagestyleorderDao.findmaxid()+1;
 		Date now = new Date();
 		style.setUpdatetime(now);
-		THomePageStyle styleEntry = new THomePageStyle();
+		THomePageStyle styleEntry = new THomePageStyle();			
 		mapper.map(style, styleEntry);
-		for(THomePageImg img : style.getImg()){	
-			homepageimgDao.delete(img.getid());	
+		List<THomePageImg> imgEntries =  homepageimgDao.find(style.getid());
+		if (imgEntries!=null){
+			homepageimgDao.delete(imgEntries);
 		}
-		for(THomePageStyleOrder order : style.getOrder()){	
-			homepagestyleorderDao.delete(order.getid());	
+		
+		List<THomePageStyleOrder> orderEntries = homepagestyleorderDao.find(style.getid());
+		if (orderEntries!=null){
+			homepagestyleorderDao.delete(orderEntries);	
 		}
 		List<THomePageStyleOrder> homepagestyleorderEntries = new ArrayList<THomePageStyleOrder>();
 		List<THomePageImg> homepageimgEntries = new ArrayList<THomePageImg>();
 		for(THomePageStyleOrder order : styleEntry.getOrder()){			
-			order.setid(orderid);	
+			order.setid(orderid);
+			order.setStyleid(style.getid());
 			homepagestyleorderEntries.add(order);
 			orderid = orderid+1;			
 		}
 		for(THomePageImg img : styleEntry.getImg()){			
 			img.setid(imgid);
+			img.setStyleid(style.getid());
 			img.setUpdatetime(now);
 			homepageimgEntries.add(img);
 			imgid = imgid+1;			
@@ -465,7 +485,7 @@ public class HomePageManager {
 		}
 		
 		if(type.equals("del")){			
-			homepageStyleDao.delete(styleid);	
+			homepageStyleDao.delete(styleEntry);	
 			return;
 		}
 		if(type.equals("start")){			
@@ -510,34 +530,98 @@ public class HomePageManager {
 		List<THomePageForm> homepagefromEntries =  homepageFormDao.find(homepageEntry.getid());
 		
 		for(THomePageForm Form : homepagefromEntries){
+			THomePageStyleOrder homepagestyleorderEntry =  homepagestyleorderDao.findform(Form.getid());
 			HomePageInfoAllDto hpDto=new HomePageInfoAllDto();
-			hpDto.setCARD_TOP_COLOR(Form.getTop_color());
-			hpDto.setCARD_WIDTH(Form.getWidth());
-			hpDto.setCARD_INDEX(homepagestyleorderDao.findform(Form.getid()).getOrderid());
-			List<HomePageFormInAllDto> forminall = new ArrayList<HomePageFormInAllDto>();
-					
-			for(THomePageFormIn Formin : Form.getFormin()){
-				HomePageFormInAllDto forminone = new HomePageFormInAllDto();
-				
-				forminone.setCONTENT_TYPE(Formin.getContent_type());
-				forminone.setMETHOD(Formin.getMethod());
-				forminone.setPAYLOAD(Formin.getPayload());
-				forminone.setQueryString(Formin.getQuerystring());
-				forminone.setSUBCARD_INDEX(Formin.getForm_inid());
-				forminone.setSUBCARD_ISMORE(Formin.getIsmore());
-				forminone.setSUBCARD_MORE_URL(Formin.getMore_url());
-				forminone.setSUBCARD_TYPE(Formin.getStyleid());
-				forminone.setSUBCARD_ZH(Formin.getName());
-				forminone.setURL(Formin.getUrl());
-				forminall.add(forminone);
-			}
-			hpDto.setSUBCARDS(forminall);
 			
-			homepageallDtos.add(hpDto);
+			
+			if (homepagestyleorderEntry!=null){
+				hpDto.setCARD_TOP_COLOR(Form.getTop_color());
+				hpDto.setCARD_WIDTH(Form.getWidth());
+				hpDto.setCARD_INDEX(homepagestyleorderEntry.getOrderid());
+				List<HomePageFormInAllDto> forminall = new ArrayList<HomePageFormInAllDto>();
+				
+				for(THomePageFormIn Formin : Form.getFormin()){
+					HomePageFormInAllDto forminone = new HomePageFormInAllDto();
+					
+					forminone.setCONTENT_TYPE(Formin.getContent_type());
+					forminone.setMETHOD(Formin.getMethod());
+					forminone.setPAYLOAD(Formin.getPayload());
+					forminone.setQueryString(Formin.getQuerystring());
+					forminone.setSUBCARD_INDEX(Formin.getForm_inid());
+					forminone.setSUBCARD_ISMORE(Formin.getIsmore());
+					forminone.setSUBCARD_MORE_URL(Formin.getMore_url());
+					forminone.setSUBCARD_TYPE(Formin.getStyleid());
+					forminone.setSUBCARD_ZH(Formin.getName());
+					forminone.setURL(Formin.getUrl());
+					forminall.add(forminone);
+				}
+				hpDto.setSUBCARDS(forminall);
+				
+				homepageallDtos.add(hpDto);
+			}
+			
+			
 		}
 		
 		return homepageallDtos;		
 	}
-	
+	public List<HomePageArticlecatDto> findArticlecat(long parent_id){
+		List<THomePageArticlecat> articlecatEntries =  homepageArticlecatDao.find(parent_id);
+		if(articlecatEntries==null){
+			return new ArrayList<HomePageArticlecatDto>();
+		}
+		List<HomePageArticlecatDto> homepagecolumnDtos=new ArrayList<HomePageArticlecatDto>();
+		
+		for(THomePageArticlecat column : articlecatEntries){
+			HomePageArticlecatDto dto=new HomePageArticlecatDto();
+			mapper.map(column, dto);
+			homepagecolumnDtos.add(dto);
+		}		
+		return homepagecolumnDtos;		
+	}
+	public void saveArticlecat(HomePageArticlecatDto articlecat) {
+		if (articlecat == null) {
+			return;
+		}		
+		
+		long id = homepageArticlecatDao.findmaxid()+1;		
+		articlecat.setid(id);		
+		articlecat.setVersion("1");
+		articlecat.setSeq("1");
+		articlecat.setIs_build("1");
+		THomePageArticlecat articlecatEntry = new THomePageArticlecat();
+		mapper.map(articlecat, articlecatEntry);
+		homepageArticlecatDao.save(articlecatEntry);
+		return;
+	}
+	public void editArticlecat(HomePageArticlecatDto articlecat) {
+		if (articlecat == null) {
+			return;
+		}				
+		THomePageArticlecat articlecatEntry = new THomePageArticlecat();
+		mapper.map(articlecat, articlecatEntry);
+		homepageArticlecatDao.save(articlecatEntry);
+		return;
+	}
+	public void editArticlecat(long articlecatid,String type) {
+		THomePageArticlecat articlecatEntry =  homepageArticlecatDao.findone(articlecatid);
+		if(articlecatEntry==null){
+			return;
+		}
+		
+		if(type.equals("del")){			
+			homepageArticlecatDao.delete(articlecatEntry);	
+			return;
+		}
+		if(type.equals("start")){			
+			articlecatEntry.setStatus("2");			
+		}
+		if(type.equals("stop")){			
+			articlecatEntry.setStatus("0");			
+		}
+
+		homepageArticlecatDao.save(articlecatEntry);
+		return;
+	}
 	
 }

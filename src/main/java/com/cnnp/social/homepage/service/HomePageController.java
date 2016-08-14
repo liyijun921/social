@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.cnnp.social.homepage.manager.HomePageManager;
+import com.cnnp.social.homepage.manager.dto.HomePageArticlecatDto;
 import com.cnnp.social.homepage.manager.dto.HomePageColumnDto;
 import com.cnnp.social.homepage.manager.dto.HomePageFormDto;
 import com.cnnp.social.homepage.manager.dto.HomePageIDNameDto;
@@ -44,17 +45,17 @@ public class HomePageController {
 	}
 	
 	@RequestMapping(value = "/homepagecolumn", method = RequestMethod.GET)
-	public @ResponseBody List<HomePageColumnDto> viewColumn(@RequestParam long hpid) {
-		return hpManger.findColumn(hpid);
+	public @ResponseBody List<HomePageArticlecatDto> viewColumn(@RequestParam long hpid) {
+		return hpManger.findArticlecat(hpid);
 	}
 	
 	@RequestMapping(value = "/homepagecolumn/add", method = RequestMethod.POST)
-	public void save(@RequestBody HomePageColumnDto column) {
-		hpManger.saveColumn(column); 
+	public void save(@RequestBody HomePageArticlecatDto column) {
+		hpManger.saveArticlecat(column); 
 	}
 	@RequestMapping(value = "/homepagecolumn/edit", method = RequestMethod.POST)
-	public void columnedit(@RequestBody HomePageColumnDto column) {
-		hpManger.editColumn(column); 
+	public void columnedit(@RequestBody HomePageArticlecatDto column) {
+		hpManger.editArticlecat(column); 
 	}
 	@RequestMapping(value = "/homepagecolumn/edittype", method = RequestMethod.GET)
 	public void editcolumntype(@RequestParam long columnid,@RequestParam String type) {
@@ -104,5 +105,11 @@ public class HomePageController {
 	@RequestMapping(value = "/sector", method = RequestMethod.GET)
 	public @ResponseBody List<HomePageIDNameDto> viewFormall() {
 		return hpManger.findHomePageSector();
+	}
+	
+	
+	@RequestMapping(value = "test/{hpid}", method = RequestMethod.GET)
+	public @ResponseBody List<HomePageArticlecatDto> test(@PathVariable("hpid") long hpid) {
+		return hpManger.findArticlecat(hpid);
 	}
 }
