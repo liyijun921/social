@@ -59,7 +59,7 @@ public class HomePageController {
 	}
 	@RequestMapping(value = "/homepagecolumn/edittype", method = RequestMethod.GET)
 	public void editcolumntype(@RequestParam long columnid,@RequestParam String type) {
-		hpManger.editColumn(columnid,type); 
+		hpManger.editArticlecat(columnid,type); 
 	}
 	
 	@RequestMapping(value = "/homepageform", method = RequestMethod.GET)
