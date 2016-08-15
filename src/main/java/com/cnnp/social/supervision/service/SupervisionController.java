@@ -37,7 +37,8 @@ public class SupervisionController {
 	
 	@RequestMapping(value = "/find/{id}", method = RequestMethod.GET)
 	public @ResponseBody SupervisionDto view(@PathVariable("id") long id) {
-		return supervisionManger.findOne(id);
+		//SupervisionDto supervisionDto=supervisionManger.findOne(id)
+		return supervisionManger.findAllStatusOne(id);
 	}
 	@RequestMapping(value = "/findchildren/{pid}", method = RequestMethod.GET)
 	public @ResponseBody List<SupervisionDto> findChildren(@PathVariable("pid") long pid) {

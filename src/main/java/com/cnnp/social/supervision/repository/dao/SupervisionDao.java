@@ -16,9 +16,15 @@ import com.cnnp.social.supervision.repository.entity.TSupervision;
 @CacheConfig(cacheNames = "cnnp.portal.socail.supervision")
 public interface SupervisionDao extends CrudRepository<TSupervision, Long>,JpaSpecificationExecutor<TSupervision>{
 	
-	@Query("select supervision from TSupervision supervision where supervision.pid = ?1 or supervision.id=?1")
+	@Query("select supervision from TSupervision supervision where (supervision.pid = ?1 or supervision.id=?1)")
 	public List<TSupervision> findChildren(long pid);
 
+	@Query("select supervision from TSupervision supervision where supervision.id=?1 and supervision.status=0")
+	TSupervision findOne(Long id);
+	
+	
+	@Query("select supervision from TSupervision supervision where supervision.id=?1")
+	TSupervision findAllStatusOne(Long id);
 	
 	
 	

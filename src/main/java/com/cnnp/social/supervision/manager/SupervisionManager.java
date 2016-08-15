@@ -1,6 +1,8 @@
 package com.cnnp.social.supervision.manager;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -10,6 +12,7 @@ import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.dozer.DozerBeanMapper;
@@ -98,6 +101,12 @@ public class SupervisionManager {
 	@Transactional
 	public SocialResponse postpone(long supervisionid,Date newDate,SupervisionUpdateStatusDto statusDto){
 		TSupervision supervisionEntry = supervisionDao.findOne(supervisionid);
+		SocialResponse response=new SocialResponse();
+		if(supervisionEntry==null){
+			response.setMessagecode(500);
+			response.setMessage(new String[]{"no record the supervision<"+supervisionid+"> return."});
+			return response;
+		}
 		supervisionEntry.setEstimatedcompletetiontime(newDate);
 		if (statusDto != null) {
 			TSupervisionUpdatestatus supervisionUpdatestatusEntry = new TSupervisionUpdatestatus();
@@ -110,7 +119,7 @@ public class SupervisionManager {
 			supervisionEntry.getUpdateStatus().add(supervisionUpdatestatusEntry);
 		}
 		TSupervision supervision=supervisionDao.save(supervisionEntry);
-		SocialResponse response=new SocialResponse();
+		
 		if(supervision!=null){
 			response.setMessagecode(200);
 			response.setMessage(new String[]{""+supervision.getId()});
@@ -122,7 +131,13 @@ public class SupervisionManager {
 	}
 	@Transactional
 	public SocialResponse delete(long supervisionid,SupervisionUpdateStatusDto statusDto){
+		SocialResponse response=new SocialResponse();
 		TSupervision supervisionEntry = supervisionDao.findOne(supervisionid);
+		if(supervisionEntry==null){
+			response.setMessagecode(500);
+			response.setMessage(new String[]{"no record the supervision<"+supervisionid+"> return."});
+			return response;
+		}
 		supervisionEntry.setStatus(2);//撤销
 		
 		if (statusDto != null) {
@@ -136,7 +151,7 @@ public class SupervisionManager {
 			supervisionEntry.getUpdateStatus().add(supervisionUpdatestatusEntry);
 		}
 		TSupervision supervision=supervisionDao.save(supervisionEntry);
-		SocialResponse response=new SocialResponse();
+		
 		if(supervision!=null){
 			response.setMessagecode(200);
 			response.setMessage(new String[]{""+supervision.getId()});
@@ -148,7 +163,13 @@ public class SupervisionManager {
 	}
 	@Transactional
 	public SocialResponse close(long supervisionid,SupervisionUpdateStatusDto statusDto){
+		SocialResponse response=new SocialResponse();
 		TSupervision supervisionEntry = supervisionDao.findOne(supervisionid);
+		if(supervisionEntry==null){
+			response.setMessagecode(500);
+			response.setMessage(new String[]{"no record the supervision<"+supervisionid+"> return."});
+			return response;
+		}
 		supervisionEntry.setStatus(1);//任务项关闭
 		
 		if (statusDto != null) {
@@ -161,7 +182,7 @@ public class SupervisionManager {
 			supervisionEntry.getUpdateStatus().add(supervisionUpdatestatusEntry);
 		}
 		TSupervision supervision=supervisionDao.save(supervisionEntry);
-		SocialResponse response=new SocialResponse();
+		
 		if(supervision!=null){
 			response.setMessagecode(200);
 			response.setMessage(new String[]{""+supervision.getId()});
@@ -181,10 +202,18 @@ public class SupervisionManager {
 	public SupervisionDto findOne(long id) {
 		TSupervision supervisionEntry = supervisionDao.findOne(id);
 		if (supervisionEntry == null) {
-			return new SupervisionDto();
+			return null;
 		}
 		return convertSupervisionEntrytoDto(supervisionEntry);
 
+	}
+	
+	public SupervisionDto findAllStatusOne(long id){
+		TSupervision supervisionEntry = supervisionDao.findAllStatusOne(id);
+		if (supervisionEntry == null) {
+			return new SupervisionDto();
+		}
+		return convertSupervisionEntrytoDto(supervisionEntry);
 	}
 
 	private SupervisionDto convertSupervisionEntrytoDto(TSupervision supervisionEntry) {
@@ -194,6 +223,7 @@ public class SupervisionManager {
 		if (traces == null || traces.size() < 1) {
 			return supervisionDto;
 		}
+		Collections.sort(traces);
 		TSupervisionTrace trace = traces.get(0);
 		SupervisionTraceDto supervisionTraceDto = new SupervisionTraceDto();
 		mapper.map(trace, supervisionTraceDto);

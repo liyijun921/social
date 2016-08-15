@@ -21,7 +21,7 @@ import org.dozer.Mapping;
  */
 @Entity
 @Table(name = "T_SUPERVISION_TRACE")
-public class TSupervisionTrace {
+public class TSupervisionTrace implements Comparable<TSupervisionTrace> {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SQ_Supervision_Trace")
@@ -33,7 +33,6 @@ public class TSupervisionTrace {
 	private String operatorsn;
 
 	private int rate;
-	@Mapping(value="supervisionID")
 	private long supervisionid;
 	private String description;
 
@@ -99,6 +98,12 @@ public class TSupervisionTrace {
 
 	public void setSupervisionid(long supervisionid) {
 		this.supervisionid = supervisionid;
+	}
+
+	@Override
+	public int compareTo(TSupervisionTrace o) {
+		// TODO Auto-generated method stub
+		return (int) (o.getId()-this.id);
 	}
 
 }
