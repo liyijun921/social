@@ -156,9 +156,9 @@ public class HomePageManager {
 			return;
 		}
 		if(type.equals("start")){
-			if (homepageaEntry.getParentid()==0){
-				homepageInfoDao.updataStatus();
-			}
+			//if (homepageaEntry.getParentid()==0){
+			//	homepageInfoDao.updataStatus();
+			//}
 			homepageaEntry.setStatus("1");			
 		}
 		if(type.equals("stop")){			
