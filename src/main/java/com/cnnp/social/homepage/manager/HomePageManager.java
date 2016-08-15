@@ -528,9 +528,10 @@ public class HomePageManager {
 			return new ArrayList<HomePageInfoAllDto>();
 		}
 		List<THomePageForm> homepagefromEntries =  homepageFormDao.find(homepageEntry.getid());
-		
+		THomePageStyle homepagestyleEntry =  homepageStyleDao.findstart(homepageEntry.getid());
 		for(THomePageForm Form : homepagefromEntries){
-			THomePageStyleOrder homepagestyleorderEntry =  homepagestyleorderDao.findform(Form.getid());
+			
+			THomePageStyleOrder homepagestyleorderEntry =  homepagestyleorderDao.findform(homepagestyleEntry.getid(),Form.getid());
 			HomePageInfoAllDto hpDto=new HomePageInfoAllDto();
 			
 			
