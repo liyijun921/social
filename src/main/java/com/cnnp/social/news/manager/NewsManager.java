@@ -42,7 +42,7 @@ public class NewsManager {
                 " FROM pb2_ARTICLE art LEFT JOIN pb2_attachments att ON art.main_attach_id = att.id WHERE art.status = 2 " +
                 " AND (art.cat_id = ? OR art.cat_id in (SELECT cat.id FROM pb2_articlecat cat WHERE cat.parent_id = ?))" +
                 "AND art.valid_date >= TO_CHAR(sysdate,'YYYY-MM-DD')" +
-                "ORDER BY art.is_top DESC, art.publish_date DESC, art.audit_date DESC) where rownum<="+topcount;
+                "ORDER BY art.publish_date DESC, art.audit_date DESC) where rownum<="+topcount;
         		obs=new Object[]{cardcode,cardcode};
         if(cardcode.equals("9999")){
         	sql="select rownum,id, main_attach_id, articleId, title, brief, orgName, "+ 
