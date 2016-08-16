@@ -16,8 +16,8 @@ public interface HomePageStyleOrderDao extends CrudRepository<THomePageStyleOrde
 
 	@Query("select hp from THomePageStyleOrder hp where hp.styleid = ?1")
 	public List<THomePageStyleOrder> find(Long styleid);
-	@Query("select hp from THomePageStyleOrder hp where hp.formid = ?1")
-	public THomePageStyleOrder findform(Long formid);
+	@Query("select hp from THomePageStyleOrder hp where hp.styleid = ?1 and hp.formid = ?2")
+	public THomePageStyleOrder findform(Long styleid,Long formid);
 	@Query("select max(cast(id as float)) from THomePageStyleOrder ")
 	public long findmaxid();
 }
