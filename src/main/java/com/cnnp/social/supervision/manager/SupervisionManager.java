@@ -230,6 +230,16 @@ public class SupervisionManager {
 		supervisionDto.setLatestTrace(supervisionTraceDto);
 		return supervisionDto;
 	}
+	public List<SupervisionTraceDto> findTraces(long supervisionid){
+		List<TSupervisionTrace> traces=supervisionTraceDao.find(supervisionid);
+		List<SupervisionTraceDto> traceDtos=new ArrayList<SupervisionTraceDto>();
+		for(TSupervisionTrace trace : traces){
+			SupervisionTraceDto supervisionTraceDto = new SupervisionTraceDto();
+			mapper.map(trace, supervisionTraceDto);
+			traceDtos.add(supervisionTraceDto);
+		}
+		return traceDtos;
+	}
 	
 	public List<SupervisionDto> findChildren(long pid) {
 		List<TSupervision> supervisionEntries=supervisionDao.findChildren(pid);

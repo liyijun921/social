@@ -49,6 +49,10 @@ public class SupervisionController {
 		supervisionManger.save(supervision);
 
 	}
+	@RequestMapping(value = "/findtrace/{supervisionid}", method = RequestMethod.GET)
+	public List<SupervisionTraceDto> findTrace(@PathVariable("supervisionid") long supervisionid){
+		return supervisionManger.findTraces(supervisionid);
+	}
 	
 	@RequestMapping(value = "/trace/{id}", method = RequestMethod.PUT)
 	public @ResponseBody SocialResponse trace(@RequestBody SupervisionTraceDto supervisionTraceDto) {

@@ -29,6 +29,7 @@ public class SupervisionDto {
 	private String comments;//备注
 	
 	private SupervisionTraceDto latestTrace;//最新执行情况
+	
 
 	public long getId() {
 		return id;
@@ -209,6 +210,7 @@ public class SupervisionDto {
 	public void setLatestTrace(SupervisionTraceDto latestTrace) {
 		this.latestTrace = latestTrace;
 	}
+	
 	
 	
 }
