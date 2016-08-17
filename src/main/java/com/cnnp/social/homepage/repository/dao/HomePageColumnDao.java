@@ -22,4 +22,6 @@ public interface HomePageColumnDao extends CrudRepository<THomePageColumn, Long>
 	public THomePageColumn findone(Long id);
 	@Query("select max(cast(id as float)) from THomePageColumn ")
 	public long findmaxid();
+	@Query("select count(*) from THomePageColumn ")
+	public long findid();
 }

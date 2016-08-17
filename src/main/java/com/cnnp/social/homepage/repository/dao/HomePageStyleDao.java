@@ -21,4 +21,6 @@ public interface HomePageStyleDao extends CrudRepository<THomePageStyle, Long> ,
 	public THomePageStyle findstart(Long hpid);
 	@Query("select max(cast(id as float)) from THomePageStyle ")
 	public long findmaxid();
+	@Query("select count(*) from THomePageStyle ")
+	public long findid();
 }

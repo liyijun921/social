@@ -19,9 +19,11 @@ public interface HomePageInfoDao extends CrudRepository<THomePageInfo, Long> ,Jp
 	public long findmaxid();
 	@Query("select hp from THomePageInfo hp where STATUS = '1' and hptype <>'0'")
 	public List<THomePageInfo> findparentid();
-	@Query("select hp from THomePageInfo hp where STATUS = '1' and PARENTID='0' and rownum =1 ")
+	@Query("select hp from THomePageInfo hp where STATUS = '1' and hptype='0' and rownum =1 ")
 	public THomePageInfo findStartHP();
 	
-	@Query("UPDATE THomePageInfo set STATUS='0' where STATUS ='1' and PARENTID='0'")
+	@Query("UPDATE THomePageInfo set STATUS='0' where STATUS ='1' and hptype='0'")
 	public THomePageInfo updataStatus();
+	@Query("select count(*) from THomePageInfo ")
+	public long findid();
 }

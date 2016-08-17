@@ -43,7 +43,12 @@ public class ScheduleManager {
         long scheduleid = 0;	
         Boolean peopleflg = false;
 		if (schedules.get(0).getid() == null) {	
-			scheduleid = scheduleDao.findmaxid() +1;
+			if (scheduleDao.findid()==0){
+				scheduleid=1;			
+			}else{
+				scheduleid = scheduleDao.findmaxid()+1;			
+			}
+			//scheduleid = scheduleDao.findmaxid() +1;
 			for(ScheduleDto scheduledto : schedules){		
 				List<TSchedulePeople> peopletemps = schedulepeopleDao.finduser(startdate, enddate,scheduledto.getPeople().getUserid());
 				if (peopletemps.size() != 0) {
@@ -109,7 +114,12 @@ public class ScheduleManager {
 		long scheduleid = 0;
 		
 		if (schedules.get(0).getid() == null) {	
-			scheduleid = scheduleDao.findmaxid() +1;
+			if (scheduleDao.findid()==0){
+				scheduleid=1;			
+			}else{
+				scheduleid = scheduleDao.findmaxid()+1;			
+			}
+			//scheduleid = scheduleDao.findmaxid() +1;
 			for(ScheduleDto scheduledto : schedules){			
 				scheduledto.setid(scheduleid);
 				scheduledto.getPeople().setScheduleId(scheduleid);
