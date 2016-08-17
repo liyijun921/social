@@ -15,4 +15,6 @@ public interface HomePageImgDao extends CrudRepository<THomePageImg, Long> ,JpaS
 	public List<THomePageImg> find(Long styleid);
 	@Query("select max(cast(id as float)) from THomePageImg ")
 	public long findmaxid();
+	@Query("select count(*) from THomePageImg ")
+	public long findid();
 }

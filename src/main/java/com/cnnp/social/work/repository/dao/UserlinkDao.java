@@ -20,6 +20,8 @@ public interface UserlinkDao extends CrudRepository<TUserLink, Long> ,JpaSpecifi
 	public List<TUserLink> find(String userid);
 	@Query("select max(cast(id as float)) from TUserLink ")
 	public long findmaxid();
+	@Query("select count(*) from TUserLink ")
+	public long findid();
 	@Query("delete from TUserLink where userid = ?1")
 	public void deluser(String userid);
 }

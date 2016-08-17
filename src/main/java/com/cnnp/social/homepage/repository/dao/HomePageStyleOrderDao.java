@@ -20,4 +20,6 @@ public interface HomePageStyleOrderDao extends CrudRepository<THomePageStyleOrde
 	public THomePageStyleOrder findform(Long styleid,Long formid);
 	@Query("select max(cast(id as float)) from THomePageStyleOrder ")
 	public long findmaxid();
+	@Query("select count(*) from THomePageStyleOrder ")
+	public long findid();
 }

@@ -23,4 +23,6 @@ public interface HomePageAdminDao extends CrudRepository<THomePageAdmin, Long> ,
 
 	@Query("select max(cast(id as float)) from THomePageAdmin ")
 	public long findmaxid();
+	@Query("select count(*) from THomePageAdmin ")
+	public long findid();
 }

@@ -69,8 +69,20 @@ public class HomePageManager {
 		if (homepage == null) {
 			return;
 		}
-		long hpid = homepageInfoDao.findmaxid()+1;
-		long id = homepageAdminDao.findmaxid()+1;
+		long hpid; 
+		if (homepageInfoDao.findid()==0){
+			hpid=1;			
+		}else{
+			hpid = homepageInfoDao.findmaxid()+1;			
+		}
+		long id; 
+		if (homepageAdminDao.findid()==0){
+			id=1;			
+		}else{
+			id = homepageAdminDao.findmaxid()+1;			
+		}
+		//long hpid = homepageInfoDao.findmaxid()+1;
+		//long id = homepageAdminDao.findmaxid()+1;
 		Date now = new Date(); 
 		homepage.setid(hpid);
 		homepage.setUpdatetime(now);
@@ -107,7 +119,13 @@ public class HomePageManager {
 		if (homepage == null) {
 			return;
 		}
-		long id = homepageAdminDao.findmaxid()+1;
+		long id; 
+		if (homepageAdminDao.findid()==0){
+			id=1;			
+		}else{
+			id = homepageAdminDao.findmaxid()+1;			
+		}
+		//long id = homepageAdminDao.findmaxid()+1;
 		Date now = new Date();
 		homepage.setUpdatetime(now);
 		THomePageInfo hpEntry = new THomePageInfo();
@@ -212,8 +230,20 @@ public class HomePageManager {
 		if (column == null) {
 			return;
 		}
-		long adminid = homepageAdminDao.findmaxid()+1;
-		long columnid = homepageColumnDao.findmaxid()+1;
+		long adminid; 
+		if (homepageAdminDao.findid()==0){
+			adminid=1;			
+		}else{
+			adminid = homepageAdminDao.findmaxid()+1;			
+		}
+		long columnid; 
+		if (homepageColumnDao.findid()==0){
+			columnid=1;			
+		}else{
+			columnid = homepageColumnDao.findmaxid()+1;			
+		}
+		//long adminid = homepageAdminDao.findmaxid()+1;
+		//long columnid = homepageColumnDao.findmaxid()+1;
 		Date now = new Date(); 
 		column.setid(columnid);
 		column.setUpdatetime(now);
@@ -330,8 +360,20 @@ public class HomePageManager {
 		if (form == null) {
 			return;
 		}
-		long formid = homepageFormDao.findmaxid()+1;
-		long forminid = homepageForminDao.findmaxid()+1;
+		long formid; 
+		if (homepageFormDao.findid()==0){
+			formid=1;			
+		}else{
+			formid = homepageFormDao.findmaxid()+1;			
+		}
+		long forminid; 
+		if (homepageForminDao.findid()==0){
+			forminid=1;			
+		}else{
+			forminid = homepageForminDao.findmaxid()+1;			
+		}
+		//long formid = homepageFormDao.findmaxid()+1;
+		//long forminid = homepageForminDao.findmaxid()+1;
 		Date now = new Date(); 
 		form.setid(formid);		
 		form.setUpdatetime(now);
@@ -356,7 +398,13 @@ public class HomePageManager {
 		if (form == null) {
 			return;
 		}
-		long forminid = homepageForminDao.findmaxid()+1;
+		long forminid; 
+		if (homepageForminDao.findid()==0){
+			forminid=1;			
+		}else{
+			forminid = homepageForminDao.findmaxid()+1;			
+		}
+		//long forminid = homepageForminDao.findmaxid()+1;
 		Date now = new Date(); 	
 		form.setUpdatetime(now);
 		THomePageForm formEntry = new THomePageForm();
@@ -412,9 +460,27 @@ public class HomePageManager {
 		if (style == null) {
 			return;
 		}
-		long styleid = homepageStyleDao.findmaxid()+1;
-		long imgid = homepageimgDao.findmaxid()+1;
-		long orderid = homepagestyleorderDao.findmaxid()+1;
+		long styleid; 
+		if (homepageStyleDao.findid()==0){
+			styleid=1;			
+		}else{
+			styleid = homepageStyleDao.findmaxid()+1;			
+		}
+		long imgid; 
+		if (homepageimgDao.findid()==0){
+			imgid=1;			
+		}else{
+			imgid = homepageimgDao.findmaxid()+1;			
+		}
+		long orderid; 
+		if (homepagestyleorderDao.findid()==0){
+			orderid=1;			
+		}else{
+			orderid = homepagestyleorderDao.findmaxid()+1;			
+		}
+		//long styleid = homepageStyleDao.findmaxid()+1;
+		//long imgid = homepageimgDao.findmaxid()+1;
+		//long orderid = homepagestyleorderDao.findmaxid()+1;
 		Date now = new Date(); 
 		style.setid(styleid);	
 		style.setUpdatetime(now);
@@ -442,8 +508,20 @@ public class HomePageManager {
 		if (style == null) {
 			return;
 		}
-		long imgid = homepageimgDao.findmaxid()+1;
-		long orderid = homepagestyleorderDao.findmaxid()+1;
+		long imgid; 
+		if (homepageimgDao.findid()==0){
+			imgid=1;			
+		}else{
+			imgid = homepageimgDao.findmaxid()+1;			
+		}
+		long orderid; 
+		if (homepagestyleorderDao.findid()==0){
+			orderid=1;			
+		}else{
+			orderid = homepagestyleorderDao.findmaxid()+1;			
+		}
+		//long imgid = homepageimgDao.findmaxid()+1;
+		//long orderid = homepagestyleorderDao.findmaxid()+1;
 		Date now = new Date();
 		style.setUpdatetime(now);
 		THomePageStyle styleEntry = new THomePageStyle();			
@@ -529,42 +607,44 @@ public class HomePageManager {
 		}
 		List<THomePageForm> homepagefromEntries =  homepageFormDao.find(homepageEntry.getid());
 		THomePageStyle homepagestyleEntry =  homepageStyleDao.findstart(homepageEntry.getid());
-		for(THomePageForm Form : homepagefromEntries){
-			
-			THomePageStyleOrder homepagestyleorderEntry =  homepagestyleorderDao.findform(homepagestyleEntry.getid(),Form.getid());
+		List<THomePageStyleOrder> orderEntries =  homepagestyleorderDao.find(homepagestyleEntry.getid());
+		for(THomePageForm Form : homepagefromEntries){			
 			HomePageInfoAllDto hpDto=new HomePageInfoAllDto();
-			
-			
-			if (homepagestyleorderEntry!=null){
-				hpDto.setCARD_TOP_COLOR(Form.getTop_color());
-				hpDto.setCARD_WIDTH(Form.getWidth());
-				hpDto.setCARD_INDEX(homepagestyleorderEntry.getOrderid());
-				List<HomePageFormInAllDto> forminall = new ArrayList<HomePageFormInAllDto>();
-				
-				for(THomePageFormIn Formin : Form.getFormin()){
-					HomePageFormInAllDto forminone = new HomePageFormInAllDto();
+			List<THomePageFormIn> Formins = Form.getFormin();
+			for(THomePageStyleOrder order : orderEntries){
+				if((Form.getid()==order.getFormid())){
 					
-					forminone.setCONTENT_TYPE(Formin.getContent_type());
-					forminone.setMETHOD(Formin.getMethod());
-					forminone.setPAYLOAD(Formin.getPayload());
-					forminone.setQueryString(Formin.getQuerystring());
-					forminone.setSUBCARD_INDEX(Formin.getForm_inid());
-					forminone.setSUBCARD_ISMORE(Formin.getIsmore());
-					forminone.setSUBCARD_MORE_URL(Formin.getMore_url());
-					forminone.setSUBCARD_TYPE(Formin.getStyleid());
-					forminone.setSUBCARD_ZH(Formin.getName());
-					forminone.setURL(Formin.getUrl());
-					forminall.add(forminone);
+					hpDto.setCARD_TOP_COLOR(Form.getTop_color());
+					hpDto.setCARD_WIDTH(Form.getWidth());
+					hpDto.setCARD_INDEX(order.getOrderid());
+					List<HomePageFormInAllDto> forminall = new ArrayList<HomePageFormInAllDto>();
+					
+					for(THomePageFormIn Formin : Formins){
+						HomePageFormInAllDto forminone = new HomePageFormInAllDto();
+						
+						forminone.setCONTENT_TYPE(Formin.getContent_type());
+						forminone.setMETHOD(Formin.getMethod());
+						forminone.setPAYLOAD(Formin.getPayload());
+						forminone.setQueryString(Formin.getQuerystring());
+						forminone.setSUBCARD_INDEX(Formin.getForm_inid());
+						forminone.setSUBCARD_ISMORE(Formin.getIsmore());
+						forminone.setSUBCARD_MORE_URL(Formin.getMore_url());
+						forminone.setSUBCARD_TYPE(Formin.getStyleid());
+						forminone.setSUBCARD_ZH(Formin.getName());
+						forminone.setURL(Formin.getUrl());
+						forminall.add(forminone);
+					}
+					hpDto.setSUBCARDS(forminall);
+					
+					homepageallDtos.add(hpDto);
+					
 				}
-				hpDto.setSUBCARDS(forminall);
-				
-				homepageallDtos.add(hpDto);
 			}
-			
 			
 		}
 		
 		return homepageallDtos;		
+	
 	}
 	public List<HomePageArticlecatDto> findArticlecat(long parent_id){
 		List<THomePageArticlecat> articlecatEntries =  homepageArticlecatDao.find(parent_id);
@@ -584,8 +664,13 @@ public class HomePageManager {
 		if (articlecat == null) {
 			return;
 		}		
-		
-		long id = homepageArticlecatDao.findmaxid()+1;		
+		long id; 
+		if (homepageArticlecatDao.findid()==0){
+			id=1;			
+		}else{
+			id = homepageArticlecatDao.findmaxid()+1;			
+		}
+		//long id = homepageArticlecatDao.findmaxid()+1;		
 		articlecat.setid(id);		
 		articlecat.setVersion("1");
 		articlecat.setSeq("1");

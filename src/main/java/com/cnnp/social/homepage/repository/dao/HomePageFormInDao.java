@@ -20,4 +20,6 @@ public interface HomePageFormInDao extends CrudRepository<THomePageFormIn, Long>
 	public List<THomePageFormIn> find(Long formid);
 	@Query("select max(cast(id as float)) from THomePageFormIn ")
 	public long findmaxid();
+	@Query("select count(*) from THomePageFormIn ")
+	public long findid();
 }

@@ -56,7 +56,13 @@ public class WorkManager {
 			return flg;
 		}
 		
-		long id = userlinkDao.findmaxid()+1;
+		long id; 
+		if (userlinkDao.findid()==0){
+			id=1;			
+		}else{
+			id = userlinkDao.findmaxid()+1;			
+		}
+				
 		List<TUserLink> userlinkEntries = new ArrayList<TUserLink>();
 		for(UserlinkDto user : userlink){
 			TUserLink userEntry = new TUserLink();

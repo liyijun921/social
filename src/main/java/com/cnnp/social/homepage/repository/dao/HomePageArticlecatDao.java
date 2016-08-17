@@ -19,4 +19,6 @@ public interface HomePageArticlecatDao extends CrudRepository<THomePageArticleca
 	public THomePageArticlecat findone(Long id);
 	@Query("select max(cast(id as float)) from THomePageArticlecat ")
 	public long findmaxid();
+	@Query("select count(*) from THomePageArticlecat ")
+	public long findid();
 }

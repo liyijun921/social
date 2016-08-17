@@ -108,8 +108,5 @@ public class HomePageController {
 	}
 	
 	
-	@RequestMapping(value = "test/{hpid}", method = RequestMethod.GET)
-	public @ResponseBody List<HomePageArticlecatDto> test(@PathVariable("hpid") long hpid) {
-		return hpManger.findArticlecat(hpid);
-	}
+	
 }
