@@ -23,16 +23,16 @@ public class WorkController {
 	@Autowired
 	private WorkManager workManger;
 	
-	@RequestMapping(value = "/work/add", method = RequestMethod.POST)
+	@RequestMapping(value = "/add", method = RequestMethod.POST)
 	public Boolean save(@RequestBody List<UserlinkDto> userlink,@RequestParam String type,@RequestParam String userid) {
 		return workManger.save(userlink,type,userid);
 	}
 
-	@RequestMapping(value = "/work/{userid}", method = RequestMethod.GET)
+	@RequestMapping(value = "/{userid}", method = RequestMethod.GET)
 	public @ResponseBody List<UserlinkDto> view(@PathVariable("userid") String userid) {
 		return workManger.findUserOrder(userid);
 	}
-	@RequestMapping(value = "/work/link", method = RequestMethod.GET)
+	@RequestMapping(value = "/link", method = RequestMethod.GET)
 	public @ResponseBody List<AdminlinkDto> viewlink() {
 		return workManger.findalllink();
 	}
