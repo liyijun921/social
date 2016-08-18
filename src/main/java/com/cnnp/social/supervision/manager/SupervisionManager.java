@@ -23,12 +23,15 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.cnnp.social.base.BaseSetting;
 import com.cnnp.social.base.SocialResponse;
+import com.cnnp.social.cache.repository.dao.DBCacheDataDao;
+import com.cnnp.social.cache.repository.entity.TDicData;
 import com.cnnp.social.news.manager.NewsSetting;
 import com.cnnp.social.supervision.manager.dto.SupervisionDto;
 import com.cnnp.social.supervision.manager.dto.SupervisionSearch;
@@ -51,6 +54,10 @@ public class SupervisionManager {
 	private SupervisionUpdateStatusDao supervisionUpdateStatusDao;
 	@Autowired
 	private SupervisionTraceDao supervisionTraceDao;
+	@Autowired
+	private DBCacheDataDao dbCacheDataDao;
+	@Autowired
+	private JdbcTemplate jdbcTemplate;
 	
 	@Autowired
 	private BaseSetting setting;
@@ -208,6 +215,16 @@ public class SupervisionManager {
 
 	}
 	
+	public int[] statisticsByYear(String uid){
+		Object[] objs=new Object[]{uid,uid};
+		
+		int uncompleted=jdbcTemplate.queryForObject("select count(*) as total from t_supervision t where "
+				+ "(t.accountablesn=? or t.responsiblesn=?) and to_char(t.estimatedcompletetiontime,'yyyy')=to_char(sysdate,'yyyy') and t.status='0'", Integer.class,objs);
+		int completed=jdbcTemplate.queryForObject("select count(*) as total from t_supervision t where "
+				+ "(t.accountablesn=? or t.responsiblesn=?) and to_char(t.estimatedcompletetiontime,'yyyy')=to_char(sysdate,'yyyy') and t.status='1'",Integer.class,objs);
+		return new int[]{uncompleted,completed};
+	}
+	
 	public SupervisionDto findAllStatusOne(long id){
 		TSupervision supervisionEntry = supervisionDao.findAllStatusOne(id);
 		if (supervisionEntry == null) {
@@ -219,6 +236,13 @@ public class SupervisionManager {
 	private SupervisionDto convertSupervisionEntrytoDto(TSupervision supervisionEntry) {
 		SupervisionDto supervisionDto = new SupervisionDto();
 		mapper.map(supervisionEntry, supervisionDto);
+		
+		TDicData dic=dbCacheDataDao.findByCode(supervisionDto.getSource());
+		supervisionDto.setSource_name(dic.getDicname());
+		
+		dic=dbCacheDataDao.findByCode(supervisionDto.getArea());
+		supervisionDto.setArea_name(dic.getDicname());
+		
 		List<TSupervisionTrace> traces = supervisionEntry.getTraces();
 		if (traces == null || traces.size() < 1) {
 			return supervisionDto;

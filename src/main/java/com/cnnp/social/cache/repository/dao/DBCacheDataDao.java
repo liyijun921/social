@@ -29,4 +29,7 @@ public interface DBCacheDataDao extends CrudRepository<TDicData, Long> {
 	//@Cacheable
 	List<TDicData> findByPID(long PID);
 	
+	@Query("select dic from TDicData dic where dic.diccode = ?1")
+	TDicData findByCode(String code);
+	
 }

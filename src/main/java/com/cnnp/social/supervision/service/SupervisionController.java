@@ -40,6 +40,11 @@ public class SupervisionController {
 		//SupervisionDto supervisionDto=supervisionManger.findOne(id)
 		return supervisionManger.findAllStatusOne(id);
 	}
+	@RequestMapping(value = "/completedRateStatistics/{uid}", method = RequestMethod.GET)
+	public @ResponseBody int[] statisticsByYear(@PathVariable("uid") String uid){
+		return supervisionManger.statisticsByYear(uid);
+	}
+	
 	@RequestMapping(value = "/findchildren/{pid}", method = RequestMethod.GET)
 	public @ResponseBody List<SupervisionDto> findChildren(@PathVariable("pid") long pid) {
 		return supervisionManger.findChildren(pid);

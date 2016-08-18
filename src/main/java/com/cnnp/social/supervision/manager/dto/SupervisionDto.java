@@ -11,8 +11,10 @@ public class SupervisionDto {
 	private String pcode;//上级督办编号
 	private String pname;//上级督办名称
 	private String name;//督办名称
-	private String source;//督办来源
-	private String area;//督办领域
+	private String source;//督办来源编码
+	private String source_name;//督办来源名称
+	private String area;//督办领域编码
+	private String area_name;//督办领域名称
 	private int status;//督办状态
 	private int importance;//重要程度
 	private int urgency;//紧急程度
@@ -209,6 +211,22 @@ public class SupervisionDto {
 
 	public void setLatestTrace(SupervisionTraceDto latestTrace) {
 		this.latestTrace = latestTrace;
+	}
+
+	public String getSource_name() {
+		return source_name;
+	}
+
+	public void setSource_name(String source_name) {
+		this.source_name = source_name;
+	}
+
+	public String getArea_name() {
+		return area_name;
+	}
+
+	public void setArea_name(String area_name) {
+		this.area_name = area_name;
 	}
 	
 	
