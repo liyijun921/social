@@ -67,7 +67,7 @@ public class ScheduleManager {
 				List<TSchedulePeople> peopletemps = schedulepeopleDao.finduser(startdate, enddate,scheduledto.getPeople().getUserid());
 				if (peopletemps.size() != 0) {
 					for(TSchedulePeople peopletemp : peopletemps){
-						if (scheduledto.getid() != peopletemp.getid()) {
+						if (!scheduledto.getPeople().getUserid().equals(peopletemp.getUserid())) {
 							resultsDtos.add(scheduledto.getPeople());
 							peopleflg = true;
 						}

@@ -14,6 +14,7 @@ public class HomePageFormInAllDto {
 	private String URL;//日程类型
 	private String PAYLOAD;//日程类型
 	private String QueryString;//日程类型
+	private String CODE;
 	public String getSUBCARD_TYPE() {
 		return SUBCARD_TYPE;
 	}
@@ -90,5 +91,11 @@ public class HomePageFormInAllDto {
 	public void setQueryString(String QueryString) {
 		this.QueryString = QueryString;
 	}
-	
+	public String getCode() {
+		return CODE;
+	}
+
+	public void setCode(String CODE) {
+		this.CODE = CODE;
+	}
 }
