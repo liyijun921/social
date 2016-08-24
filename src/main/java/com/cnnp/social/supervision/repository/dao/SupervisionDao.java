@@ -25,5 +25,5 @@ public interface SupervisionDao extends CrudRepository<TSupervision, Long>,JpaSp
 	
 	@Query("select supervision from TSupervision supervision where supervision.id=?1")
 	TSupervision findAllStatusOne(Long id);
-		
+	
 }

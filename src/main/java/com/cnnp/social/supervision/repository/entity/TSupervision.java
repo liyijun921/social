@@ -64,13 +64,7 @@ public class TSupervision implements Serializable{
 
 	private BigDecimal urgency;
 
-	@OneToMany(cascade = { CascadeType.ALL })
-	@JoinColumn(name = "supervisionid")
-	private List<TSupervisionTrace> traces = new ArrayList<TSupervisionTrace>();
 	
-	@OneToMany(cascade = { CascadeType.ALL })
-	@JoinColumn(name = "supervisionid")
-	private List<TSupervisionUpdatestatus> updateStatus=new ArrayList<TSupervisionUpdatestatus>();
 
 	public TSupervision() {
 	}
@@ -229,21 +223,7 @@ public class TSupervision implements Serializable{
 		this.urgency = urgency;
 	}
 	
-	public List<TSupervisionTrace> getTraces() {
-		return traces;
-	}
-
-	public void setTraces(List<TSupervisionTrace> traces) {
-		this.traces = traces;
-	}
-
-	public List<TSupervisionUpdatestatus> getUpdateStatus() {
-		return updateStatus;
-	}
-
-	public void setUpdateStatus(List<TSupervisionUpdatestatus> updateStatus) {
-		this.updateStatus = updateStatus;
-	}
+	
 
 	public String getScope() {
 		return scope;

@@ -1,7 +1,8 @@
 package com.cnnp.social.schedule.manager.dto;
 
 import java.util.Date;
-import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 public class ScheduleDto {
 	private Long id; //ID
@@ -13,13 +14,13 @@ public class ScheduleDto {
 	private String userid;//用户id
 
 	private String username;//用户名
-
+	//@JsonFormat(pattern="yyyy-MM-dd",timezone="GMT+8")
 	private Date startdate;//开始日期
 
 	private String description;//备注
 
 	private String scope;//范围
-
+	//@JsonFormat(pattern="yyyy-MM-dd",timezone="GMT+8")
 	private Date enddate;//结束日期
 
 	private String starttime;//开始时间

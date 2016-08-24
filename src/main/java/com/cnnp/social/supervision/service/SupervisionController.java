@@ -50,8 +50,8 @@ public class SupervisionController {
 		return supervisionManger.findChildren(pid);
 	}
 	@RequestMapping(value = "/add", method = RequestMethod.POST)
-	public void save(@RequestBody SupervisionDto supervision) {
-		supervisionManger.save(supervision);
+	public long save(@RequestBody SupervisionDto supervision) {
+		return supervisionManger.save(supervision);
 
 	}
 	@RequestMapping(value = "/findtrace/{supervisionid}", method = RequestMethod.GET)

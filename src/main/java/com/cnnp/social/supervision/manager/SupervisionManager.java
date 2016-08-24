@@ -1,5 +1,6 @@
 package com.cnnp.social.supervision.manager;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -65,27 +66,35 @@ public class SupervisionManager {
 	private DozerBeanMapper mapper = new DozerBeanMapper();
 
 	@Transactional
-	public void save(SupervisionDto supervision) {
+	public long save(SupervisionDto supervision) {
 		if (supervision == null) {
-			return;
+			return -1;
 		}
+		String code_sq="SELECT SQ_SUPERVISION_CODE.NEXTVAL FROM DUAL";
 		// 保存督办主表
 		TSupervision supervisionEntry = new TSupervision();
 		mapper.map(supervision, supervisionEntry);
-
-		SupervisionTraceDto traceDto = supervision.getLatestTrace();
-		if (traceDto != null) {
-			TSupervisionTrace supervisionTraceEntry = new TSupervisionTrace();
-			mapper.map(traceDto, supervisionTraceEntry);
-			if (supervisionEntry.getTraces() == null) {
-				supervisionEntry.setTraces(new ArrayList<TSupervisionTrace>());
-			}
-			supervisionEntry.getTraces().add(supervisionTraceEntry);
+//		
+//		SupervisionTraceDto traceDto = supervision.getLatestTrace();
+//		if (traceDto != null) {
+//			TSupervisionTrace supervisionTraceEntry = new TSupervisionTrace();
+//			mapper.map(traceDto, supervisionTraceEntry);
+//			if (supervisionEntry.getTraces() == null) {
+//				supervisionEntry.setTraces(new ArrayList<TSupervisionTrace>());
+//			}
+//			supervisionEntry.getTraces().add(supervisionTraceEntry);
+//		}
+		if(StringUtils.isBlank(supervisionEntry.getCode())){
+			int seq=jdbcTemplate.queryForObject(code_sq, Integer.class);
+			supervisionEntry.setCode(new SimpleDateFormat("yyyy").format(new Date())+"-"+supervisionEntry.getArea()+"-"+
+			StringUtils.leftPad(""+seq,6,'0'));
 		}
 
 		supervisionDao.save(supervisionEntry);
+		return supervisionEntry.getId();
 
 	}
+	
 	public SocialResponse trace(SupervisionTraceDto traceDto){
 		TSupervisionTrace trace=null;
 		if (traceDto != null) {
@@ -118,12 +127,10 @@ public class SupervisionManager {
 		if (statusDto != null) {
 			TSupervisionUpdatestatus supervisionUpdatestatusEntry = new TSupervisionUpdatestatus();
 			mapper.map(statusDto, supervisionUpdatestatusEntry);
-			if (supervisionEntry.getUpdateStatus() == null) {
-				supervisionEntry.setUpdateStatus(new ArrayList<TSupervisionUpdatestatus>());
-			}
+			
 			supervisionUpdatestatusEntry.setSupervisionId(supervisionid);
 			supervisionUpdatestatusEntry.setOperatetype(2);//延期
-			supervisionEntry.getUpdateStatus().add(supervisionUpdatestatusEntry);
+			supervisionUpdateStatusDao.save(supervisionUpdatestatusEntry);
 		}
 		TSupervision supervision=supervisionDao.save(supervisionEntry);
 		
@@ -150,12 +157,9 @@ public class SupervisionManager {
 		if (statusDto != null) {
 			TSupervisionUpdatestatus supervisionUpdatestatusEntry = new TSupervisionUpdatestatus();
 			mapper.map(statusDto, supervisionUpdatestatusEntry);
-			if (supervisionEntry.getUpdateStatus() == null) {
-				supervisionEntry.setUpdateStatus(new ArrayList<TSupervisionUpdatestatus>());
-			}
 			supervisionUpdatestatusEntry.setOperatetype(3);//关闭
 			supervisionUpdatestatusEntry.setSupervisionId(supervisionid);
-			supervisionEntry.getUpdateStatus().add(supervisionUpdatestatusEntry);
+			supervisionUpdateStatusDao.save(supervisionUpdatestatusEntry);
 		}
 		TSupervision supervision=supervisionDao.save(supervisionEntry);
 		
@@ -182,11 +186,10 @@ public class SupervisionManager {
 		if (statusDto != null) {
 			TSupervisionUpdatestatus supervisionUpdatestatusEntry = new TSupervisionUpdatestatus();
 			mapper.map(statusDto, supervisionUpdatestatusEntry);
-			if (supervisionEntry.getUpdateStatus() == null) {
-				supervisionEntry.setUpdateStatus(new ArrayList<TSupervisionUpdatestatus>());
-			}
 			supervisionUpdatestatusEntry.setOperatetype(4);//关闭
-			supervisionEntry.getUpdateStatus().add(supervisionUpdatestatusEntry);
+			supervisionUpdatestatusEntry.setSupervisionId(supervisionid);
+			supervisionUpdateStatusDao.save(supervisionUpdatestatusEntry);
+			//supervisionEntry.getUpdateStatus().add(supervisionUpdatestatusEntry);
 		}
 		TSupervision supervision=supervisionDao.save(supervisionEntry);
 		
@@ -243,7 +246,7 @@ public class SupervisionManager {
 		dic=dbCacheDataDao.findByCode(supervisionDto.getArea());
 		supervisionDto.setArea_name(dic.getDicname());
 		
-		List<TSupervisionTrace> traces = supervisionEntry.getTraces();
+		List<TSupervisionTrace> traces = supervisionTraceDao.find(supervisionEntry.getId());
 		if (traces == null || traces.size() < 1) {
 			return supervisionDto;
 		}
@@ -354,9 +357,9 @@ public class SupervisionManager {
 		for (TSupervision supervison : pageSetList) {
 			SupervisionDto dto = new SupervisionDto();
 			mapper.map(supervison, dto);
-
-			if (supervison.getTraces().size() > 0) {
-				TSupervisionTrace trace = supervison.getTraces().get(0);
+			List<TSupervisionTrace> traces=supervisionTraceDao.find(supervison.getId());
+			if (traces.size() > 0) {
+				TSupervisionTrace trace = traces.get(0);
 				SupervisionTraceDto traceDto = new SupervisionTraceDto();
 				mapper.map(trace, traceDto);
 				dto.setLatestTrace(traceDto);
