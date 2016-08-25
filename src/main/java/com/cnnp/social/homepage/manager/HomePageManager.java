@@ -70,10 +70,10 @@ public class HomePageManager {
 			return;
 		}
 		long hpid; 
-		if (homepageInfoDao.findid()==0){
+		if (homepageArticlecatDao.findid()==0){
 			hpid=1;			
 		}else{
-			hpid = homepageInfoDao.findmaxid()+1;			
+			hpid = homepageArticlecatDao.findmaxid()+1;			
 		}
 		long id; 
 		if (homepageAdminDao.findid()==0){
@@ -112,7 +112,19 @@ public class HomePageManager {
 			homepageadminEntries.add(user);
 		}
 		hpEntry.setAdmin(homepageadminEntries);
+		THomePageArticlecat articlecatEntry = new THomePageArticlecat();
+		articlecatEntry.setid(hpid);
+		articlecatEntry.setIs_build("1");
+		articlecatEntry.setName(hpEntry.getName());
+		articlecatEntry.setParent_id(1);
+		articlecatEntry.setPre_view_name(hpEntry.getName());
+		articlecatEntry.setSeq("99");
+		articlecatEntry.setStatus("2");
+		articlecatEntry.setVersion("1");
+		articlecatEntry.setAuditor_ids(hpEntry.getCreateuserid());
+		articlecatEntry.setAuditor_names(hpEntry.getCreateusername());		
 		homepageInfoDao.save(hpEntry);
+		homepageArticlecatDao.save(articlecatEntry);
 		return;
 	}
 	public void editHomePage(HomePageInfoDto homepage) {
@@ -125,7 +137,6 @@ public class HomePageManager {
 		}else{
 			id = homepageAdminDao.findmaxid()+1;			
 		}
-		//long id = homepageAdminDao.findmaxid()+1;
 		Date now = new Date();
 		homepage.setUpdatetime(now);
 		THomePageInfo hpEntry = new THomePageInfo();
@@ -675,8 +686,10 @@ public class HomePageManager {
 		//long id = homepageArticlecatDao.findmaxid()+1;		
 		articlecat.setid(id);		
 		articlecat.setVersion("1");
-		articlecat.setSeq("1");
+		articlecat.setSeq("99");
 		articlecat.setIs_build("1");
+		articlecat.setPre_view_name(articlecat.getName());
+		articlecat.setStatus("2");
 		THomePageArticlecat articlecatEntry = new THomePageArticlecat();
 		mapper.map(articlecat, articlecatEntry);
 		homepageArticlecatDao.save(articlecatEntry);
