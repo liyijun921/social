@@ -14,12 +14,12 @@ import java.util.Date;
 public class TCollspaceRemark{
 	
 	@Id
-	
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long id; //评论ID
 	
 	private long collspaceid; //空间ID
 
-	private String topicid;//主题ID
+	private long topicid;//主题ID
 
 	private long createuserid;//创建人ID
 
@@ -55,11 +55,11 @@ public class TCollspaceRemark{
 		this.collspaceid = collspaceid;
 	}
 
-	public String getTopicid() {
+	public long getTopicid() {
 		return this.topicid;
 	}
 
-	public void setTopicid(String topicid) {
+	public void setTopicid(long topicid) {
 		this.topicid = topicid;
 	}
 

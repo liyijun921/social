@@ -1,41 +1,24 @@
-package com.cnnp.social.collspace.repository.entity;
+package com.cnnp.social.collspace.manager.dto;
 
-import javax.persistence.*;
+import org.dozer.Mapping;
+
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-
-/**
- * The persistent class for the TOPICINFO database table.
- * 
- */
-@Entity
-@Table(name = "TOPICINFO")
-public class TCollspaceTopic{
-	
-	@Id
-	private long topicid;//主题ID
+public class CollspaceTopic_RDto {
 	private long collspaceid; //空间ID
-
+	private long topicid;//主题ID
 	private long createuserid;//创建人ID
-
 	private String createusername;//创建人
-
 	private Date createtime;//创建时间
-
 	private Date updatetime;//更新时间
-
 	private String description;//备注信息
-
 	private String remarkname;//主题名
-
-	public TCollspaceTopic() {
-	}
-
+	private List<CollspaceRemarkDto>  Remarks;
 	public long getCollspaceid() {
-		return this.collspaceid;
+		return collspaceid;
 	}
 
 	public void setCollspaceid(long collspaceid) {
@@ -43,7 +26,7 @@ public class TCollspaceTopic{
 	}
 
 	public long getTopicid() {
-		return this.topicid;
+		return topicid;
 	}
 
 	public void setTopicid(long topicid) {
@@ -51,7 +34,7 @@ public class TCollspaceTopic{
 	}
 
 	public long getCreateuserid() {
-		return this.createuserid;
+		return createuserid;
 	}
 
 	public void setCreateuserid(long createuserid) {
@@ -59,7 +42,7 @@ public class TCollspaceTopic{
 	}
 
 	public String getCreateusername() {
-		return this.createusername;
+		return createusername;
 	}
 
 	public void setCreateusername(String createusername) {
@@ -67,7 +50,7 @@ public class TCollspaceTopic{
 	}
 
 	public Date getCreatetime() {
-		return this.createtime;
+		return createtime;
 	}
 
 	public void setCreatetime(Date createtime) {
@@ -75,7 +58,7 @@ public class TCollspaceTopic{
 	}
 
 	public Date getUpdatetime() {
-		return this.updatetime;
+		return updatetime;
 	}
 
 	public void setUpdatetime(Date updatetime) {
@@ -83,7 +66,7 @@ public class TCollspaceTopic{
 	}
 
 	public String getDescription() {
-		return this.description;
+		return description;
 	}
 
 	public void setDescription(String description) {
@@ -91,13 +74,17 @@ public class TCollspaceTopic{
 	}
 
 	public String getRemarkname() {
-		return this.remarkname;
+		return remarkname;
 	}
 
 	public void setRemarkname(String remarkname) {
 		this.remarkname = remarkname;
 	}
+	public List<CollspaceRemarkDto> getRemark() {
+		return Remarks;
+	}
 
-
-	
+	public void setRemark(List<CollspaceRemarkDto> Remarks) {
+		this.Remarks = Remarks;
+	}
 }
