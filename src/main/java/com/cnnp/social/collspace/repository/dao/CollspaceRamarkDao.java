@@ -13,9 +13,6 @@ import com.cnnp.social.collspace.repository.entity.TCollspaceRemark;
 public interface CollspaceRamarkDao extends CrudRepository<TCollspaceRemark, Long> {
 	@Query("select remark from TCollspaceRemark remark where remark.id = ?1")
 	TCollspaceRemark find(Long id);
-	//public List<TSupervision> search()
-	@Query("select count(1) from TCollspaceRemark remark where remark.collspaceid = ?1")
-	long countbacknum(Long collspaceid);
 
 	@Query("select remark from TCollspaceRemark remark where remark.topicid = ?1")
 	public List<TCollspaceRemark> findtopic(Long topicid);

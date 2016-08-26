@@ -1,6 +1,5 @@
 package com.cnnp.social.collspace.service;
 
-import java.util.Calendar;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,12 +13,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.cnnp.social.collspace.manager.CollspaceManager;
 import com.cnnp.social.collspace.manager.dto.CollspaceDto;
-import com.cnnp.social.collspace.manager.dto.CollspaceTopicDto;
 import com.cnnp.social.collspace.manager.dto.CollspaceRemarkDto;
 import com.cnnp.social.collspace.manager.dto.CollspaceTopicDto;
 import com.cnnp.social.collspace.manager.dto.CollspaceTopic_RDto;
 import com.cnnp.social.collspace.manager.dto.CollspaceUserDto;
-import com.cnnp.social.collspace.repository.entity.TCollspaceTopic;
 
 
 
@@ -87,22 +84,5 @@ public class CollspaceController {
 	@RequestMapping(value = "/addremark", method = RequestMethod.POST)
 	public @ResponseBody CollspaceRemarkDto saveremark(@RequestBody CollspaceRemarkDto topic,@RequestParam String type) {
 		return collspaceManger.saveRemark(topic,type); 
-	}
-	
-	//查询发帖信息 wzy
-	@RequestMapping(value = "/Colltopic/{topicid}",method = RequestMethod.GET)
-	@ResponseBody
-	public List<CollspaceTopicDto> viewtopic(@PathVariable("topicid")String topicid){
-		return collspaceManger.findtopiclist(topicid);
-	}
-	
-	//保存发帖信息wzy
-	@RequestMapping(value ="/Colltopic/add",method = RequestMethod.POST)
-	@ResponseBody
-	public CollspaceTopicDto savetopic(@RequestBody TCollspaceTopic tCollspaceTopic){
-		final Calendar today=Calendar.getInstance();
-		tCollspaceTopic.setCreatetime(today.getTime());
-		tCollspaceTopic.setUpdatetime(today.getTime());
-		return collspaceManger.savetopic(tCollspaceTopic);
 	}
 }

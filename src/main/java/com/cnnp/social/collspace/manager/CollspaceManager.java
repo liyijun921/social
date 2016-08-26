@@ -11,7 +11,6 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.cnnp.social.collspace.manager.dto.CollspaceDto;
-import com.cnnp.social.collspace.manager.dto.CollspaceTopicDto;
 import com.cnnp.social.collspace.manager.dto.CollspaceRemarkDto;
 import com.cnnp.social.collspace.manager.dto.CollspaceTopicDto;
 import com.cnnp.social.collspace.manager.dto.CollspaceTopic_RDto;
@@ -36,11 +35,6 @@ public class CollspaceManager {
 	@Autowired
 	private CollspaceUserDao collspaceUserDao;
 	@Autowired
-	private CollspaceTopicDao collspaceTopicDao;
-	@Autowired
-	private CollspaceRamarkDao collspaceRamarkDao;
-
-
 	private CollspaceTopicDao topicDao;
 	@Autowired
 	private CollspaceRamarkDao ramarkDao;
@@ -244,33 +238,6 @@ public class CollspaceManager {
 		}		
 	
 		return topicDtos;		
-	}
-	/**
-	 * //查询发帖信息 wzy
-	 * @param topicid
-	 * @return
-	 */
-	public List<CollspaceTopicDto> findtopiclist(String topicid){
-		List<CollspaceTopicDto> collspaceTopicDtos =new ArrayList<CollspaceTopicDto>();
-		List<TCollspaceTopic> topiclist = collspaceTopicDao.findtopiclist(topicid);
-		
-		for (TCollspaceTopic topiclists : topiclist) {
-			long backnum = collspaceRamarkDao.countbacknum(topiclists.getCollspaceid());
-			
-			CollspaceTopicDto collspaceTopicDto = new CollspaceTopicDto();
-			collspaceTopicDto.setBacknum(backnum);
-			mapper.map(topiclists, collspaceTopicDto);
-			collspaceTopicDtos.add(collspaceTopicDto);
-		}
-		return collspaceTopicDtos;
-	}
-	
-	@Transactional
-	public CollspaceTopicDto savetopic(TCollspaceTopic tCollspaceTopic){
-		CollspaceTopicDto collspaceTopicDto = new CollspaceTopicDto();
-		tCollspaceTopic =collspaceTopicDao.save(tCollspaceTopic);
-		mapper.map(tCollspaceTopic, collspaceTopicDto);
-		return collspaceTopicDto;
 	}
 	public CollspaceRemarkDto saveRemark(CollspaceRemarkDto remark,String type) {
 		if (remark == null) {
