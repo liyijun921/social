@@ -16,4 +16,11 @@ public interface CollspaceTopicDao extends CrudRepository<TCollspaceTopic, Long>
 	//public List<TSupervision> search()
 	@Query("select topic from TCollspaceTopic topic where topic.topicid = ?1")
 	List<TCollspaceTopic> findtopiclist(String topicid);
+	public List<TCollspaceTopic> find(Long collspaceid);
+	@Query("select topic from TCollspaceTopic topic where topic.topicid = ?1")
+	public List<TCollspaceTopic> findone(Long topicid);
+	@Query("select max(cast(topicid as float)) from TCollspaceTopic ")
+	public long findmaxid();
+	@Query("select count(*) from TCollspaceTopic ")
+	public long findid();
 }

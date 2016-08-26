@@ -19,15 +19,12 @@ public class TCollspaceUser {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	private String collspaceid; //空间ID
-	@Mapping(value="userid")
+	private long id;//是否删除
+	private long collspaceid; //空间ID
 	private String userid;//用户id
 	private String username;//用户名
 	private String type;//用户类型
-	private String isdelete;//是否删除
 	
-	
-
 	public TCollspaceUser() {
 	}
 
@@ -39,11 +36,11 @@ public class TCollspaceUser {
 		this.userid = userid;
 	}
 
-	public String getCollspaceid() {
+	public long getCollspaceid() {
 		return this.collspaceid;
 	}
 
-	public void setCollspaceid(String collspaceid) {
+	public void setCollspaceid(long collspaceid) {
 		this.collspaceid = collspaceid;
 	}
 
@@ -63,12 +60,12 @@ public class TCollspaceUser {
 		this.type = type;
 	}
 
-	public String getIsdelete() {
-		return isdelete;
+	public long getId() {
+		return this.id;
 	}
 
-	public void setIsdelete(String isdelete) {
-		this.isdelete = isdelete;
+	public void setId(long id) {
+		this.id = id;
 	}
 
 }

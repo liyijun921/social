@@ -1,9 +1,13 @@
 package com.cnnp.social.collspace.manager.dto;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+
+import com.cnnp.social.collspace.repository.entity.TCollspaceUser;
 
 public class CollspaceDto {
-	private String collspaceid; //空间ID
+	private long collspaceid; //空间ID
 	private String collspacename;//空间名
 	private String createuserid;//创建人ID
 	private String createusername;//创建人
@@ -16,12 +20,16 @@ public class CollspaceDto {
 	private String member;//成员数
 	private String collsystem;//协作空间制度	
 	private String responsibility;//协作空间职责
-
-	public String getCollspaceid() {
+	private String contactid;//
+	private String contactname;//
+	private String departmentid;//
+	private String departmentname;//
+	private List<TCollspaceUser> user;
+	public long getCollspaceid() {
 		return collspaceid;
 	}
 
-	public void setCollspaceid(String collspaceid) {
+	public void setCollspaceid(long collspaceid) {
 		this.collspaceid = collspaceid;
 	}
 
@@ -120,4 +128,40 @@ public class CollspaceDto {
 	public void setResponsibility(String responsibility) {
 		this.responsibility = responsibility;
 	}
+	public String getContactid() {
+		return contactid;
+	}
+
+	public void setContactid(String contactid) {
+		this.contactid = contactid;
+	}
+	public String getContactname() {
+		return contactname;
+	}
+
+	public void setContactname(String contactname) {
+		this.contactname = contactname;
+	}
+	public String getDepartmentid() {
+		return departmentid;
+	}
+
+	public void setDepartmentid(String departmentid) {
+		this.departmentid = departmentid;
+	}
+	public String getDepartmentname() {
+		return departmentname;
+	}
+
+	public void setDepartmentname(String departmentname) {
+		this.departmentname = departmentname;
+	}
+	public List<TCollspaceUser> getUser() {
+		return user;
+	}
+
+	public void setUser(List<TCollspaceUser> user) {
+		this.user = user;
+	}
 }
+
