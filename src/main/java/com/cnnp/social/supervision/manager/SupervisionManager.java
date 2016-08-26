@@ -89,7 +89,7 @@ public class SupervisionManager {
 			supervisionEntry.setCode(new SimpleDateFormat("yyyy").format(new Date())+"-"+supervisionEntry.getArea()+"-"+
 			StringUtils.leftPad(""+seq,6,'0'));
 		}
-
+		
 		supervisionDao.save(supervisionEntry);
 		return supervisionEntry.getId();
 

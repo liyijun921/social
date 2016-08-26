@@ -10,7 +10,7 @@ import com.cnnp.social.supervision.repository.entity.TSupervisionTrace;
 
 @Transactional
 public interface SupervisionTraceDao extends CrudRepository<TSupervisionTrace, Long> {
-	@Query("select trace from TSupervisionTrace trace where trace.supervisionid = ?1 order by trace.supervisionid desc")
+	@Query("select trace from TSupervisionTrace trace where trace.supervisionid = ?1 order by trace.updatetime desc")
 	List<TSupervisionTrace> find(long supervisionID);
 
 }
