@@ -74,22 +74,13 @@ public class SupervisionManager {
 		// 保存督办主表
 		TSupervision supervisionEntry = new TSupervision();
 		mapper.map(supervision, supervisionEntry);
-//		
-//		SupervisionTraceDto traceDto = supervision.getLatestTrace();
-//		if (traceDto != null) {
-//			TSupervisionTrace supervisionTraceEntry = new TSupervisionTrace();
-//			mapper.map(traceDto, supervisionTraceEntry);
-//			if (supervisionEntry.getTraces() == null) {
-//				supervisionEntry.setTraces(new ArrayList<TSupervisionTrace>());
-//			}
-//			supervisionEntry.getTraces().add(supervisionTraceEntry);
-//		}
+
 		if(StringUtils.isBlank(supervisionEntry.getCode())){
 			int seq=jdbcTemplate.queryForObject(code_sq, Integer.class);
 			supervisionEntry.setCode(new SimpleDateFormat("yyyy").format(new Date())+"-"+supervisionEntry.getArea()+"-"+
 			StringUtils.leftPad(""+seq,6,'0'));
 		}
-		
+		supervisionEntry.setUpdatetime(new Date());
 		supervisionDao.save(supervisionEntry);
 		return supervisionEntry.getId();
 
@@ -250,7 +241,6 @@ public class SupervisionManager {
 		if (traces == null || traces.size() < 1) {
 			return supervisionDto;
 		}
-		Collections.sort(traces);
 		TSupervisionTrace trace = traces.get(0);
 		SupervisionTraceDto supervisionTraceDto = new SupervisionTraceDto();
 		mapper.map(trace, supervisionTraceDto);

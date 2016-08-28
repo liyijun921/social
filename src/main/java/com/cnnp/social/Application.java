@@ -1,16 +1,14 @@
 package com.cnnp.social;
 
-import com.cnnp.social.base.BaseSetting;
-import com.cnnp.social.news.manager.NewsSetting;
-
-import java.util.Date;
-
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+
+import com.cnnp.social.base.BaseSetting;
+import com.cnnp.social.news.manager.NewsSetting;
 
 @Configuration
 @ComponentScan
@@ -20,7 +18,8 @@ import org.springframework.context.annotation.Configuration;
 public class Application {
 //extends SpringBootServletInitializer
     public static void main(String[] args) {
-        SpringApplication.run(Application.class, args);
+      //System.out.println(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
+     SpringApplication.run(Application.class, args);
     	//System.out.println(new Date());
     }
 //    @Override

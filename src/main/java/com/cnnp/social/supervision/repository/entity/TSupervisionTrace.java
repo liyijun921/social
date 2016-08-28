@@ -7,13 +7,10 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-
-import org.dozer.Mapping;
 
 /**
  * The persistent class for the T_SUPERVISION_TRACE database table.
@@ -21,7 +18,7 @@ import org.dozer.Mapping;
  */
 @Entity
 @Table(name = "T_SUPERVISION_TRACE")
-public class TSupervisionTrace implements Comparable<TSupervisionTrace> {
+public class TSupervisionTrace {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SQ_Supervision_Trace")
@@ -98,12 +95,6 @@ public class TSupervisionTrace implements Comparable<TSupervisionTrace> {
 
 	public void setSupervisionid(long supervisionid) {
 		this.supervisionid = supervisionid;
-	}
-
-	@Override
-	public int compareTo(TSupervisionTrace o) {
-		// TODO Auto-generated method stub
-		return (int) (o.getId()-this.id);
 	}
 
 }
