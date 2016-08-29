@@ -19,9 +19,6 @@ import com.cnnp.social.uplaod.manager.dto.UploadDto;
 @RequestMapping("/api/V1.0/uploadPage")
 public class UploadController {
 	
-	
-	
-	
 	@Autowired
 	private UploadManager uploadManager;
 	
