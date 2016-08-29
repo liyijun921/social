@@ -1,15 +1,9 @@
 package com.cnnp.social.supervision.repository.entity;
 
 import javax.persistence.*;
-
-import org.springframework.cache.annotation.Cacheable;
-
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
-import java.util.List;
 
 /**
  * The persistent class for the SUPERVISION database table.
@@ -58,8 +52,8 @@ public class TSupervision implements Serializable{
 
 	private int status;
 
-	@Column(columnDefinition = "DATE DEFAULT SYSDATE",insertable=false) 
-	@Temporal(TemporalType.DATE)
+	//@Column(columnDefinition = "DATE DEFAULT SYSDATE",insertable=false)
+	@Temporal(TemporalType.TIMESTAMP)
 	private Date updatetime;
 
 	private BigDecimal urgency;

@@ -1,16 +1,7 @@
 package com.cnnp.social.supervision.repository.entity;
 
+import javax.persistence.*;
 import java.util.Date;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 
 /**
  * The persistent class for the T_SUPERVISION_TRACE database table.
@@ -33,8 +24,8 @@ public class TSupervisionTrace {
 	private long supervisionid;
 	private String description;
 
-	@Column(columnDefinition = "DATE DEFAULT SYSDATE",insertable=false) 
-	@Temporal(TemporalType.DATE)
+	//@Column(columnDefinition = "DATE DEFAULT SYSDATE",insertable=false)
+	@Temporal(TemporalType.TIMESTAMP)
 	private Date updatetime;
 	
 

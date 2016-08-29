@@ -1,19 +1,19 @@
 package com.cnnp.social.supervision.manager;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Path;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
-
-import org.apache.commons.collections.CollectionUtils;
+import com.cnnp.social.base.BaseSetting;
+import com.cnnp.social.base.SocialResponse;
+import com.cnnp.social.cache.repository.dao.DBCacheDataDao;
+import com.cnnp.social.cache.repository.entity.TDicData;
+import com.cnnp.social.supervision.manager.dto.SupervisionDto;
+import com.cnnp.social.supervision.manager.dto.SupervisionSearch;
+import com.cnnp.social.supervision.manager.dto.SupervisionTraceDto;
+import com.cnnp.social.supervision.manager.dto.SupervisionUpdateStatusDto;
+import com.cnnp.social.supervision.repository.dao.SupervisionDao;
+import com.cnnp.social.supervision.repository.dao.SupervisionTraceDao;
+import com.cnnp.social.supervision.repository.dao.SupervisionUpdateStatusDao;
+import com.cnnp.social.supervision.repository.entity.TSupervision;
+import com.cnnp.social.supervision.repository.entity.TSupervisionTrace;
+import com.cnnp.social.supervision.repository.entity.TSupervisionUpdatestatus;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.dozer.DozerBeanMapper;
@@ -29,21 +29,11 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.cnnp.social.base.BaseSetting;
-import com.cnnp.social.base.SocialResponse;
-import com.cnnp.social.cache.repository.dao.DBCacheDataDao;
-import com.cnnp.social.cache.repository.entity.TDicData;
-import com.cnnp.social.news.manager.NewsSetting;
-import com.cnnp.social.supervision.manager.dto.SupervisionDto;
-import com.cnnp.social.supervision.manager.dto.SupervisionSearch;
-import com.cnnp.social.supervision.manager.dto.SupervisionTraceDto;
-import com.cnnp.social.supervision.manager.dto.SupervisionUpdateStatusDto;
-import com.cnnp.social.supervision.repository.dao.SupervisionDao;
-import com.cnnp.social.supervision.repository.dao.SupervisionTraceDao;
-import com.cnnp.social.supervision.repository.dao.SupervisionUpdateStatusDao;
-import com.cnnp.social.supervision.repository.entity.TSupervision;
-import com.cnnp.social.supervision.repository.entity.TSupervisionTrace;
-import com.cnnp.social.supervision.repository.entity.TSupervisionUpdatestatus;
+import javax.persistence.criteria.*;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 @EnableTransactionManagement
 @Component
@@ -91,6 +81,7 @@ public class SupervisionManager {
 		if (traceDto != null) {
 			TSupervisionTrace supervisionTraceEntry = new TSupervisionTrace();
 			mapper.map(traceDto, supervisionTraceEntry);
+			supervisionTraceEntry.setUpdatetime(new Date());
 			trace=supervisionTraceDao.save(supervisionTraceEntry);
 		}
 		SocialResponse response=new SocialResponse();
@@ -123,6 +114,7 @@ public class SupervisionManager {
 			supervisionUpdatestatusEntry.setOperatetype(2);//延期
 			supervisionUpdateStatusDao.save(supervisionUpdatestatusEntry);
 		}
+		supervisionEntry.setUpdatetime(new Date());
 		TSupervision supervision=supervisionDao.save(supervisionEntry);
 		
 		if(supervision!=null){
@@ -152,6 +144,7 @@ public class SupervisionManager {
 			supervisionUpdatestatusEntry.setSupervisionId(supervisionid);
 			supervisionUpdateStatusDao.save(supervisionUpdatestatusEntry);
 		}
+		supervisionEntry.setUpdatetime(new Date());
 		TSupervision supervision=supervisionDao.save(supervisionEntry);
 		
 		if(supervision!=null){
@@ -159,7 +152,7 @@ public class SupervisionManager {
 			response.setMessage(new String[]{""+supervision.getId()});
 		}else{
 			response.setMessagecode(500);
-			response.setMessage(new String[]{"postpone the supervision<"+supervisionid+"> error."});
+			response.setMessage(new String[]{"delete the supervision<" + supervisionid + "> error."});
 		}
 		return response;
 	}
@@ -182,6 +175,7 @@ public class SupervisionManager {
 			supervisionUpdateStatusDao.save(supervisionUpdatestatusEntry);
 			//supervisionEntry.getUpdateStatus().add(supervisionUpdatestatusEntry);
 		}
+		supervisionEntry.setUpdatetime(new Date());
 		TSupervision supervision=supervisionDao.save(supervisionEntry);
 		
 		if(supervision!=null){
@@ -189,7 +183,7 @@ public class SupervisionManager {
 			response.setMessage(new String[]{""+supervision.getId()});
 		}else{
 			response.setMessagecode(500);
-			response.setMessage(new String[]{"postpone the supervision<"+supervisionid+"> error."});
+			response.setMessage(new String[]{"close the supervision<" + supervisionid + "> error."});
 		}
 		return response;
 	}
