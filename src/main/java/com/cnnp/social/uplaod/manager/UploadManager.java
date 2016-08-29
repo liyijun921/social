@@ -61,7 +61,6 @@ public class UploadManager {
 			}
 			
 		}
-//		fileBack = "Path: " +directory +" "+ "Name: "+file.getOriginalFilename();
 		return uploadFeed;
 	}
 	
