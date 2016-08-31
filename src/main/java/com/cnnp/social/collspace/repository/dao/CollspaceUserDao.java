@@ -20,10 +20,13 @@ public interface CollspaceUserDao extends CrudRepository<TCollspaceUser, String>
 	@Query("from TCollspaceUser Collspace where Collspace.collspaceid = ?1 and type = ?2")
 	public List<TCollspaceUser> findmember(long collspaceid,String type);
 	
-	@Query("from TCollspaceUser Collspace where Collspace.userid = ?1 and Collspace.collspaceid = ?2")
+	@Query("select user from TCollspaceUser user where user.userid = ?1 and user.collspaceid = ?2")
 	public TCollspaceUser findmemberup(String userid,long collspaceid);
+	
 	@Query("from TCollspaceUser Collspace where Collspace.collspaceid = ?1")
 	public List<TCollspaceUser> findmember(long collspaceid);
+	@Query("from TCollspaceUser Collspace where Collspace.id = ?1")
+	public TCollspaceUser findid(long id);
 	@Query("select max(cast(id as float)) from TCollspaceUser ")
 	public long findmaxid();
 	@Query("select count(*) from TCollspaceUser ")

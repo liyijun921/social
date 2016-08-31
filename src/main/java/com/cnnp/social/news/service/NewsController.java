@@ -6,9 +6,10 @@
 package com.cnnp.social.news.service;
 
 import com.cnnp.social.news.manager.NewsManager;
+import com.cnnp.social.news.manager.dto.AttachmentsAddDto;
+import com.cnnp.social.news.manager.dto.NewsAddDto;
 import com.cnnp.social.news.manager.dto.NewsDto;
 import com.cnnp.social.news.manager.dto.News_AttDto;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -43,4 +44,9 @@ public class NewsController {
     List<NewsDto> viewtest(@RequestParam String title) {
         return newsManager.findARTICLEall(title);
     }
+    
+    @RequestMapping(value = "/add", method = RequestMethod.POST)
+    public void save(@RequestBody NewsAddDto news) {
+    	newsManager.saveNews(news); 		
+	}
 }
