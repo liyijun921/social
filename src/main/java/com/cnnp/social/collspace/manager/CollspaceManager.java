@@ -291,5 +291,34 @@ public class CollspaceManager {
 		ramarkDao.delete(remarkEntries);	
 		topicDao.delete(topicEntry);	
 	}
-
+	
+	public Boolean applyOneCollspace(CollspaceUserDto user){
+		if (user == null) {
+			return false;
+		}
+		TCollspace collspaceEntry = collspaceDao.find(user.getCollspaceid());
+		if(collspaceEntry==null){
+			return false;
+		}
+		TCollspaceUser UserEntry = collspaceUserDao.findmemberup(user.getUserid(), user.getCollspaceid());
+		if(UserEntry==null){
+			TCollspaceUser UserTemp = new TCollspaceUser();
+			mapper.map(user, UserTemp);
+			//UserTemp.setType("0");
+			collspaceUserDao.save(UserTemp);			
+		}else{			
+			return false;			
+		}
+		return true;
+	}	
+		
+	public Boolean editUser(long id,String type){
+		TCollspaceUser UserEntry = collspaceUserDao.findid(id);
+		if (UserEntry == null) {
+			return false;
+		}
+		UserEntry.setType(type);
+		collspaceUserDao.save(UserEntry);
+		return true;
+	}
 }

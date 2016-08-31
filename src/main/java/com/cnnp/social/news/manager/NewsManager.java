@@ -5,18 +5,22 @@
  */
 package com.cnnp.social.news.manager;
 
+import com.cnnp.social.news.manager.dto.AttachmentsAddDto;
 import com.cnnp.social.news.manager.dto.AttachmentsDto;
+import com.cnnp.social.news.manager.dto.NewsAddDto;
 import com.cnnp.social.news.manager.dto.NewsDto;
 import com.cnnp.social.news.manager.dto.News_AttDto;
-import com.cnnp.social.schedule.manager.dto.ScheduleDto;
+import com.cnnp.social.news.repository.dao.NewsAttDao;
+import com.cnnp.social.news.repository.dao.NewsDao;
+import com.cnnp.social.news.repository.entity.TNews;
+import com.cnnp.social.news.repository.entity.TNews_Att;
 
-import org.apache.commons.lang3.time.DateUtils;
+import org.dozer.DozerBeanMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 
-import java.awt.font.TextMeasurer;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
@@ -34,6 +38,12 @@ public class NewsManager {
     private JdbcTemplate jdbcTemplate;
     @Autowired
     private NewsSetting newsSetting;
+    @Autowired
+    private NewsDao addnews;
+    @Autowired
+    private NewsAttDao newsatt;
+    private DozerBeanMapper mapper = new DozerBeanMapper();
+    
     public List<NewsDto> findTopNews(String site, String cardcode, int topcount) {
     	Object[] obs=null;
         String sql = "select rownum,id, main_attach_id, articleId, title, brief, orgName, "+ 
@@ -246,5 +256,43 @@ public class NewsManager {
     	return news_attdto;
     }
 
-
+    public void saveNews(NewsAddDto news) {
+    	if (news ==null) {
+    		return;    		
+    	}
+    	long id;
+    	long attid;
+    	id = addnews.findmaxid()+1;
+    	news.setid(id);
+    	TNews newsEntry = new TNews();
+ 	    mapper.map(news, newsEntry);
+ 	    //newsEntry = addnews.save(newsEntry);
+    	if (news.getAtt() !=null){
+    	    attid= newsatt.findmaxid()+1;
+    	    for(AttachmentsAddDto att : news.getAtt()){   	    	
+    	    	TNews_Att attEntry = new TNews_Att(); 
+    	    	mapper.map(att, attEntry);
+    	    	attEntry.setid(attid);    	    	
+    	    	newsatt.save(attEntry);
+    	    	if (att.getFile_from().equals("附件区")){
+    	    		int i= addAttachments(id,attid);   	    		    	    		
+    	    	}
+    	    	if (att.getFile_from().equals("附件正文")){
+    	    		newsEntry.setAttach_content_id(attid);
+    	    	}
+                if (att.getFile_from().equals("主附件")){
+                	newsEntry.setMain_attach_id(attid);
+    	    	}
+                attid = attid+1;
+    	    }  	         	    
+    	}   
+    	addnews.save(newsEntry);
+    }
+    public int addAttachments(long id,long attid) {
+    	Object[] obs=null;
+        String sql = "Insert into PB2_ARTICLE_ATTACHS (ARTICLE_ID,ATTACH_ID) values (?,?)";
+             
+        		obs=new Object[]{id,attid};
+        		return jdbcTemplate.update(sql, obs);            
+    }
 }

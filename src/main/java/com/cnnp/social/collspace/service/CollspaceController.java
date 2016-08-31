@@ -42,13 +42,13 @@ public class CollspaceController {
 	}
 	//
 	@RequestMapping(value = "/Collmember/{collspaceid}", method = RequestMethod.GET)
-	public @ResponseBody List<CollspaceUserDto> viewmember(@PathVariable("collspaceid") long collspaceid) {
-		return collspaceManger.findmember(collspaceid,"1");
+	public @ResponseBody List<CollspaceUserDto> viewmember(@PathVariable("collspaceid") long collspaceid,@RequestParam String type) {
+		return collspaceManger.findmember(collspaceid,type);
 	}
 	//
 	@RequestMapping(value = "/Colladmin/{collspaceid}", method = RequestMethod.GET)
-	public @ResponseBody List<CollspaceUserDto> viewadmin(@PathVariable("collspaceid") long collspaceid) {
-		return collspaceManger.findmember(collspaceid,"2");
+	public @ResponseBody List<CollspaceUserDto> viewadmin(@PathVariable("collspaceid") long collspaceid,@RequestParam String type) {
+		return collspaceManger.findmember(collspaceid,type);
 	}
 
 	//
@@ -84,5 +84,20 @@ public class CollspaceController {
 	@RequestMapping(value = "/addremark", method = RequestMethod.POST)
 	public @ResponseBody CollspaceRemarkDto saveremark(@RequestBody CollspaceRemarkDto topic,@RequestParam String type) {
 		return collspaceManger.saveRemark(topic,type); 
+	}
+	
+	@RequestMapping(value = "/approvallist/{collspaceid}", method = RequestMethod.GET)
+	public List<CollspaceUserDto> approvallist(@PathVariable("collspaceid") long collspaceid,@RequestParam String type) {
+		return collspaceManger.findmember(collspaceid,type);
+	}
+	
+	@RequestMapping(value = "/approvalUser/{id}", method = RequestMethod.GET)
+	public Boolean approvalUser(@PathVariable("id") long id,@RequestParam String type) {
+		return collspaceManger.editUser(id,type);
+	}
+	
+	@RequestMapping(value = "/applyOneCollspace", method = RequestMethod.POST)
+	public Boolean applycoll(@RequestBody CollspaceUserDto user) {
+		return collspaceManger.applyOneCollspace(user); 
 	}
 }
