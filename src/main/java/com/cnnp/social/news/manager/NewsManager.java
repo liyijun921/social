@@ -8,15 +8,11 @@ package com.cnnp.social.news.manager;
 import com.cnnp.social.news.manager.dto.AttachmentsDto;
 import com.cnnp.social.news.manager.dto.NewsDto;
 import com.cnnp.social.news.manager.dto.News_AttDto;
-import com.cnnp.social.schedule.manager.dto.ScheduleDto;
-
-import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 
-import java.awt.font.TextMeasurer;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
