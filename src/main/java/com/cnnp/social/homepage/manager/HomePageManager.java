@@ -599,7 +599,7 @@ public class HomePageManager {
 			iddto.setid(hp.getid());
 			iddto.setName(hp.getName());
 			iddto.setHptype(hp.getHptype());
-			iddto.setUrl(hp.getWebtype());
+			iddto.setWebtype(hp.getWebtype());
 			iddto.setUrl(hp.getUrl());
 			homepageaidnameDtos.add(iddto);
 		}
