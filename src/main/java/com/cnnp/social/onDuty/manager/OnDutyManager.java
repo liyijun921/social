@@ -167,49 +167,46 @@ public class OnDutyManager {
 		return dutyList;
 	}
 	
-//	public List<OnDutyDto> listDutyByDate(DutyUserDto user,String startdate,String enddate ){
-//		
-//		if("".equals(startdate)||(startdate==null)){
-//			System.out.println("the start date is null");
-//			return null;
-//		}
-//		if("".equals(enddate)||(enddate==null)){
-//			System.out.println("the end date is null");
-//			return null;
-//		}
-//		if(user==null || user.getUserid()==null||user.getUserid()==0){
-//			System.out.println("user id is null");
-//			return null;
-//		}
-//		
-//		
-//		List<OnDutyDto> dutyDtoList = new ArrayList<OnDutyDto>();
-//		
-//		List<DutyUserDto> dutyUserDtoList = new ArrayList<DutyUserDto>();
-//		
-//		List<TDutyUser> dutyUserlist = new ArrayList<TDutyUser>();
-//		
-//		//TODO get user list
-//		dutyUserlist =  onDutyUserDao.finduser(user.getUserid(),startdate,enddate);
-//		
-//		// get the duty list by duty id
-//		for(TDutyUser tempDutyUser : dutyUserlist){
-//			DutyUserDto dutyUser = new DutyUserDto();
-//			mapper.map(tempDutyUser, dutyUser);
-//			List<TDuty> dutylist = onDutyDao.finduser(dutyUser.getDutyid(),startdate,enddate);
-//			if(dutylist.size()>0){
-//				for (TDuty duty : dutylist){
-//					OnDutyDto dutyDto = new OnDutyDto();
-//					mapper.map(duty, dutyDto);
-//					dutyUserDtoList.add(dutyDto);
-//					dutyDto.setUser((List<DutyUserDto>) (dutyUser));
-//					dutyDtoList.add(dutyDto);
-//				}
-//					
-//			}							
-//		}
-//		return dutyDtoList;
-//	}
+	public List<OnDutyDto> listDutyByDate(Long userid,String startdate,String enddate ){
+		
+		if("".equals(startdate)||(startdate==null)){
+			System.out.println("the start date is null");
+			return null;
+		}
+		if("".equals(enddate)||(enddate==null)){
+			System.out.println("the end date is null");
+			return null;
+		}
+		if( "".equals(userid)||userid==null){
+			System.out.println("user id is null");
+			return null;
+		}
+		
+		
+		List<OnDutyDto> dutyDtoList = new ArrayList<OnDutyDto>();
+		
+		List<DutyUserDto> dutyUserDtoList = new ArrayList<DutyUserDto>();
+		
+		List<TDutyUser> dutyUserlist = new ArrayList<TDutyUser>();
+		
+		//TODO get user list
+		dutyUserlist =  onDutyUserDao.finduser(userid,startdate,enddate);
+		
+		// get the duty list by duty id
+		for(TDutyUser tempDutyUser : dutyUserlist){
+			DutyUserDto dutyUser = new DutyUserDto();
+			mapper.map(tempDutyUser, dutyUser);
+			TDuty duty = onDutyDao.findOne(dutyUser.getDutyid());
+			
+			OnDutyDto dutyDto = new OnDutyDto();
+			mapper.map(duty, dutyDto);
+			dutyUserDtoList.add(dutyUser);
+			dutyDto.setUser(dutyUserDtoList);
+			dutyDtoList.add(dutyDto);
+										
+		}
+		return dutyDtoList;
+	}
 	
 	
 	public OnDutyDto listDutyByDutyId(Long dutyID){

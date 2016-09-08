@@ -38,6 +38,11 @@ public class OnDutyController {
 		return onDutyManger.listDutyByDutyId(dutyID); 
 	}
 	
+	@RequestMapping(value = "/onduty/findbydate", method = RequestMethod.POST)
+	public List<OnDutyDto> listDutyByDate(@RequestBody Long dutyID,@RequestParam String startdate,@RequestParam String enddate) {
+		return onDutyManger.listDutyByDate(dutyID,startdate,enddate); 
+	}
+	
 	@RequestMapping(value = "/onduty/findbyuser", method = RequestMethod.POST)
 	public List<OnDutyDto> listDutyByUser(@RequestBody DutyUserDto dutyUserDto) {
 		return onDutyManger.listDutyByUser(dutyUserDto); 
