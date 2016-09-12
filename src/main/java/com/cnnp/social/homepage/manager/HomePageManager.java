@@ -86,6 +86,10 @@ public class HomePageManager {
 		Date now = new Date(); 
 		homepage.setid(hpid);
 		homepage.setUpdatetime(now);
+		// set the default value of priority as 0
+		if("".equals(homepage.getPriority())){
+			homepage.setPriority(0);
+		}
 		THomePageInfo hpEntry = new THomePageInfo();
 		mapper.map(homepage, hpEntry);
 		List<THomePageAdmin> homepageadminEntries = new ArrayList<THomePageAdmin>();
@@ -590,10 +594,27 @@ public class HomePageManager {
 	}
 	public List<HomePageIDNameDto> findHomePageSector(){
 		List<HomePageIDNameDto> homepageaidnameDtos=new ArrayList<HomePageIDNameDto>();
-		List<THomePageInfo> homepageEntry = homepageInfoDao.findparentid();
-		if(homepageEntry==null){
-			return new ArrayList<HomePageIDNameDto>();
+		
+		//1.group by priority get priority list; 2.get list by priority order by updatetime; 3.add all list
+		List<Long> priorityList = homepageInfoDao.findpriority();
+		if(priorityList.size()==0||priorityList==null){
+			return null;
 		}
+		
+		List<THomePageInfo> homepageEntry = new ArrayList<THomePageInfo>();
+		
+		for(int i=0;i<priorityList.size();i++){
+			List<THomePageInfo> templist = new ArrayList<THomePageInfo>();
+			templist = homepageInfoDao.findparentid(priorityList.get(i));
+			homepageEntry.addAll(templist);
+		}
+		
+		
+		if(homepageEntry==null||homepageEntry.size()==0){
+			return null;
+		}
+		
+		
 		for(THomePageInfo hp : homepageEntry){
 			HomePageIDNameDto iddto=new HomePageIDNameDto();
 			iddto.setid(hp.getid());

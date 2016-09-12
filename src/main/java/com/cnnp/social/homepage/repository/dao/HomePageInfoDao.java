@@ -17,8 +17,8 @@ public interface HomePageInfoDao extends CrudRepository<THomePageInfo, Long> ,Jp
 	public THomePageInfo findOne(Long id);
 	@Query("select max(cast(id as float)) from THomePageInfo ")
 	public long findmaxid();
-	@Query("select hp from THomePageInfo hp where STATUS = '1' and hptype <>'0'")
-	public List<THomePageInfo> findparentid();
+	@Query("select hp from THomePageInfo hp where STATUS = '1' and hptype <>'0' and priority = ?1 order by updatetime desc ")
+	public List<THomePageInfo> findparentid(Long priority);
 	@Query("select hp from THomePageInfo hp where STATUS = '1' and hptype='0' and rownum =1 ")
 	public THomePageInfo findStartHP();
 	
@@ -26,4 +26,7 @@ public interface HomePageInfoDao extends CrudRepository<THomePageInfo, Long> ,Jp
 	public THomePageInfo updataStatus();
 	@Query("select count(*) from THomePageInfo ")
 	public long findid();
+	
+	@Query("select priority from THomePageInfo hp group by priority order by priority desc ")
+	public List<Long> findpriority();
 }

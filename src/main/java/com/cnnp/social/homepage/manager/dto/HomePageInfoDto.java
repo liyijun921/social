@@ -24,6 +24,7 @@ public class HomePageInfoDto {
 	private Date updatetime;//创建时间	
 	private List<THomePageAdmin> admin = new ArrayList<THomePageAdmin>();
 	private long parentid; //ID
+	private long priority;// 排序优先级
 	
 	public Long getid() {
 		return id;
@@ -126,4 +127,14 @@ public class HomePageInfoDto {
 	public void setParentid(long parentid) {
 		this.parentid = parentid;
 	}
+
+	public long getPriority() {
+		return priority;
+	}
+
+	public void setPriority(long priority) {
+		this.priority = priority;
+	}
+	
+	
 }

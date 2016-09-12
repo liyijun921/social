@@ -29,6 +29,8 @@ public class THomePageInfo{
 	private Date updatetime;//创建时间	
 	private long parentid; //ID
 	
+	private long priority;//优先级
+	
 	@OneToMany(cascade = { CascadeType.ALL })
 	@JoinColumn(name = "hpid")
 	private List<THomePageAdmin> admin = new ArrayList<THomePageAdmin>();
@@ -136,4 +138,14 @@ public class THomePageInfo{
 	public void setParentid(long parentid) {
 		this.parentid = parentid;
 	}
+
+	public long getPriority() {
+		return priority;
+	}
+
+	public void setPriority(long priority) {
+		this.priority = priority;
+	}
+	
+	
 }
