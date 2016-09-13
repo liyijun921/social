@@ -1,13 +1,9 @@
 package com.cnnp.social.meeting.manager.dto;
 
-import java.util.List;
-
 public class MeetingStatus {
 	
 
 	private String Stauts;
-	
-	private List<MeetingDto> meetinglist;
 	
 	private String log;
 	
@@ -21,13 +17,6 @@ public class MeetingStatus {
 		Stauts = stauts;
 	}
 
-	public List<MeetingDto> getMeetinglist() {
-		return meetinglist;
-	}
-
-	public void setMeetinglist(List<MeetingDto> meetinglist) {
-		this.meetinglist = meetinglist;
-	}
 
 	public String getLog() {
 		return log;

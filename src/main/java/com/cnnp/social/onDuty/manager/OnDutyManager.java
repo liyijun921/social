@@ -85,7 +85,7 @@ public class OnDutyManager {
 		}
 		
 		//check if there are old duty or not, if has will delete the record first and add it later.
-		if(delDuty(onDutyDto)){
+		if(delDuty(onDutyDto.getId())){
 			System.out.println("the conference records which id is  " + onDutyDto.getId() + " are deleted");
 		};
 		
@@ -108,12 +108,12 @@ public class OnDutyManager {
 		return userlist;
 	}
 	
-	public Boolean delDuty(OnDutyDto onDutyDto){
-		TDuty dutyItem = onDutyDao.findOne(onDutyDto.getId());
+	public Boolean delDuty(Long dutyid){
+		TDuty dutyItem = onDutyDao.findOne(dutyid);
 		if(dutyItem==null){
 			return false;
 		}
-		onDutyDao.delete(onDutyDto.getId());
+		onDutyDao.delete(dutyid);
 		return true;
 	}
 	
@@ -131,20 +131,18 @@ public class OnDutyManager {
 		return dutyDtoList;
 	}
 	
-	public List<OnDutyDto> listDutyByUser(DutyUserDto dutyUser){
+	public List<OnDutyDto> listDutyByUser(Long userid){
 		// if user id is null 
-		if(dutyUser.getUserid()==null||"".equals(dutyUser.getUserid())){
+		if(userid==null||"".equals(userid)){
 			System.out.println("the user id is null");
 			return null;
 		}
 		
 		
 		List<OnDutyDto> dutyList = new ArrayList<OnDutyDto>();
-		TDutyUser user = new TDutyUser();
 		List<TDutyUser> dutyUserlist = new ArrayList<TDutyUser>();
-		mapper.map(dutyUser,user);
 		// get user list
-		dutyUserlist = onDutyUserDao.findByUserId(user.getUserid());
+		dutyUserlist = onDutyUserDao.findByUserId(userid);
 		if(dutyUserlist.size()==0){
 			System.out.println("the user id has not recorded");
 			return null;
@@ -158,7 +156,7 @@ public class OnDutyManager {
 					return null;
 				}
 				dutyUserlist.clear();
-				dutyUserlist.add(user);
+				dutyUserlist.add(tempUser);
 				duty.setUser(dutyUserlist);
 				mapper.map(duty, onDutyDto);
 				dutyList.add(onDutyDto);

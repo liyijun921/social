@@ -2,6 +2,7 @@ package com.cnnp.social.onDuty.service;
 
 import java.io.IOException;
 import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -9,10 +10,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+
 import com.cnnp.social.onDuty.manager.OnDutyManager;
 import com.cnnp.social.onDuty.manager.dto.DutyImportDto;
 import com.cnnp.social.onDuty.manager.dto.DutyStatus;
-import com.cnnp.social.onDuty.manager.dto.DutyUserDto;
 import com.cnnp.social.onDuty.manager.dto.OnDutyDto;
 
 @RestController
@@ -29,23 +30,23 @@ public class OnDutyController {
 	}
 	
 	@RequestMapping(value = "/onduty/delete", method = RequestMethod.POST)
-	public Boolean del(@RequestBody OnDutyDto onDutyDto) {
-		return onDutyManger.delDuty(onDutyDto); 
+	public Boolean del(@RequestParam Long dutyid) {
+		return onDutyManger.delDuty(dutyid); 
 	}
 	
 	@RequestMapping(value = "/onduty/findbydutyid", method = RequestMethod.POST)
-	public OnDutyDto listByDutyId(@RequestBody Long dutyID) {
-		return onDutyManger.listDutyByDutyId(dutyID); 
+	public OnDutyDto listByDutyId(@RequestBody Long dutyid) {
+		return onDutyManger.listDutyByDutyId(dutyid); 
 	}
 	
 	@RequestMapping(value = "/onduty/findbydate", method = RequestMethod.POST)
-	public List<OnDutyDto> listDutyByDate(@RequestBody Long dutyID,@RequestParam String startdate,@RequestParam String enddate) {
-		return onDutyManger.listDutyByDate(dutyID,startdate,enddate); 
+	public List<OnDutyDto> listDutyByDate(@RequestBody Long dutyid,@RequestParam String startdate,@RequestParam String enddate) {
+		return onDutyManger.listDutyByDate(dutyid,startdate,enddate); 
 	}
 	
 	@RequestMapping(value = "/onduty/findbyuser", method = RequestMethod.POST)
-	public List<OnDutyDto> listDutyByUser(@RequestBody DutyUserDto dutyUserDto) {
-		return onDutyManger.listDutyByUser(dutyUserDto); 
+	public List<OnDutyDto> listDutyByUser(@RequestParam Long userid) {
+		return onDutyManger.listDutyByUser(userid); 
 	}
 	
 	@RequestMapping(value = "/onduty/findall", method = RequestMethod.POST)
@@ -65,9 +66,5 @@ public class OnDutyController {
 		return status;
 	}
 	      
-//	@RequestMapping(value = "/importDB", method = RequestMethod.POST)
-//	public DutyStatus importDutyInfoToDB() throws IOException{    
-//		DutyStatus status = onDutyManger.importDutyInfoToDB();
-//		return status;
-//	}
+
 }

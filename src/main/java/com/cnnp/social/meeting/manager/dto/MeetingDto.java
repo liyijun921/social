@@ -7,8 +7,6 @@ import java.util.List;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-import com.cnnp.social.meeting.repository.entity.TMeetingAttachment;
-
 public class MeetingDto {
 	
 	private Long id; // meeting ID 
@@ -26,7 +24,7 @@ public class MeetingDto {
 	private String content;
 	private Long userid;
 	
-	private List<TMeetingAttachment> attchment = new ArrayList<TMeetingAttachment>();
+	private List<MeetingAttachmentDto> attchment = new ArrayList<MeetingAttachmentDto>();
 	
 
 	
@@ -126,11 +124,11 @@ public class MeetingDto {
 		this.content = content;
 	}
 
-	public List<TMeetingAttachment> getAttchment() {
+	public List<MeetingAttachmentDto> getAttchment() {
 		return attchment;
 	}
 
-	public void setAttchment(List<TMeetingAttachment> attchment) {
+	public void setAttchment(List<MeetingAttachmentDto> attchment) {
 		this.attchment = attchment;
 	}
 

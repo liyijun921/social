@@ -7,7 +7,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.cnnp.social.onDuty.repository.entity.TDuty;
 import com.cnnp.social.onDuty.repository.entity.TDutyUser;
 
 
