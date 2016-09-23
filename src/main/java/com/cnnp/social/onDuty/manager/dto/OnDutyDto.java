@@ -1,28 +1,19 @@
 package com.cnnp.social.onDuty.manager.dto;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 
 public class OnDutyDto {
 	
 	private Long id; // 值班ID 
-	private long userid; // 用户ID
-	private String username; // 用户姓名
+	private long createuserid; // 用户ID
+	private String createusername; // 用户姓名
 	private String responsibledepartment;// 部门
 	private String companyid;// 公司	
-	@Temporal(TemporalType.DATE)
-	private Date startdate;// 开始时间	
-	@Temporal(TemporalType.DATE)
-	private Date enddate;// 结束时间
+	private String updatetime;//  创建or更新时间		
 	private String description;// 备注
 	
 	private List<DutyUserDto> user = new ArrayList<DutyUserDto>();
-	
-	
 
 	public Long getId() {
 		return id;
@@ -32,20 +23,20 @@ public class OnDutyDto {
 		this.id = id;
 	}
 
-	public long getUserid() {
-		return userid;
+	public long getCreateuserid() {
+		return createuserid;
 	}
 
-	public void setUserid(long userid) {
-		this.userid = userid;
+	public void setCreateuserid(long createuserid) {
+		this.createuserid = createuserid;
 	}
 
-	public String getUsername() {
-		return username;
+	public String getCreateusername() {
+		return createusername;
 	}
 
-	public void setUsername(String username) {
-		this.username = username;
+	public void setCreateusername(String createusername) {
+		this.createusername = createusername;
 	}
 
 	public String getResponsibledepartment() {
@@ -64,20 +55,12 @@ public class OnDutyDto {
 		this.companyid = companyid;
 	}
 
-	public Date getStartdate() {
-		return startdate;
+	public String getUpdatetime() {
+		return updatetime;
 	}
 
-	public void setStartdate(Date startdate) {
-		this.startdate = startdate;
-	}
-
-	public Date getEnddate() {
-		return enddate;
-	}
-
-	public void setEnddate(Date enddate) {
-		this.enddate = enddate;
+	public void setUpdatetime(String updatetime) {
+		this.updatetime = updatetime;
 	}
 
 	public String getDescription() {
@@ -95,7 +78,8 @@ public class OnDutyDto {
 	public void setUser(List<DutyUserDto> user) {
 		this.user = user;
 	}
-
+	
+	
 	
 	
 	

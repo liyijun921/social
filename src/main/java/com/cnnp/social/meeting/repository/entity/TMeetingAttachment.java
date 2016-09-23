@@ -18,7 +18,7 @@ public class TMeetingAttachment {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	private long id; // attachment id
+	private Long id; // attachment id
 	private long userid; // 用户
 	@Temporal(TemporalType.DATE)
 	private Date createdate; // 
@@ -29,10 +29,10 @@ public class TMeetingAttachment {
 	private Long meetingid;
 	
 	
-	public long getId() {
+	public Long getId() {
 		return id;
 	}
-	public void setId(long id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 	public long getUserid() {

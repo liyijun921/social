@@ -17,7 +17,7 @@ public class MeetingAttachmentDto {
 	private String meetingid;
 	
 	
-	public long getId() {
+	public Long getId() {
 		return id;
 	}
 	public void setId(Long id) {

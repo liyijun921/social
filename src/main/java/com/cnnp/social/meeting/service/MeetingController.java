@@ -12,8 +12,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.cnnp.social.meeting.manager.MeetingManager;
 import com.cnnp.social.meeting.manager.dto.MeetingDto;
+import com.cnnp.social.meeting.manager.dto.MeetingInputDto;
 import com.cnnp.social.meeting.manager.dto.MeetingRoomDto;
 import com.cnnp.social.meeting.manager.dto.MeetingStatus;
+import com.cnnp.social.onDuty.manager.dto.DutyDto;
+import com.cnnp.social.onDuty.manager.dto.OnDutyDto;
 
 @RestController
 @RequestMapping("/api/V1.0/meeting")
@@ -23,8 +26,8 @@ public class MeetingController {
 	
 	
 	@RequestMapping(value = "/meeting/addMeeting", method = RequestMethod.POST)
-	public MeetingStatus addMeeting(@RequestBody MeetingDto meetingDto,@RequestParam String startdate,@RequestParam String enddate) throws ParseException {
-		MeetingStatus status = meetingManager.addMeeting(meetingDto, startdate, enddate);
+	public MeetingStatus addMeeting(@RequestBody MeetingInputDto meetingDto) throws ParseException {
+		MeetingStatus status = meetingManager.addMeeting(meetingDto);
 		return status;
 	}
 	
@@ -38,9 +41,9 @@ public class MeetingController {
 		return meetingManager.listAllMeeting(userid); 
 	}
 	
-	@RequestMapping(value = "/meeting/listMeetingByDate", method = RequestMethod.POST)
-	public List<MeetingDto> listMeetingByDate(@RequestBody Long userid,@RequestParam String startdate,@RequestParam String enddate) throws ParseException {
-		return meetingManager.listMeetingByDate(userid, startdate, enddate); 
+	@RequestMapping(value = "/onduty/listMeetingByDto", method = RequestMethod.POST)
+	public List<MeetingDto> getMeetingByDto(@RequestBody MeetingInputDto dto) {
+		return meetingManager.getMeetingByDto(dto); 
 	}
 	
 	@RequestMapping(value = "/meeting/addMeetingRoom", method = RequestMethod.POST)

@@ -29,4 +29,7 @@ public interface HomePageInfoDao extends CrudRepository<THomePageInfo, Long> ,Jp
 	
 	@Query("select priority from THomePageInfo hp group by priority order by priority desc ")
 	public List<Long> findpriority();
+	
+	@Query("select hp from THomePageInfo hp where STATUS = '1' and hptype ='0' and priority = ?1 order by updatetime desc ")
+	public List<THomePageInfo> findcompany(Long priority);
 }

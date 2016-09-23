@@ -7,6 +7,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Row;
@@ -15,15 +16,18 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.dozer.DozerBeanMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.cnnp.social.onDuty.manager.dto.DutyDto;
 import com.cnnp.social.onDuty.manager.dto.DutyImportDto;
 import com.cnnp.social.onDuty.manager.dto.DutyStatus;
 import com.cnnp.social.onDuty.manager.dto.DutyUserDto;
 import com.cnnp.social.onDuty.manager.dto.OnDutyDto;
+import com.cnnp.social.onDuty.manager.dto.UserDto;
 import com.cnnp.social.onDuty.repository.dao.OnDutyDao;
 import com.cnnp.social.onDuty.repository.dao.OnDutyImportDao;
 import com.cnnp.social.onDuty.repository.dao.OnDutyUserDao;
@@ -37,6 +41,8 @@ import com.cnnp.social.onDuty.repository.entity.TDutyUser;
 @Component
 
 public class OnDutyManager {
+	@Autowired
+	private JdbcTemplate jdbcTemplate;
 	@Autowired
 	private OnDutyDao  onDutyDao;
 	
@@ -53,60 +59,87 @@ public class OnDutyManager {
 	private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	
 	@Transactional
-	public DutyStatus addDuty(OnDutyDto onDutyDto,String starDate,String endDate){
+	public DutyStatus addDuty(DutyDto dutyDto) throws ParseException{
 		DutyStatus status = new DutyStatus();
-		if(onDutyDto==null){
+		if(dutyDto==null){
 			status.setStauts("False");
 			status.setLog("the object is null");
 			return status;
 		}
-		long dutyId = 0;
+		
 		TDuty onDuty = new TDuty();
+		long dutyId = 0;
 		//if the first add duty, will set a new id. else use the duty form's id.
-		if(onDutyDto.getId() == null){
+		if(dutyDto.getDutyid() == null ||dutyDto.getDutyid()==0){
 			if(onDutyDao.countDuty()==0){
 				dutyId = 1;
 			}else{
 				dutyId = onDutyDao.findmaxid() +1;
 			}
-			onDutyDto.setId(dutyId);
+			dutyDto.setDutyid(dutyId);
 		}
 		// has records on the dutyuser
-		List<DutyUserDto> userlist = checkUser(onDutyDto, starDate, endDate);
+		//TODO 值班信息必须要有
+		if(dutyDto.getUser().size()==0){
+			status.setStauts("False");
+			status.setLog("the user list is null");
+			return status;
+		}
+		
+		List<UserDto> userlist = new ArrayList<UserDto>();
+		for(UserDto tempUser : dutyDto.getUser()){
+//			String startDate = sdf.format( tempUser.getStartdate());
+//			String endDate = sdf.format( tempUser.getEnddate());
+			TDutyUser user = new TDutyUser();
+			List<TDutyUser> tempList = onDutyUserDao.finduser(user.getUserid(), tempUser.getStartdate(), tempUser.getEnddate());
+			if(tempList.size()==0){
+				userlist.add(tempUser);
+			}
+		}
+		
+		
 		if(userlist.size()==0){
 			status.setStauts("False");
 			status.setLog("user had added before");
 			return status;
 		}
-		onDutyDto.setUser(userlist);
-		for(int i=0;i<onDutyDto.getUser().size();i++){
-			
-			onDutyDto.getUser().get(i).setDutyid(onDutyDto.getId());
+		dutyDto.setUser(userlist);
+		for(int i=0;i<dutyDto.getUser().size();i++){
+			dutyDto.getUser().get(i).setDutyid(dutyDto.getDutyid());
 		}
 		
 		//check if there are old duty or not, if has will delete the record first and add it later.
-		if(delDuty(onDutyDto.getId())){
-			System.out.println("the conference records which id is  " + onDutyDto.getId() + " are deleted");
+		if(delDuty(dutyDto.getDutyid())){
+			System.out.println("the conference records which id is  " + dutyDto.getDutyid() + " are deleted");
 		};
 		
-		mapper.map(onDutyDto,onDuty);
+		onDuty.setId(dutyDto.getDutyid());
+		onDuty.setCompanyid(dutyDto.getCompany());
+		onDuty.setCreateuserid(dutyDto.getCreateuserid());
+		onDuty.setCreateusername(dutyDto.getCreateusername());
+		onDuty.setResponsibledepartment(dutyDto.getDepartment());
+		onDuty.setDescription(onDuty.getDescription());
+		Date now = new Date();
+		onDuty.setUpdatetime(now);
+		List<TDutyUser> userList = new ArrayList<TDutyUser>();
+		for(UserDto tempUser : dutyDto.getUser()){
+			TDutyUser user = new TDutyUser();
+			
+			user.setUserid(tempUser.getUserid());
+			user.setDutyid(tempUser.getDutyid());
+			user.setUsername(tempUser.getUsername());
+			user.setStartdate(sdf.parse(tempUser.getStartdate()));
+			user.setEnddate(sdf.parse(tempUser.getEnddate()));
+			user.setDescription(tempUser.getUserdescription());
+			
+			userList.add(user);
+		}
+		onDuty.setUser(userList);
 		onDutyDao.save(onDuty);
 		status.setStauts("True");
 		return status;
 	}
 
-	private List<DutyUserDto> checkUser(OnDutyDto onDutyDto, String starDate, String endDate) {
-		List<DutyUserDto> userlist = new ArrayList<DutyUserDto>();
-		for(DutyUserDto tempUser : onDutyDto.getUser()){
-			TDutyUser user = new TDutyUser();
-			mapper.map(tempUser, user);
-			List<TDutyUser> tempList = onDutyUserDao.finduser(user.getUserid(), starDate, endDate);
-			if(tempList.size()==0){
-				userlist.add(tempUser);
-			}
-		}
-		return userlist;
-	}
 	
 	public Boolean delDuty(Long dutyid){
 		TDuty dutyItem = onDutyDao.findOne(dutyid);
@@ -117,7 +150,7 @@ public class OnDutyManager {
 		return true;
 	}
 	
-	
+	//list all duty
 	public List<OnDutyDto> listDutyAll(){
 		List<OnDutyDto> dutyDtoList = new ArrayList<OnDutyDto>();
 		
@@ -131,107 +164,107 @@ public class OnDutyManager {
 		return dutyDtoList;
 	}
 	
-	public List<OnDutyDto> listDutyByUser(Long userid){
-		// if user id is null 
-		if(userid==null||"".equals(userid)){
-			System.out.println("the user id is null");
-			return null;
-		}
-		
-		
-		List<OnDutyDto> dutyList = new ArrayList<OnDutyDto>();
-		List<TDutyUser> dutyUserlist = new ArrayList<TDutyUser>();
-		// get user list
-		dutyUserlist = onDutyUserDao.findByUserId(userid);
-		if(dutyUserlist.size()==0){
-			System.out.println("the user id has not recorded");
-			return null;
-		}else{
-			for(TDutyUser tempUser : dutyUserlist){
-				OnDutyDto onDutyDto = new OnDutyDto();
-				// get duty by duty id
-				TDuty duty = onDutyDao.findOne(tempUser.getDutyid());
-				if(duty==null){
-					System.out.println("duty is null");
-					return null;
-				}
-				dutyUserlist.clear();
-				dutyUserlist.add(tempUser);
-				duty.setUser(dutyUserlist);
-				mapper.map(duty, onDutyDto);
-				dutyList.add(onDutyDto);
-			}
-		}
-		return dutyList;
-	}
+//	public List<OnDutyDto> listDutyByUser(Long userid){
+//		// if user id is null 
+//		if(userid==null||"".equals(userid)){
+//			System.out.println("the user id is null");
+//			return null;
+//		}
+//		
+//		
+//		List<OnDutyDto> dutyList = new ArrayList<OnDutyDto>();
+//		List<TDutyUser> dutyUserlist = new ArrayList<TDutyUser>();
+//		// get user list
+//		dutyUserlist = onDutyUserDao.findByUserId(userid);
+//		if(dutyUserlist.size()==0){
+//			System.out.println("the user id has not recorded");
+//			return null;
+//		}else{
+//			for(TDutyUser tempUser : dutyUserlist){
+//				OnDutyDto onDutyDto = new OnDutyDto();
+//				// get duty by duty id
+//				TDuty duty = onDutyDao.findOne(tempUser.getDutyid());
+//				if(duty==null){
+//					System.out.println("duty is null");
+//					return null;
+//				}
+//				dutyUserlist.clear();
+//				dutyUserlist.add(tempUser);
+//				duty.setUser(dutyUserlist);
+//				mapper.map(duty, onDutyDto);
+//				dutyList.add(onDutyDto);
+//			}
+//		}
+//		return dutyList;
+//	}
 	
-	public List<OnDutyDto> listDutyByDate(Long userid,String startdate,String enddate ){
-		
-		if("".equals(startdate)||(startdate==null)){
-			System.out.println("the start date is null");
-			return null;
-		}
-		if("".equals(enddate)||(enddate==null)){
-			System.out.println("the end date is null");
-			return null;
-		}
-		if( "".equals(userid)||userid==null){
-			System.out.println("user id is null");
-			return null;
-		}
-		
-		
-		List<OnDutyDto> dutyDtoList = new ArrayList<OnDutyDto>();
-		
-		List<DutyUserDto> dutyUserDtoList = new ArrayList<DutyUserDto>();
-		
-		List<TDutyUser> dutyUserlist = new ArrayList<TDutyUser>();
-		
-		//TODO get user list
-		dutyUserlist =  onDutyUserDao.finduser(userid,startdate,enddate);
-		
-		// get the duty list by duty id
-		for(TDutyUser tempDutyUser : dutyUserlist){
-			DutyUserDto dutyUser = new DutyUserDto();
-			mapper.map(tempDutyUser, dutyUser);
-			TDuty duty = onDutyDao.findOne(dutyUser.getDutyid());
-			
-			OnDutyDto dutyDto = new OnDutyDto();
-			mapper.map(duty, dutyDto);
-			dutyUserDtoList.add(dutyUser);
-			dutyDto.setUser(dutyUserDtoList);
-			dutyDtoList.add(dutyDto);
-										
-		}
-		return dutyDtoList;
-	}
+//	public List<OnDutyDto> listDutyByDate(Long userid,String startdate,String enddate ){
+//		
+//		if("".equals(startdate)||(startdate==null)){
+//			System.out.println("the start date is null");
+//			return null;
+//		}
+//		if("".equals(enddate)||(enddate==null)){
+//			System.out.println("the end date is null");
+//			return null;
+//		}
+//		if( "".equals(userid)||userid==null){
+//			System.out.println("user id is null");
+//			return null;
+//		}
+//		
+//		
+//		List<OnDutyDto> dutyDtoList = new ArrayList<OnDutyDto>();
+//		
+//		List<DutyUserDto> dutyUserDtoList = new ArrayList<DutyUserDto>();
+//		
+//		List<TDutyUser> dutyUserlist = new ArrayList<TDutyUser>();
+//		
+//		//TODO get user list
+//		dutyUserlist =  onDutyUserDao.finduser(userid,startdate,enddate);
+//		
+//		// get the duty list by duty id
+//		for(TDutyUser tempDutyUser : dutyUserlist){
+//			DutyUserDto dutyUser = new DutyUserDto();
+//			mapper.map(tempDutyUser, dutyUser);
+//			TDuty duty = onDutyDao.findOne(dutyUser.getDutyid());
+//			
+//			OnDutyDto dutyDto = new OnDutyDto();
+//			mapper.map(duty, dutyDto);
+//			dutyUserDtoList.add(dutyUser);
+//			dutyDto.setUser(dutyUserDtoList);
+//			dutyDtoList.add(dutyDto);
+//										
+//		}
+//		return dutyDtoList;
+//	}
 	
 	
-	public OnDutyDto listDutyByDutyId(Long dutyID){
-		OnDutyDto duty = new OnDutyDto();
-		
-		TDuty tempDuty = onDutyDao.findOne(dutyID);
-		
-		if(tempDuty == null){
-			return duty;
-		}
-		
-		List<DutyUserDto> userList = new ArrayList<DutyUserDto>();
-		
-		List<TDutyUser> tempUserlist = new ArrayList<TDutyUser>();
-		
-		DutyUserDto user = new DutyUserDto();
-		
-		tempUserlist = onDutyUserDao.findByDutyId(dutyID);
-		
-		for(TDutyUser tempUser : tempUserlist){
-			mapper.map(tempUser, user);
-			userList.add(user);
-		}
-		mapper.map(tempDuty, duty);
-		duty.setUser(userList);
-		return duty;
-	}
+//	public OnDutyDto listDutyByDutyId(Long dutyID){
+//		OnDutyDto duty = new OnDutyDto();
+//		
+//		TDuty tempDuty = onDutyDao.findOne(dutyID);
+//		
+//		if(tempDuty == null){
+//			return duty;
+//		}
+//		
+//		List<DutyUserDto> userList = new ArrayList<DutyUserDto>();
+//		
+//		List<TDutyUser> tempUserlist = new ArrayList<TDutyUser>();
+//		
+//		DutyUserDto user = new DutyUserDto();
+//		
+//		tempUserlist = onDutyUserDao.findByDutyId(dutyID);
+//		
+//		for(TDutyUser tempUser : tempUserlist){
+//			mapper.map(tempUser, user);
+//			userList.add(user);
+//		}
+//		mapper.map(tempDuty, duty);
+//		duty.setUser(userList);
+//		return duty;
+//	}
 	
 	public DutyStatus importDutyInfoToDB(){
 		DutyStatus status = new DutyStatus();
@@ -284,18 +317,18 @@ public class OnDutyManager {
 				String description = (dutyItem.getDescription()==null||"".equals(dutyItem.getDescription().trim()))?"":dutyItem.getDescription().trim();
 				String responsibleDepartment = (dutyItem.getResponsibledepartment()==null||"".equals(dutyItem.getResponsibledepartment().trim()))?"":dutyItem.getResponsibledepartment().trim();
 				String userName = (dutyItem.getUsername()==null||"".equals(dutyItem.getUsername().trim()))?"":dutyItem.getUsername().trim();
+				String createusername = (dutyItem.getCreateusername()==null||"".equals(dutyItem.getCreateusername().trim()))?"":dutyItem.getCreateusername().trim();
+				Date now = new Date();
 				tDuty.setCompanyid(companyId);
 				tDuty.setDescription(description);
 				tDuty.setResponsibledepartment(responsibleDepartment);
-				tDuty.setUsername(userName);
-				tDuty.setUserid(dutyItem.getUserid());
-				tDuty.setStartdate(startDate);
-				tDuty.setEnddate(endDate);
+				tDuty.setCreateusername(createusername);
+				tDuty.setCreateuserid(dutyItem.getCreateuserid());
 				tDuty.setId(dutyId);
+				tDuty.setUpdatetime(now);
 				tUser.setDutyid(dutyId);
 				tUser.setUserid(dutyItem.getUserid());
 				tUser.setUsername(userName);
-				tUser.setCompanyid(companyId);
 				tUser.setDescription(description);
 				tUser.setStartdate(startDate);
 				tUser.setEnddate(endDate);
@@ -400,8 +433,140 @@ public class OnDutyManager {
             contentDto.setStartdate(row.getCell(4).toString());
             contentDto.setEnddate(row.getCell(5).toString());
             contentDto.setDescription(row.getCell(6).getStringCellValue());
+            contentDto.setCreateusername(row.getCell(7).getStringCellValue());
+            contentDto.setCreateuserid((long) row.getCell(8).getNumericCellValue());
             contentList.add(contentDto);
         }  
         return contentList;  
     }
+	
+	public List<OnDutyDto> findByDuty(DutyDto duty ){
+		StringBuffer sql = new StringBuffer("select id,createuserid,createusername,updatetime,responsibledepartment,companyid,description from DUTY where 1=1 ");
+		StringBuffer query = new StringBuffer();
+		if(duty.getDutyid()!=null && (!"".equals(duty.getDutyid()))){
+			query.append(" and id=" + duty.getDutyid());
+		}
+		if(duty.getCreateuserid()!=null && (!"".equals(duty.getCreateuserid()))){
+			query.append(" and createuserid=" + duty.getCreateuserid());
+		}
+		if(duty.getCreateusername()!=null && (!"".equals(duty.getCreateusername().trim())) ){
+			query.append(" and createusername='" + duty.getCreateusername()+"'");
+		}
+		if(duty.getUpdatetime()!=null && (!"".equals(duty.getUpdatetime()))){
+			query.append(" and updatetime='" + duty.getUpdatetime()+"'");
+		}
+		if(duty.getDepartment()!=null && (!"".equals(duty.getDepartment().trim()))){
+			query.append(" and responsibledepartment='" + duty.getDepartment()+"'");
+		}
+		if(duty.getCompany()!=null && (!"".equals(duty.getCompany().trim()))){
+			query.append(" and companyid='" + duty.getCompany()+"'");
+		}
+		if(duty.getDutydescription()!=null && (!"".equals(duty.getDutydescription().trim()))){
+			query.append(" and description='" + duty.getDutydescription()+"'");
+		}
+		sql= sql.append(query);
+		
+		
+		List<Map<String,Object>> querylist ;
+			
+		querylist =jdbcTemplate.queryForList(sql.toString());
+		if(querylist==null || querylist.size()==0){
+			return null;
+		}
+		
+		
+		List<OnDutyDto> dutylist = new ArrayList<OnDutyDto>();
+		for(int i=0;i<querylist.size();i++){
+			OnDutyDto tempDuty = new OnDutyDto();
+			tempDuty.setId(Long.parseLong((String) querylist.get(i).get("id")));
+			tempDuty.setCreateuserid(Long.parseLong((String) querylist.get(i).get("createuserid")));
+			tempDuty.setCreateusername((String) querylist.get(i).get("createusername"));
+			tempDuty.setCompanyid((String) querylist.get(i).get("companyid"));
+			tempDuty.setResponsibledepartment((String) querylist.get(i).get("responsibledepartment"));
+			tempDuty.setDescription((String) querylist.get(i).get("description"));
+			tempDuty.setUpdatetime(querylist.get(i).get("updatetime").toString());
+			
+			List<DutyUserDto> userList = new ArrayList<DutyUserDto>();
+			
+			List<TDutyUser> tempUserlist = new ArrayList<TDutyUser>();
+			
+			DutyUserDto user = new DutyUserDto();
+			
+			tempUserlist = onDutyUserDao.findByDutyId(tempDuty.getId());
+			
+			for(TDutyUser tempUser : tempUserlist){
+				mapper.map(tempUser, user);
+				userList.add(user);
+			}
+			tempDuty.setUser(userList);
+			dutylist.add(tempDuty);
+		}
+		
+		return dutylist;
+		
+	}
+	
+	public List<OnDutyDto> findByUser(UserDto user ){
+		
+		StringBuffer sql = new StringBuffer("select userid,username,dutyid,id,description,startdate,enddate from DUTYPEOPLE where 1=1 ");
+		
+		StringBuffer query = new StringBuffer();
+		if(user.getUserid()!=null && (!"".equals(user.getUserid()))){
+			query.append(" and userid=" + user.getUserid());
+		}
+		if(user.getUsername()!=null && (!"".equals(user.getUsername().trim()))){
+			query.append(" and username='" +user.getUsername() +"'");
+		}
+		if(user.getDutyid()!=null && (!"".equals(user.getDutyid())) ){
+			query.append(" and dutyid=" + user.getDutyid());
+		}
+		if(user.getUserdescription()!=null && (!"".equals(user.getUserdescription()))){
+			query.append(" and description='" + user.getUserdescription()+"'");
+		}
+		if(user.getStartdate()!=null && (!"".equals(user.getStartdate().trim()))){
+			query.append(" and startdate='" + user.getStartdate()+"'");
+		}
+		if(user.getEnddate()!=null && (!"".equals(user.getEnddate().trim()))){
+			query.append(" and enddate='" + user.getEnddate()+"'");
+		}
+		sql= sql.append(query);
+		
+		List<Map<String,Object>> querylist ;
+		
+		querylist =jdbcTemplate.queryForList(sql.toString());
+		if(querylist==null || querylist.size()==0){
+			return null;
+		}
+		
+		List<OnDutyDto> dutylist = new ArrayList<OnDutyDto>();
+		List<DutyUserDto> userlist = new ArrayList<DutyUserDto>();
+		
+		for(int i=0;i<querylist.size();i++){
+			DutyUserDto tempUser = new DutyUserDto();
+			tempUser.setUserid(Long.parseLong((String)querylist.get(i).get("userid")));
+			tempUser.setDutyid(Long.parseLong((String)querylist.get(i).get("dutyid")));
+			tempUser.setDescription((String)querylist.get(i).get("description"));
+			tempUser.setUsername((String)querylist.get(i).get("username"));
+			tempUser.setStartdate((Date) querylist.get(i).get("startdate"));
+			tempUser.setEnddate((Date) querylist.get(i).get("enddate"));
+			userlist.add(tempUser);
+			Long tempid = Long.parseLong((String)querylist.get(0).get("dutyid"));
+			TDuty tempDuty = new TDuty();
+			OnDutyDto dutyDto = new OnDutyDto();
+			if(tempid!=tempUser.getDutyid()){
+				tempDuty = onDutyDao.findByDutyId(tempid);
+				mapper.map(tempDuty, dutyDto);
+				dutyDto.setUser(userlist);
+				dutylist.add(dutyDto);
+			}else{
+				tempid = Long.parseLong((String)querylist.get(querylist.size()-1).get("dutyid"));
+				tempDuty = onDutyDao.findByDutyId(tempid);
+				mapper.map(tempDuty, dutyDto);
+				dutyDto.setUser(userlist);
+				dutylist.add(dutyDto);
+			}
+		}
+		return dutylist;
+		
+	} 
 }

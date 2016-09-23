@@ -7,16 +7,14 @@ import java.util.List;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-public class MeetingDto {
+public class MeetingInputDto {
 	
 	private Long id; // meeting ID 
-	private long roomid; // room ID
+	private Long roomid; // room ID
 	private String topic; // topic
 	private String department;// 部门
-	@Temporal(TemporalType.DATE)
-	private Date startdate;// 开始时间	
-	@Temporal(TemporalType.DATE)
-	private Date enddate;// 结束时间
+	private String startdate;// 开始时间	
+	private String enddate;// 结束时间
 	private String area;// area
 	private String chairman; //主持人
 	private String scope;
@@ -37,11 +35,11 @@ public class MeetingDto {
 		this.id = id;
 	}
 
-	public long getRoomid() {
+	public Long getRoomid() {
 		return roomid;
 	}
 
-	public void setRoomid(long roomid) {
+	public void setRoomid(Long roomid) {
 		this.roomid = roomid;
 	}
 
@@ -61,19 +59,19 @@ public class MeetingDto {
 		this.department = department;
 	}
 
-	public Date getStartdate() {
+	public String getStartdate() {
 		return startdate;
 	}
 
-	public void setStartdate(Date startdate) {
+	public void setStartdate(String startdate) {
 		this.startdate = startdate;
 	}
 
-	public Date getEnddate() {
+	public String getEnddate() {
 		return enddate;
 	}
 
-	public void setEnddate(Date enddate) {
+	public void setEnddate(String enddate) {
 		this.enddate = enddate;
 	}
 

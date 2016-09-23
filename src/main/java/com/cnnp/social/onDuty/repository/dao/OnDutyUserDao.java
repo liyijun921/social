@@ -9,14 +9,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.cnnp.social.onDuty.repository.entity.TDutyUser;
 
-
-
-
 @Transactional
 public interface OnDutyUserDao extends CrudRepository<TDutyUser, Long> ,JpaSpecificationExecutor<TDutyUser>{
 	
 	@Query("select max(cast(id as float)) from TDutyUser ")
-	public long finduser();
+	public long findmaxid();
 	@Query("select count(*) from TDutyUser dutyUser where dutyUser.dutyid = ?1")
 	public long userCount(Long id);
 	@Query("select dutyUser from TDutyUser dutyUser where dutyUser.userid = ?1")

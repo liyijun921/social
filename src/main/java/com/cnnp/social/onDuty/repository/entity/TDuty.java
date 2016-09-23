@@ -23,21 +23,17 @@ public class TDuty{
 	
 	@Id
 	private long id; // 值班ID 
-	private long userid; // 用户ID
-	private String username; // 用户姓名
+	private long createuserid; // 用户ID
+	private String createusername; // 用户姓名
 	private String responsibledepartment;// 部门
 	private String companyid;// 公司	
 	@Temporal(TemporalType.DATE)
-	private Date startdate;// 开始时间	
-	@Temporal(TemporalType.DATE)
-	private Date enddate;// 结束时间
+	private Date updatetime;// 创建or更新时间	
 	private String description;// 备注
 	
 	@OneToMany(cascade = { CascadeType.ALL })
 	@JoinColumn(name = "dutyid")
 	private List<TDutyUser> user = new ArrayList<TDutyUser>();
-	
-	
 
 	public long getId() {
 		return id;
@@ -47,20 +43,20 @@ public class TDuty{
 		this.id = id;
 	}
 
-	public long getUserid() {
-		return userid;
+	public long getCreateuserid() {
+		return createuserid;
 	}
 
-	public void setUserid(long userid) {
-		this.userid = userid;
+	public void setCreateuserid(long createuserid) {
+		this.createuserid = createuserid;
 	}
 
-	public String getUsername() {
-		return username;
+	public String getCreateusername() {
+		return createusername;
 	}
 
-	public void setUsername(String username) {
-		this.username = username;
+	public void setCreateusername(String createusername) {
+		this.createusername = createusername;
 	}
 
 	public String getResponsibledepartment() {
@@ -79,20 +75,12 @@ public class TDuty{
 		this.companyid = companyid;
 	}
 
-	public Date getStartdate() {
-		return startdate;
+	public Date getUpdatetime() {
+		return updatetime;
 	}
 
-	public void setStartdate(Date startdate) {
-		this.startdate = startdate;
-	}
-
-	public Date getEnddate() {
-		return enddate;
-	}
-
-	public void setEnddate(Date enddate) {
-		this.enddate = enddate;
+	public void setUpdatetime(Date updatetime) {
+		this.updatetime = updatetime;
 	}
 
 	public String getDescription() {
@@ -111,6 +99,8 @@ public class TDuty{
 		this.user = user;
 	}
 	
+	
+
 	
 	
 }

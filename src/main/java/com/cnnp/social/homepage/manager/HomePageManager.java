@@ -627,6 +627,41 @@ public class HomePageManager {
 		return homepageaidnameDtos;		
 	}
 	
+	public List<HomePageIDNameDto> findHomePageCompanySector(){
+		List<HomePageIDNameDto> homepageaidnameDtos=new ArrayList<HomePageIDNameDto>();
+		
+		//1.group by priority get priority list; 2.get list by priority order by updatetime; 3.add all list
+		List<Long> priorityList = homepageInfoDao.findpriority();
+		if(priorityList.size()==0||priorityList==null){
+			return null;
+		}
+		
+		List<THomePageInfo> homepageEntry = new ArrayList<THomePageInfo>();
+		
+		for(int i=0;i<priorityList.size();i++){
+			List<THomePageInfo> templist = new ArrayList<THomePageInfo>();
+			templist = homepageInfoDao.findcompany(priorityList.get(i));
+			homepageEntry.addAll(templist);
+		}
+		
+		
+		if(homepageEntry==null||homepageEntry.size()==0){
+			return null;
+		}
+		
+		
+		for(THomePageInfo hp : homepageEntry){
+			HomePageIDNameDto iddto=new HomePageIDNameDto();
+			iddto.setid(hp.getid());
+			iddto.setName(hp.getName());
+			iddto.setHptype(hp.getHptype());
+			iddto.setWebtype(hp.getWebtype());
+			iddto.setUrl(hp.getUrl());
+			homepageaidnameDtos.add(iddto);
+		}
+		return homepageaidnameDtos;		
+	}
+	
 	public List<HomePageInfoAllDto> findHomePageAll(long hpid){
 		List<HomePageInfoAllDto> homepageallDtos=new ArrayList<HomePageInfoAllDto>();
 		THomePageInfo homepageEntry = new THomePageInfo();

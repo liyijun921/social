@@ -107,6 +107,9 @@ public class HomePageController {
 		return hpManger.findHomePageSector();
 	}
 	
-	
+	@RequestMapping(value = "/companysector", method = RequestMethod.GET)
+	public @ResponseBody List<HomePageIDNameDto> findHomePageCompanySector() {
+		return hpManger.findHomePageCompanySector();
+	}
 	
 }

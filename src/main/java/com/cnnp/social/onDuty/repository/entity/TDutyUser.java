@@ -26,10 +26,8 @@ public class TDutyUser{
 	private long id; // ID 
 	@Mapping(value="dutyid")
 	private long dutyid; // 值班ID
-	private long userid; // 用户ID
-	private String username; // 用户姓名
-	private String responsibledepartment;// 部门
-	private String companyid;// 公司	
+	private long userid; // 值班者ID
+	private String username; // 值班者姓名
 	private String description;// 备注
 	@Temporal(TemporalType.DATE)
 	private Date startdate;// 开始时间	
@@ -73,18 +71,6 @@ public class TDutyUser{
 	}
 	public void setUsername(String username) {
 		this.username = username;
-	}
-	public String getResponsibledepartment() {
-		return responsibledepartment;
-	}
-	public void setResponsibledepartment(String responsibledepartment) {
-		this.responsibledepartment = responsibledepartment;
-	}
-	public String getCompanyid() {
-		return companyid;
-	}
-	public void setCompanyid(String companyid) {
-		this.companyid = companyid;
 	}
 	public String getDescription() {
 		return description;
